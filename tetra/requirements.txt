@@ -1,0 +1,3 @@
+numpy>=1.26
+opencv-python-headless>=4.9,<5   # 5.x writes slightly different JPEG bytes; 4.x reproduces the shipped maps byte for byte
+Pillow>=10

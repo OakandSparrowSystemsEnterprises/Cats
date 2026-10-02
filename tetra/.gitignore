@@ -1,0 +1,6 @@
+node_modules/
+__pycache__/
+tests/out/
+pipeline/*_prev.png
+pipeline/pools_sheet.png
+pipeline/edge_check.png

@@ -1,0 +1,23 @@
+const { chromium } = require('playwright');
+const PAGE = require('../_page');
+(async () => {
+  const browser = await chromium.launch(PAGE.LAUNCH);
+  const errors = [];
+  const ctx = await browser.newContext({ viewport: { width: 1366, height: 820 }, deviceScaleFactor: 1 });
+  const page = await ctx.newPage();
+  page.on('pageerror', e => errors.push(String(e)));
+  page.on('console', m => { if (m.type() === 'error' && !/ERR_TUNNEL/.test(m.text())) errors.push('console: ' + m.text()); });
+  await page.goto(PAGE.URL); await page.waitForTimeout(700);
+  await page.evaluate(() => { tetra.state.playing = false; });
+  await page.click('[data-face="west"]'); await page.waitForTimeout(1900); await page.screenshot({ path: PAGE.out('s6_west.png') });
+  await page.click('[data-face="south"]'); await page.waitForTimeout(1900); await page.screenshot({ path: PAGE.out('s6_south.png') });
+  await page.click('[data-face="far"]'); await page.waitForTimeout(1900); await page.screenshot({ path: PAGE.out('s6_far.png') });
+  await page.evaluate(() => tetra.select('island')); await page.waitForTimeout(1600); await page.screenshot({ path: PAGE.out('s6_island.png') });
+  await page.evaluate(() => tetra.select('warmia')); await page.waitForTimeout(1600); await page.screenshot({ path: PAGE.out('s6_warmia.png') });
+  console.log('warmia card', (await page.evaluate(() => document.getElementById('placeBody').innerText)).slice(0, 300).replace(/\n+/g, ' | '));
+  await page.click('#tabWorld'); await page.evaluate(() => { document.querySelector('#codex .body').scrollTop = 2300; }); await page.waitForTimeout(300);
+  await page.screenshot({ path: PAGE.out('s6_explorers.png') });
+  console.log('imgs', await page.evaluate(() => [...document.images].map(i => i.naturalWidth + 'x' + i.naturalHeight).join(', ')));
+  console.log('errors', JSON.stringify(errors));
+  await ctx.close(); await browser.close();
+})();

@@ -1,0 +1,740 @@
+<title>Tetra</title>
+<meta name="theme-color" content="#04060d">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --void:#04060d; --deep:#070b16;
+    --ink:#f2e8d3; --muted:#b9ad96; --dim:#7f765f;
+    --gold:#f5b64f; --gold-soft:#ffdea3; --gold-deep:#c9822a;
+    --blue:#5aa5ff; --blue-soft:#a9d1ff;
+    --amber:#f0a05a; --sky:#86bbff; --stone:#9aa0ad;
+    --panel:rgba(8,11,20,.76); --panel-2:rgba(12,16,27,.94); --line:rgba(242,232,211,.14); --line-2:rgba(242,232,211,.28);
+    --focus:#ffd98a;
+    --display:'Cinzel','Times New Roman',Georgia,serif;
+    --serif:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Georgia,serif;
+    --ui:'IBM Plex Sans','Segoe UI',Roboto,system-ui,sans-serif;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{background:var(--void);color:var(--ink);font:14px/1.4 var(--ui);-webkit-font-smoothing:antialiased}
+  #app{position:fixed;inset:0;overflow:hidden;
+    background:
+      radial-gradient(ellipse at 12% 46%,rgba(150,70,220,.22),transparent 34%),
+      radial-gradient(ellipse at 86% 30%,rgba(70,120,255,.17),transparent 36%),
+      linear-gradient(#03040a,#060a17 55%,#04060d)}
+  canvas.layer{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #stars{z-index:0}
+  #gl{z-index:1;touch-action:none;cursor:grab}
+  #gl.dragging{cursor:grabbing}
+  #fx{z-index:2;pointer-events:none}
+  #markers{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+
+  /* ---- region markers ---- */
+  .marker{position:absolute;left:0;top:0;width:0;height:0;overflow:visible;pointer-events:none;appearance:none;border:0;background:none;padding:0;margin:0;color:var(--ink);
+    cursor:pointer;opacity:0;transition:opacity .25s;will-change:transform}
+  .marker .dot,.marker .lbl{position:absolute;pointer-events:auto;cursor:pointer}
+  .marker .dot{left:-5px;top:-5px}
+  .marker .lbl{left:11px;top:-12px}
+  .marker.lbl-left .lbl{left:auto;right:11px}
+  .marker.lbl-below .lbl{left:0;top:9px;transform:translateX(-50%)}
+  .marker[hidden]{display:none}
+  .marker .dot{width:10px;height:10px;border-radius:50%;background:var(--gold-soft);box-shadow:0 0 0 2px rgba(4,6,13,.65),0 0 14px 3px rgba(245,182,79,.55);flex:none;transition:transform .2s}
+  .marker .lbl{font:500 11px/1 var(--ui);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;padding:5px 8px;border-radius:999px;
+    background:rgba(6,9,17,.72);border:1px solid var(--line);backdrop-filter:blur(6px);text-shadow:0 1px 6px #000;transition:opacity .2s,transform .2s}
+  .marker:not(.show-label):not(:hover):not(.selected) .lbl{opacity:0;pointer-events:none}
+  .marker:hover .dot,.marker.selected .dot{transform:scale(1.35)}
+  .marker.selected .dot{background:#fff;box-shadow:0 0 0 2px rgba(4,6,13,.65),0 0 18px 5px rgba(255,222,163,.75)}
+  .marker.selected .lbl{border-color:var(--gold);color:var(--gold-soft)}
+  .marker:focus-visible{outline:none}.marker:focus-visible .lbl{outline:2px solid var(--focus);outline-offset:2px;opacity:1}
+  .marker.face-west .dot{background:var(--amber)} .marker.face-south .dot{background:var(--sky);box-shadow:0 0 0 2px rgba(4,6,13,.65),0 0 14px 3px rgba(90,165,255,.5)}
+  .marker.mark-x .dot{background:transparent;box-shadow:none;width:14px;height:14px;left:-7px;top:-7px}
+  .marker.mark-x .dot::before,.marker.mark-x .dot::after{content:'';position:absolute;left:50%;top:50%;width:16px;height:3px;background:#5fb4ff;border-radius:2px;box-shadow:0 0 8px #5fb4ff;translate:-50% -50%}
+  .marker.mark-x .dot::before{rotate:45deg} .marker.mark-x .dot::after{rotate:-45deg}
+  .marker.mark-x.selected .dot::before,.marker.mark-x.selected .dot::after{background:#fff}
+  .marker.mark-bolt .dot{background:#5fb4ff;box-shadow:0 0 10px #5fb4ff;border-radius:0;width:12px;height:18px;left:-6px;top:-9px;clip-path:polygon(42% 0,100% 0,62% 42%,88% 42%,28% 100%,44% 56%,12% 56%)}
+  .marker.mark-bolt.selected .dot{background:#fff}
+  .nations{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px}
+  .nations button{width:100%;text-align:left;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline;padding:8px 11px;border-radius:12px;background:rgba(242,232,211,.04);font-weight:500}
+  .nations button i{width:8px;height:8px;border-radius:50%;background:var(--c,var(--gold));box-shadow:0 0 8px var(--c,var(--gold));translate:0 -1px}
+  .nations button b{font:600 13px/1.3 var(--ui);color:var(--ink)}
+  .nations button span{display:block;font:400 12px/1.35 var(--ui);color:var(--muted)}
+  .nations .hd{margin:14px 0 4px;font:400 10px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .nations .hd:first-child{margin-top:0}
+  .unsure{display:inline-block;margin-left:6px;font:600 9px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--amber);border:1px dashed rgba(240,160,90,.6);border-radius:999px;padding:3px 6px;vertical-align:middle}
+  .kingdoms li b .unsure{margin-left:6px}
+  .kv.meta{margin-top:12px}
+  .chart{margin:12px 0 0;padding:10px;border:1px dashed var(--line-2);border-radius:12px;background:rgba(4,6,13,.35)}
+  .chart img{width:100%;max-width:300px;height:auto;display:block;margin:0 auto}
+  .chart figcaption{margin-top:8px;font:italic 400 13px/1.3 var(--serif);color:var(--muted);text-align:center}
+  .kingdoms{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:5px}
+  .kingdoms li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline;font:400 14px/1.35 var(--ui)}
+  .kingdoms li b{font-weight:600;color:var(--ink)} .kingdoms li span{color:var(--muted)}
+  .group .sub{margin:-4px 0 8px;font:italic 400 13px/1.3 var(--serif);color:var(--muted)}
+  .worlds li i.sapphire{border:0;position:relative;background:none} .worlds li i.sapphire::before,.worlds li i.sapphire::after{content:'';position:absolute;left:50%;top:50%;width:15px;height:2.5px;background:#5fb4ff;box-shadow:0 0 6px #5fb4ff;translate:-50% -50%;border-radius:2px}
+  .worlds li i.sapphire::before{rotate:45deg} .worlds li i.sapphire::after{rotate:-45deg}
+  .marker.tight .lbl{font-size:9px;padding:3px 6px;letter-spacing:.04em}
+  .marker.tight .dot{width:8px;height:8px;left:-4px;top:-4px}
+  .marker.unwritten .dot{background:transparent;border:1px dashed var(--stone);box-shadow:none;width:12px;height:12px;left:-6px;top:-6px}
+  .marker.unwritten .lbl{font-family:var(--serif);font-style:italic;text-transform:none;letter-spacing:.02em;font-size:13px;color:var(--muted)}
+
+  /* ---- chrome ---- */
+  .brand{position:absolute;z-index:5;left:max(18px,env(safe-area-inset-left,0px));top:calc(16px + env(safe-area-inset-top,0px));pointer-events:none;text-shadow:0 2px 20px #000}
+  .brand h1{margin:0;font:400 clamp(30px,4.4vw,58px)/1 var(--display);letter-spacing:.32em;color:var(--gold-soft)}
+  .brand p{margin:9px 0 0;font:400 clamp(9px,1.05vw,13px)/1.5 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .dice{position:absolute;z-index:5;right:max(18px,env(safe-area-inset-right,0px));top:calc(18px + env(safe-area-inset-top,0px));text-align:right;pointer-events:none;text-shadow:0 2px 14px #000}
+  .dice .t{font:600 clamp(11px,1.3vw,16px)/1 var(--display);letter-spacing:.24em;color:var(--ink)}
+  .dice .s{margin-top:6px;font:400 9px/1.5 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .dice .q{margin-top:12px;font:italic 500 15px/1.35 var(--serif);color:var(--muted)}
+  .legend{margin-top:14px;display:grid;gap:5px;font:500 10px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase}
+  .legend span{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+  .legend i{width:22px;height:2px;border-radius:2px;display:inline-block}
+  .legend .g{color:var(--gold-soft)} .legend .g i{background:linear-gradient(90deg,transparent,var(--gold));box-shadow:0 0 8px var(--gold)}
+  .legend .b{color:var(--blue-soft)} .legend .b i{background:linear-gradient(90deg,transparent,var(--blue));box-shadow:0 0 8px var(--blue)}
+  .legend .p{color:#d9b8ff} .legend .p i{background:linear-gradient(90deg,transparent,#9b5cff);box-shadow:0 0 8px #9b5cff}
+  .field.p i{background:#9b5cff;box-shadow:0 0 10px #9b5cff} .field.p b{color:#d9b8ff}
+  .facing{position:absolute;z-index:5;left:50%;top:calc(18px + env(safe-area-inset-top,0px));translate:-50% 0;pointer-events:none;
+    font:400 10px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);text-shadow:0 2px 10px #000;white-space:nowrap}
+  .hint{position:absolute;z-index:4;left:50%;bottom:calc(126px + env(safe-area-inset-bottom,0px));translate:-50% 0;pointer-events:none;
+    font:500 10px/1.2 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:rgba(242,232,211,.42);text-shadow:0 2px 8px #000;white-space:nowrap}
+
+  /* ---- dock ---- */
+  .dock{position:absolute;z-index:8;left:50%;bottom:0;translate:-50% 0;width:min(860px,calc(100% - 24px));margin-bottom:12px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));
+    border:1px solid var(--line);border-radius:18px;background:var(--panel);backdrop-filter:blur(16px);box-shadow:0 18px 50px rgba(0,0,0,.45);
+    display:grid;grid-template-columns:auto auto 1fr auto;gap:10px 14px;align-items:center}
+  .date{display:grid;gap:3px;min-width:170px}
+  .date strong{font:600 15px/1.1 var(--display);letter-spacing:.14em;color:var(--gold-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .date span{font:400 11px/1.3 var(--ui);color:var(--muted);white-space:nowrap}
+  .date em{font-style:normal;color:var(--ink)}
+  .time{display:grid;grid-template-columns:auto 1fr auto;gap:8px 10px;align-items:center;min-width:0}
+  .time label{display:contents}
+  .time .k{font:500 10px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .time .v{font:500 11px/1 var(--ui);color:var(--ink);font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
+  input[type=range]{width:100%;min-width:0;accent-color:var(--gold);height:22px;margin:0;background:transparent}
+  .btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  button{appearance:none;border:1px solid var(--line-2);background:rgba(242,232,211,.06);color:var(--ink);border-radius:10px;min-height:36px;padding:7px 12px;
+    font:600 12px/1 var(--ui);cursor:pointer;letter-spacing:.02em;transition:background .15s,border-color .15s}
+  button:hover{background:rgba(242,232,211,.12)}
+  button:focus-visible,input:focus-visible,textarea:focus-visible,[role=tab]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+  button.primary{border-color:rgba(245,182,79,.55);background:rgba(245,182,79,.16);color:var(--gold-soft)}
+  button.ghost{border-color:transparent;background:transparent;color:var(--muted)} button.ghost:hover{color:var(--ink);background:rgba(242,232,211,.08)}
+  .faces{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .faces button{min-height:34px;padding:6px 8px;font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:7px}
+  .faces button i{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
+  .faces button[data-face=west] i{background:var(--amber)} .faces button[data-face=south] i{background:var(--sky)} .faces button[data-face=far] i{background:var(--stone)}
+  .faces button[aria-pressed=true]{background:rgba(245,182,79,.16);border-color:rgba(245,182,79,.5);color:var(--gold-soft)}
+  #btnCodex{justify-self:start}
+  #btnCodex[aria-pressed=true]{background:rgba(245,182,79,.16);border-color:rgba(245,182,79,.5);color:var(--gold-soft)}
+
+  /* ---- codex drawer ---- */
+  .codex{position:absolute;z-index:9;right:12px;top:calc(172px + env(safe-area-inset-top,0px));bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100% - 24px));
+    display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;background:var(--panel);backdrop-filter:blur(16px);box-shadow:0 18px 50px rgba(0,0,0,.45);
+    transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .3s}
+  .codex.closed{transform:translateX(calc(100% + 24px));opacity:0;pointer-events:none}
+  .codex .tabs{display:flex;gap:2px;padding:8px 8px 0;border-bottom:1px solid var(--line)}
+  .codex [role=tab]{flex:1;appearance:none;border:0;background:none;color:var(--muted);padding:10px 6px 11px;font:500 10px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;border-radius:0}
+  .codex [role=tab][aria-selected=true]{color:var(--gold-soft);border-bottom-color:var(--gold)}
+  .codex [role=tab]:hover{color:var(--ink)}
+  .codex .body{flex:1;overflow:auto;padding:16px 18px 18px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(242,232,211,.2) transparent}
+  .codex .grip{display:none} .codex .close{display:none}
+  .pane[hidden]{display:none}
+  .eyebrow{font:400 10px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+  .pane h2{margin:0;font:400 22px/1.1 var(--display);letter-spacing:.14em;color:var(--ink)}
+  .pane h2 small{display:block;margin-top:6px;font:400 10px/1.5 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .tagline{margin:10px 0 0;font:italic 500 17px/1.35 var(--serif);color:var(--muted)}
+  .sect{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+  .sect:first-child{margin-top:0;padding-top:0;border-top:0}
+  .sect p{margin:0;font:400 16px/1.45 var(--serif);color:var(--ink)}
+  .sect p+p{margin-top:6px}
+  .sect .q{font-style:italic;color:var(--muted)}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font:400 13px/1.4 var(--ui)}
+  .kv dt{color:var(--muted);letter-spacing:.04em} .kv dd{margin:0;color:var(--ink);font-variant-numeric:tabular-nums}
+  .field{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;margin-top:10px}
+  .field i{width:10px;height:10px;border-radius:50%;margin-top:5px}
+  .field.g i{background:var(--gold);box-shadow:0 0 10px var(--gold)} .field.b i{background:var(--blue);box-shadow:0 0 10px var(--blue)}
+  .field b{display:block;font:600 12px/1.3 var(--ui);letter-spacing:.08em;text-transform:uppercase}
+  .field.g b{color:var(--gold-soft)} .field.b b{color:var(--blue-soft)}
+  .field span{display:block;font:400 15px/1.4 var(--serif);color:var(--ink)}
+  .field .q{font-style:italic;color:var(--muted)}
+  .facelist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+  .facelist button,.reglist button{width:100%;text-align:left;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 11px;font-weight:500;border-radius:12px;background:rgba(242,232,211,.04)}
+  .facelist button i,.reglist button i{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px currentColor}
+  .facelist button b{font:400 13px/1.2 var(--display);letter-spacing:.1em}
+  .facelist button small,.reglist button small{font:400 11px/1.2 var(--ui);color:var(--muted);white-space:nowrap}
+  .reglist{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+  .reglist button{padding:8px 11px}
+  .reglist button span{font:500 13px/1.2 var(--ui)}
+  .reglist button.active{border-color:rgba(245,182,79,.5);background:rgba(245,182,79,.12)}
+  .reglist button small{display:flex;align-items:center;gap:6px}
+  .reglist small i{width:6px;height:6px;box-shadow:none;background:var(--dim)}
+  .reglist small i.sun{background:var(--gold-soft);box-shadow:0 0 6px var(--gold)} .reglist small i.dawn{background:var(--amber)} .reglist small i.dusk{background:#c67b4a} .reglist small i.night{background:#3f4a6e}
+  .group{margin-top:16px} .group:first-child{margin-top:0}
+  .group h3{margin:0 0 8px;font:400 10px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:space-between}
+  .group h3 button{min-height:0;padding:4px 8px;font-size:10px;letter-spacing:.1em}
+  .year{display:flex;gap:2px;margin-top:12px}
+  .year .m{flex:1;min-width:0;height:34px;border-radius:5px;background:var(--c,#555);opacity:.55;position:relative;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font:600 8px/1 var(--ui);letter-spacing:.04em;color:#0a0d16;text-transform:uppercase;transition:opacity .3s}
+  .year .m.r{flex:.45}
+  .year .m.now{opacity:1;box-shadow:0 0 0 1px var(--ink),0 0 12px var(--c)}
+  .year .m.now::after{content:'';position:absolute;left:var(--x,50%);top:-5px;width:2px;height:calc(100% + 10px);background:var(--ink);translate:-50% 0;border-radius:2px}
+  .seasons{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:6px}
+  .seasons li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline;font:400 13px/1.35 var(--ui)}
+  .seasons li i{width:10px;height:10px;border-radius:3px;background:var(--c);display:inline-block;translate:0 1px}
+  .seasons li b{font-weight:600;color:var(--ink)} .seasons li span{color:var(--muted)}
+  .seasons li.now b{color:var(--gold-soft)}
+  .worlds{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+  .worlds li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+  .worlds li i{width:14px;height:14px;margin-top:3px;border:1.5px solid var(--muted);display:inline-block}
+  .worlds li i.tetra{clip-path:polygon(50% 0,100% 100%,0 100%);background:var(--gold);border:0}
+  .worlds li b{display:block;font:400 14px/1.3 var(--display);letter-spacing:.08em;color:var(--ink)}
+  .worlds li span{display:block;font:400 14px/1.4 var(--serif);color:var(--muted)}
+  .flora{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start;margin-top:10px}
+  .flora img{width:100%;height:auto;display:block;filter:drop-shadow(0 0 8px rgba(245,182,79,.25))}
+  .flora b{display:block;font:400 15px/1.3 var(--display);letter-spacing:.08em;color:var(--ink)}
+  .flora p{margin:6px 0 0;font:400 15px/1.45 var(--serif);color:var(--ink)}
+  .flora p.q{color:var(--muted);font-style:italic}
+  .unwritten-list{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+  .unwritten-list li{font:400 12px/1 var(--ui);color:var(--muted);border:1px dashed var(--line-2);border-radius:999px;padding:6px 10px}
+  .phase{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border-radius:12px;background:rgba(242,232,211,.05);border:1px solid var(--line)}
+  .phase i{width:12px;height:12px;border-radius:50%;background:var(--gold-soft);box-shadow:0 0 12px var(--gold);flex:none}
+  .phase i.night{background:#3f4a6e;box-shadow:0 0 10px #2b3a6a} .phase i.dawn{background:var(--amber);box-shadow:0 0 12px var(--amber)} .phase i.dusk{background:#c67b4a;box-shadow:0 0 12px #c67b4a}
+  .phase b{font:400 15px/1.2 var(--display);letter-spacing:.08em;color:var(--ink)}
+  .phase small{display:block;margin-top:3px;font:400 11px/1.3 var(--ui);color:var(--muted)}
+  .lore{margin-top:16px}
+  .lore .chip{display:inline-flex;align-items:center;gap:6px;font:600 9px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:5px 8px;margin-bottom:10px}
+  .lore .chip.edited{color:var(--gold-soft);border-color:rgba(245,182,79,.5)}
+  .lore p{font:400 17px/1.5 var(--serif);color:var(--ink);margin:0;white-space:pre-wrap}
+  .lore textarea{width:100%;min-height:150px;resize:vertical;border:1px solid var(--line-2);border-radius:12px;background:rgba(4,6,13,.6);color:var(--ink);padding:10px 12px;font:400 16px/1.5 var(--serif)}
+  .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .note{margin-top:10px;font:400 12px/1.4 var(--ui);color:var(--muted)}
+  .json{width:100%;min-height:120px;margin-top:8px;border:1px solid var(--line-2);border-radius:12px;background:rgba(4,6,13,.6);color:var(--muted);padding:10px;font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .toast{position:absolute;z-index:20;left:50%;top:calc(70px + env(safe-area-inset-top,0px));translate:-50% 0;padding:9px 14px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line-2);font:500 12px/1 var(--ui);color:var(--ink);opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+  .toast.on{opacity:1}
+  .error{display:none;position:absolute;z-index:30;left:50%;top:40%;translate:-50% -50%;width:min(420px,calc(100% - 32px));padding:18px;border:1px solid #654;border-radius:14px;background:#15110d;text-align:center;font:14px/1.5 var(--ui)}
+
+  @media (max-width:820px){
+    .dice .q,.legend{display:none}
+    .codex{right:0;left:0;top:auto;bottom:0;width:100%;max-height:min(56%,560px);border-radius:18px 18px 0 0;border-bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);
+      transform:translateY(calc(100% - 0px));opacity:1}
+    .codex.closed{transform:translateY(calc(100% + 24px));opacity:1}
+    .codex.open{transform:none}
+    .codex .grip{display:block;width:44px;height:4px;border-radius:2px;background:var(--line-2);margin:8px auto 0}
+    .codex .close{display:inline-flex;position:absolute;right:8px;top:6px;min-height:30px;padding:5px 10px;font-size:11px}
+    .dock{grid-template-columns:1fr auto;gap:8px 10px;padding:9px 10px calc(9px + env(safe-area-inset-bottom,0px));margin-bottom:8px;width:calc(100% - 16px)}
+    .date{min-width:0} .date strong{font-size:13px}
+    .time{grid-column:1/-1}
+    .btns{grid-column:1/-1;justify-content:stretch} .btns button{flex:1;padding:7px 6px;font-size:11px}
+    #btnCodex{justify-self:end}
+    .faces button{font-size:10px;padding:6px 4px;gap:5px}
+    .marker .lbl{font-size:10px;padding:4px 7px}
+    .hint,.facing{display:none}
+    .brand h1{font-size:28px} .brand p{font-size:8px;letter-spacing:.18em;max-width:220px}
+  }
+  @media (max-width:420px){ .time .k{display:none} .time{grid-template-columns:1fr auto} }
+  @media (prefers-reduced-motion:reduce){ .marker,.codex{transition:none} }
+</style>
+
+<div id="app">
+  <canvas id="stars" class="layer"></canvas>
+  <canvas id="gl" class="layer" aria-label="Tetra, a four-sided world. Drag to turn, pinch or scroll to zoom, click a region to read about it."></canvas>
+  <canvas id="fx" class="layer"></canvas>
+  <div id="markers"></div>
+
+  <header class="brand"><h1>TETRA</h1><p>A single world · A thousand stories</p></header>
+  <div class="dice">
+    <div class="t">THE DICE SYSTEM</div><div class="s">Worlds beyond chance</div>
+    <div class="q">Different worlds.<br>Same imagination.</div>
+    <div class="legend"><span class="p">A dark purple star · its light turns gold in the field <i></i></span><span class="g">Magical field · all the way around · slows light <i></i></span><span class="b">Magnetic field · all the way around · guides worlds <i></i></span></div>
+  </div>
+  <div class="facing" id="facing">Facing · The Canon Face</div>
+  <div class="hint">Drag to turn · Pinch or scroll to zoom · Tap a region</div>
+
+  <aside class="codex closed" id="codex" aria-label="Codex">
+    <div class="grip"></div><button type="button" class="close ghost" id="btnClose">Close</button>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tabWorld" aria-selected="true" aria-controls="paneWorld">World</button>
+      <button role="tab" id="tabRegions" aria-selected="false" aria-controls="paneRegions">Regions</button>
+      <button role="tab" id="tabPlace" aria-selected="false" aria-controls="panePlace">Place</button>
+    </div>
+    <div class="body">
+      <section class="pane" id="paneWorld" role="tabpanel">
+        <div class="sect">
+          <p class="eyebrow">The world</p>
+          <h2>TETRA<small>A single world · A thousand stories</small></h2>
+          <p class="tagline">One world turning on the four-sided die, all four faces charted and mapped.</p>
+          <dl class="kv" style="margin-top:12px"><dt>Water</dt><dd>At least half of every face</dd><dt>Edges</dt><dd>Land and sea continue across every edge</dd></dl>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">The calendar</p>
+          <dl class="kv"><dt>Months</dt><dd>13 · 28 days each</dd><dt>Year</dt><dd>364 days + the Restart Day</dd><dt>One day</dt><dd>One full turn</dd><dt>Spin</dt><dd>Leftward</dd></dl>
+          <div class="year" id="yearStrip" aria-label="The year, month by month"></div>
+          <p class="eyebrow" style="margin-top:16px">Seasons on the Canon Face · on average</p>
+          <ul class="seasons" id="seasonList"></ul>
+          <p class="tagline">A slower turn, a richer world.</p>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">The two fields</p>
+          <div class="field g"><i></i><div><b>Magical field · slows light</b><span>Goes all the way around the world. It slows light, so dawn crosses the land slowly and the first light comes in gold, and it turns the dark purple star’s light into the colour of our own sunlight.</span><span class="q">Here, the morning moves slower. And light flows like gold.</span></div></div>
+          <div class="field b"><i></i><div><b>Magnetic field · guides worlds</b><span>Goes all the way around the world too. It guides worlds.</span></div></div>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">The star</p>
+          <div class="field p"><i></i><div><b>A dark purple star</b><span>Tetra’s sun is a dark purple star. Its light reaches the ground the colour of our own sun’s light, because the magical field turns it on the way in.</span></div></div>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">The four faces</p>
+          <ul class="facelist" id="facelist"></ul>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">The Dice System</p>
+          <p>Worlds beyond chance. Tetra is the four-sided world; the others are only just being spoken of.</p>
+          <ul class="worlds" id="worlds"></ul>
+          <p class="q" style="margin-top:12px">Different worlds. Same imagination.</p>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">Life of Tetra</p>
+          <div class="flora"><img id="zinniaImg" alt="Line drawing of the Umbrella Tree Zinnia: a tall stem with a wide crown of petals and small blossoms hanging from its rim" src="{{ZINNIA}}"><div><b>The Umbrella Tree Zinnia</b><p>A single tall stem that is not wood, crowned with a wide umbrella of broad petals. Small blossoms hang on threads from the rim of the crown.</p><p class="q">Where it grows: not yet written.</p></div></div>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">Nations</p>
+          <p class="note" style="margin:0 0 6px">Countries named so far, spelled the way Ruby spells them.</p>
+          <ul class="nations" id="nations"></ul>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">Explorers</p>
+          <ul class="worlds" id="explorers"></ul>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">Still unwritten</p>
+          <ul class="unwritten-list"><li>Day names</li><li>Hours in a day</li><li>Size of the world</li><li>A second Restart Day?</li><li>Where the Umbrella Tree Zinnia grows</li><li>More of every face</li></ul>
+          <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
+        </div>
+      </section>
+      <section class="pane" id="paneRegions" role="tabpanel" hidden>
+        <div id="reggroups"></div>
+      </section>
+      <section class="pane" id="panePlace" role="tabpanel" hidden>
+        <div id="placeBody"><p class="note">Tap a region on the world, or pick one from the Regions tab.</p></div>
+      </section>
+    </div>
+  </aside>
+
+  <div class="dock" id="dock">
+    <div class="date"><strong id="dateOut">1 January</strong><span id="dateSub">Year 1 · Rain season · day 1 of 365</span></div>
+    <button id="btnCodex" type="button" aria-pressed="false" aria-controls="codex">Codex</button>
+    <div class="time">
+      <label><span class="k">Spin</span><input id="rngSpin" type="range" min="0" max="8" step="0.1" value="1" aria-label="Spin speed"><span class="v" id="spinOut">1.0×</span></label>
+      <label><span class="k">Day</span><input id="rngDay" type="range" min="1" max="365" step="1" value="1" aria-label="Day of the year"><span class="v" id="dayOut">1</span></label>
+    </div>
+    <div class="btns">
+      <button id="btnPlay" type="button" class="primary">Pause</button>
+      <button id="btnDay" type="button" title="Advance one day">+1 day</button>
+      <button id="btnMonth" type="button" title="Advance one month">+1 month</button>
+      <button id="btnReset" type="button" title="Reset the view and the calendar">Reset</button>
+    </div>
+    <div class="faces" aria-label="Turn to a face">
+      <button type="button" data-face="canon" aria-pressed="true"><i></i>Canon</button>
+      <button type="button" data-face="west" aria-pressed="false"><i></i>West</button>
+      <button type="button" data-face="south" aria-pressed="false"><i></i>South</button>
+      <button type="button" data-face="far" aria-pressed="false"><i></i>Far</button>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="error" id="error"></div>
+  <img id="tex-canon" alt="" hidden src="{{TEX_CANON}}">
+  <img id="tex-west" alt="" hidden src="{{TEX_WEST}}">
+  <img id="tex-south" alt="" hidden src="{{TEX_SOUTH}}">
+  <img id="tex-far" alt="" hidden src="{{TEX_FAR}}">
+</div>
+
+<script>
+(()=>{
+'use strict';
+/* ============================== WORLD DATA ============================== */
+const GEO = {{GEOMETRY}};
+const WORLD = {
+  name:'Tetra', tagline:'A single world · A thousand stories',
+  system:{name:'The Dice System', tagline:'Worlds beyond chance', quote:'Different worlds. Same imagination.'},
+  calendar:{months:['January','February','Tredesember','March','April','May','June','July','August','September','October','November','December'], daysPerMonth:28, restartDays:1, yearDays:365, spin:'leftward', quote:'A slower turn, a richer world.',
+    seasons:[{id:'rain',name:'Rain season',months:[0],restart:true,color:'#7f9fc4',light:[0.80,0.87,0.98]},
+             {id:'spring',name:'Spring',months:[1,2,3],color:'#8cc98a',light:[0.94,1.0,0.9]},
+             {id:'summer',name:'Summer',months:[4,5,6],color:'#f5b64f',light:[1.0,0.95,0.84]},
+             {id:'fall',name:'Fall',months:[7,8,9],color:'#e0884a',light:[1.0,0.88,0.72]},
+             {id:'winter',name:'Winter',months:[10,11,12],color:'#b7d3f0',light:[0.86,0.9,1.0]}]},
+  places:{
+    'spikia-canon':{name:'Spikia \u00b7 the spike', kind:'Nation', nation:'Spikia', note:'The top corner land of the Canon Face. All the top corner lands are one country.'},
+    unoooland:{name:'Unoooland', kind:'Nation', nation:'Unoooland', biome:'jungle', note:'On the far side of the Canon Face, between Islandia and the far edge.'},
+    hotland:{name:'It\u2019s Hot', kind:'Nation', nation:'It\u2019s Hot', biome:'sweltering', note:'On the far side of the Canon Face. The nation is called exactly what the chart says.'},
+    rainia:{name:'Rainia', kind:'Nation', nation:'Rainia', biome:'rain', note:'On the far side of the Canon Face.'},
+    uohia:{name:'Uohia', kind:'Nation', nation:'Uohia', biome:'forest', note:'On the far side of the Canon Face, at the eastern end.'},
+    spike:{name:'Spikia \u00b7 the spike', kind:'Nation', nation:'Spikia', note:'The top of the West Face, connected to the top area of the Canon Face. All the top corner lands are one country.'},
+    delta:{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation. Wetia is all the deltas, and the three of them meet at this corner of the world, where the West, South and Far faces touch.'},
+    swampland:{name:'Swampland', kind:'Nation', nation:'Swampland', tight:true, note:'On the central island of the West Face, the one Sapphire marked with a blue X.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
+    greenia:{name:'Greenia', kind:'Nation', nation:'Greenia', tight:true, note:'On the central island of the West Face.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
+    marshia:{name:'Marshia', kind:'Nation', nation:'Marshia', tight:true, note:'On the central island of the West Face.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
+    greeneria:{name:'Greeneria', kind:'Nation', nation:'Greeneria', tight:true, note:'On the central island of the West Face.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
+    baiuland:{name:'Baiuland', kind:'Nation', nation:'Baiuland', tight:true, note:'On the central island of the West Face, along its eastern shore.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
+    tropicia:{name:'Tropicia', kind:'Island', biome:'tropical', note:'A small island in the West Face\u2019s inland sea, toward the Canon side.'},
+    'spike-south':{name:'Spikia \u00b7 the spike', kind:'Nation', nation:'Spikia', biome:'tropical', mark:'bolt', note:'The top corner land of the South Face, marked in blue by Amethyst. Tropical. The top connects again.'},
+    snowia:{name:'Snowia', kind:'Nation', nation:'Snowia', tight:true, note:'On the southern continent, in the middle of the South Face, up on its snowy spine.', chart:'@continent', chartCaption:'The southern continent and its three nations, from Opal\u2019s map'},
+    coldland:{name:'Coldland', kind:'Nation', nation:'Coldland', tight:true, note:'On the southern continent, in the middle of the South Face.', chart:'@continent', chartCaption:'The southern continent and its three nations, from Opal\u2019s map'},
+    beria:{name:'Beria', kind:'Nation', nation:'Beria', tight:true, note:'On the southern continent, in the middle of the South Face.', chart:'@continent', chartCaption:'The southern continent and its three nations, from Opal\u2019s map'},
+    'delta-south':{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation, in the South Face\u2019s right-hand corner, the same corner as the West and Far deltas.'},
+    'mountains-far':{name:'Extreme Mountains', kind:'Biome', biome:'extreme mountains', note:'The \u201cfar\u201d extreme mountains run from the top of the face down its middle to the exact centre, where Mount Celestial stands.'},
+    celestial:{name:'Mount Celestial', kind:'Peak', biome:'extreme mountains', note:'At the exact centre of the Far Face, on the axis the world turns on. The sun never rises or sets here: it is always twilight on Mount Celestial.'},
+    'delta-far':{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation. It shares its corner with the West and South deltas.'},
+    warmia:{name:'Warmia', kind:'Nation', nation:'Warmia', note:'By the Canon side.'},
+    ehia:{name:'Ehia', kind:'Nation', nation:'Ehia', note:'By the Canon side, on the land south of Warmia.'},
+    treeland:{name:'Tree Land', kind:'Nation', nation:'Tree Land', note:'Along the South side. Its coast crosses the edge onto the South Face and joins the southern continent.'}
+  },
+  nations:[
+    {group:'Across the faces', items:[
+      {name:'Spikia', where:'All the top corner lands: the spikes of the Canon, West and South faces', note:'Pronounced sp-\u012bk-i\u0259. Also written Spikya.', places:['spikia-canon','spike','spike-south']},
+      {name:'Wetia', where:'The deltas, one nation, meeting at the one corner where the West, South and Far faces touch', places:['delta','delta-south','delta-far']}]},
+    {group:'Canon Face \u00b7 far side', items:[
+      {name:'Unoooland', where:'jungle', places:['unoooland']},{name:'It\u2019s Hot', where:'sweltering', places:['hotland']},{name:'Rainia', where:'rain', places:['rainia']},{name:'Uohia', where:'forest', places:['uohia']}]},
+    {group:'West Face \u00b7 the central island', items:[
+      {name:'Swampland', places:['swampland']},{name:'Greenia', places:['greenia']},{name:'Marshia', places:['marshia']},{name:'Greeneria', places:['greeneria']},{name:'Baiuland', places:['baiuland']}]},
+    {group:'South Face \u00b7 the southern continent', items:[
+      {name:'Snowia', places:['snowia']},{name:'Coldland', places:['coldland']},{name:'Beria', places:['beria']}]},
+    {group:'Far Face', items:[
+      {name:'Warmia', where:'by the Canon side', places:['warmia']},{name:'Ehia', where:'by the Canon side', places:['ehia']},{name:'Tree Land', where:'along the South side, joined to the southern continent', places:['treeland']}]}
+  ],
+  explorers:[{name:'Sapphire the explorer', desc:'Charted the West Face: the spike, Wetia, the central island and its five nations, and the island of Tropicia.'},
+             {name:'Amethyst the explorer', desc:'Charted the South Face: tropical at the top, the southern continent with Snowia, Coldland and Beria, and Wetia.'},
+             {name:'Obsidian the explorer', desc:'Charted the Far Face: the \u201cfar\u201d extreme mountains, Wetia, and the nations Warmia, Ehia and Tree Land.'},
+             {name:'Opal the explorer', desc:'Went back over the West, South and Far faces and drew the complete maps from the other explorers\u2019 charts. Opal\u2019s maps are the ones on the world now.'}],
+  worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},
+          {id:'inverted',name:'The Inverted Planet',desc:'A 16 \u00d7 16 \u00d7 16 cube, lived in from the inside: an overworld cave biome.'}],
+  star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
+  fields:[{id:'magical',name:'Magical field',effect:'slows light; turns the star\u2019s purple light to sunlight',extent:'all the way around',quote:'Here, the morning moves slower. And light flows like gold.'},
+          {id:'magnetic',name:'Magnetic field',effect:'guides worlds',extent:'all the way around'}],
+  faces:{
+    canon:{name:'The Canon Face', short:'Canon', tagline:'A single world · A thousand stories', blurb:'The first face: eight regions around an inland sea, from the egg-shaped western land to the rooster-crested east. On its far side, between Islandia and the far edge, four nations. Its top corner is part of Spikia.', color:'#f5b64f'},
+    west: {name:'The Western Face', short:'West', tagline:'Uncharted shores · New histories', blurb:'Charted by Sapphire the explorer: the spike at the top, the central island with its five nations, the little island of Tropicia, and Wetia at the corner.', note:'The area at the top of the West Face is connected to the top area of the Canon Face.', color:'#f0a05a', exploring:true, explorer:'Sapphire the explorer', explorerShort:'Sapphire', chart:'{{MAP_WEST}}', chartCaption:'Opal\u2019s complete map of the West, drawn from Sapphire\u2019s chart'},
+    south:{name:'The Southern Face', short:'South', tagline:'Further lands · New histories', blurb:'Charted by Amethyst the explorer: tropical at the top, the southern continent in the middle sea with its three nations, and Wetia in the right-hand corner. The continent is joined to Tree Land across the Far edge; it does not touch the West side.', note:'The top connects again: the top of the South Face is part of Spikia with the other spikes.', color:'#86bbff', exploring:true, explorer:'Amethyst the explorer', explorerShort:'Amethyst', chart:'{{MAP_SOUTH}}', chartCaption:'Opal\u2019s complete map of the South, drawn from Amethyst\u2019s chart'},
+    far:  {name:'The Far Face', short:'Far', tagline:'\u201cFar\u201d extreme mountains', blurb:'The base the world turns on, charted by Obsidian the explorer. The extreme mountains run from the top of the face to its exact centre, Mount Celestial. Warmia and Ehia lie by the Canon side, Tree Land along the South side, Wetia at the corner. The Far Face has no high sun and no deep night.', note:'Mount Celestial is on the axis the world spins on, so the sun never rises or sets there: twilight that never ends.', color:'#9aa0ad', exploring:true, explorer:'Obsidian the explorer', explorerShort:'Obsidian', chart:'{{MAP_FAR}}', chartCaption:'Opal\u2019s complete map of the Far Face, drawn from Obsidian\u2019s chart'}
+  },
+  lore:{
+    whiteland:'Chalk downs and snowfields, the shell-white half of the great egg-shaped land. Villages sit low against the wind, roofs whitewashed to match the ground, and a single river marks the border with Yolkia.',
+    yolkia:'The golden interior: amber grassland, orchards and terraced farms that ripen early in the slow morning light. Yolkia feeds half the Canon Face, and knows it.',
+    islandia:'The island-realm at the heart of the inland sea, one great isle of forest and stone ringed by smaller ones, joined by ferries and bridges. Every road across the face passes through Islandia sooner or later.',
+    headlands:'The rooster’s crest: red cliffs and high terraces at the top of the eastern land. From its towers you can see three seas. Proud, loud, and first to argue.',
+    neckia:'The narrow throat of land between the Headlands and the Feathers. Every road, every rumour and every army passes through Neckia, and its toll-towns have grown rich on the fact.',
+    feathers:'A rumpled range of snow peaks and pine, layered like plumage. Mountain holds, goatherds and deep mines; the Feathers keep their own counsel and their own weather.',
+    llamaland:'Rolling steppe on the sheltered side of the Feathers, herded by patient traders who walk the caravan routes down to Footia and back with the seasons.',
+    footia:'The claw of the eastern land, where the rivers fan out into a warm delta of docks and bridges. Footia is where things arrive, and where things leave.'
+  }
+};
+const CHARTS={island:'{{MAP_ISLAND}}',continent:'{{MAP_CONTINENT}}'};
+Object.values(WORLD.places).forEach(pl=>{if(pl.chart&&pl.chart[0]==='@')pl.chart=CHARTS[pl.chart.slice(1)]});
+const REGIONS = GEO.regions.map(r=>({...r, ...(WORLD.places[r.id]||{}), lore:WORLD.lore[r.id]}));
+const FACE_ORDER = ['canon','west','south','far'];
+const LABEL_SIDE = {whiteland:'left', yolkia:'below', feathers:'left', delta:'below', tropicia:'below', uohia:'left', hotland:'below', 'delta-south':'below', 'delta-far':'below', 'mountains-far':'left', celestial:'below', ehia:'left', treeland:'below', swampland:'left', greenia:'left', marshia:'left', greeneria:'below', snowia:'left', coldland:'left', beria:'below'};
+
+/* ============================== MATH ============================== */
+const TAU = Math.PI*2;
+const v3 = (x,y,z)=>[x,y,z];
+const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], mulS=(a,s)=>[a[0]*s,a[1]*s,a[2]*s];
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const len=a=>Math.hypot(a[0],a[1],a[2]), norm=a=>{const l=len(a)||1;return [a[0]/l,a[1]/l,a[2]/l]};
+const mix=(a,b,t)=>a+(b-a)*t, clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+const wrapPi=a=>((a+Math.PI)%TAU+TAU)%TAU-Math.PI;
+const ident=()=>[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+const mul=(a,b)=>{const o=new Array(16).fill(0);for(let c=0;c<4;c++)for(let r=0;r<4;r++){let s=0;for(let k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s}return o};
+const persp=(fovy,asp,n,f)=>{const q=1/Math.tan(fovy/2),nf=1/(n-f);return[q/asp,0,0,0,0,q,0,0,0,0,(f+n)*nf,-1,0,0,2*f*n*nf,0]};
+const rotY=a=>{const c=Math.cos(a),s=Math.sin(a);return[c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1]};
+const lookAt=(eye,at,up)=>{const f=norm(sub(at,eye)),s=norm(cross(f,up)),u=cross(s,f);return[s[0],u[0],-f[0],0,s[1],u[1],-f[1],0,s[2],u[2],-f[2],0,-dot(s,eye),-dot(u,eye),dot(f,eye),1]};
+const xform=(m,p)=>[m[0]*p[0]+m[4]*p[1]+m[8]*p[2]+m[12],m[1]*p[0]+m[5]*p[1]+m[9]*p[2]+m[13],m[2]*p[0]+m[6]*p[1]+m[10]*p[2]+m[14],m[3]*p[0]+m[7]*p[1]+m[11]*p[2]+m[15]];
+const rotYv=(a,p)=>{const c=Math.cos(a),s=Math.sin(a);return[c*p[0]+s*p[2],p[1],-s*p[0]+c*p[2]]};
+function rayTri(o,d,a,b,c){const e1=sub(b,a),e2=sub(c,a),p=cross(d,e2),det=dot(e1,p);if(Math.abs(det)<1e-9)return null;const inv=1/det,t=sub(o,a),u=dot(t,p)*inv;if(u<0||u>1)return null;const q=cross(t,e1),v=dot(d,q)*inv;if(v<0||u+v>1)return null;const tt=dot(e2,q)*inv;return tt>1e-6?tt:null}
+
+/* ============================== GEOMETRY ============================== */
+const EH = 2*Math.sqrt(2/3);
+const V = [[0,3*EH/4,0],[-1,-EH/4,1/Math.sqrt(3)],[1,-EH/4,1/Math.sqrt(3)],[0,-EH/4,-2/Math.sqrt(3)]];
+const FACES = [
+  {id:'canon', idx:[0,1,2]},
+  {id:'west',  idx:[0,3,1]},
+  {id:'south', idx:[0,2,3]},
+  {id:'far',   idx:[1,3,2]},
+];
+FACES.forEach(f=>{
+  const [a,b,c]=f.idx.map(i=>V[i]);
+  let n=norm(cross(sub(b,a),sub(c,a)));
+  f.center=mulS(add(add(a,b),c),1/3);
+  if(dot(n,f.center)<0)n=mulS(n,-1);
+  f.normal=n;
+  const L=GEO.layout[f.id]; f.uv=[L.apex,L.bl,L.br];
+  f.tex=document.getElementById('tex-'+f.id);
+});
+const faceById=Object.fromEntries(FACES.map(f=>[f.id,f]));
+REGIONS.forEach(r=>{const f=faceById[r.face],[a,b,c]=f.idx.map(i=>V[i]);r.pos=add(add(mulS(a,r.b[0]),mulS(b,r.b[1])),mulS(c,r.b[2]));r.uv=[0,1].map(k=>r.b[0]*f.uv[0][k]+r.b[1]*f.uv[1][k]+r.b[2]*f.uv[2][k]);r.az=Math.atan2(r.pos[0],r.pos[2]);r.el=Math.asin(clamp(f.normal[1],-1,1))});
+const EDGES=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]].map(([a,b])=>({a,b,faces:FACES.filter(f=>f.idx.includes(a)&&f.idx.includes(b))}));
+
+/* ============================== STATE ============================== */
+const DAY_SECONDS=30, YEAR=WORLD.calendar.yearDays, DPM=WORLD.calendar.daysPerMonth, MONTHS=WORLD.calendar.months, SEASONS=WORLD.calendar.seasons, TILT=23.4*Math.PI/180;
+const SUMMER_MID=(4*DPM+7*DPM)/2, RAIN_START=MONTHS.length*DPM; // doy 364 = Restart Day, then January
+function dateParts(day){const d=Math.floor(day),y=Math.floor(d/YEAR)+1,doy=((d%YEAR)+YEAR)%YEAR;const mi=doy>=RAIN_START?-1:Math.floor(doy/DPM),dom=mi<0?0:doy%DPM+1;const season=SEASONS.find(sn=>mi<0?sn.restart:sn.months.includes(mi));return{y,doy,mi,dom,season}}
+const seasonCenters=SEASONS.map(sn=>{const ds=sn.months.flatMap(m=>[m*DPM,m*DPM+DPM-1]);if(sn.restart)ds.push(YEAR-1,YEAR-1+DPM);const lo=Math.min(...ds),hi=Math.max(...ds);return{sn,c:sn.restart?((YEAR-1+YEAR+DPM-1)/2)%YEAR:(lo+hi)/2}}).sort((a,b)=>a.c-b.c);
+function seasonLight(day){const doy=((day%YEAR)+YEAR)%YEAR;const n=seasonCenters.length;for(let i=0;i<n;i++){const a=seasonCenters[i],b=seasonCenters[(i+1)%n];let c0=a.c,c1=b.c;if(c1<=c0)c1+=YEAR;let x=doy;if(x<c0)x+=YEAR;if(x>=c0&&x<=c1){const t=(x-c0)/(c1-c0);return a.sn.light.map((v,k)=>v+(b.sn.light[k]-v)*t)}}return[1,1,1]}
+function rainAmount(day){const doy=((day%YEAR)+YEAR)%YEAR;let x=doy<RAIN_START?doy+YEAR:doy;const a=RAIN_START,b=RAIN_START+1+DPM;if(x<a-1||x>b)return 0;return clamp(Math.min(x-(a-1),b-x),0,1)}
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const state={day:0, playing:!reduceMotion, speed:1, baseYaw:0, pitch:0.36, dist:4.5, follow:false, selected:null, selectedFace:null, fly:null, tab:'World'};
+const SUN0=norm([-0.75,0,0.66]);
+function sunDir(day){const e=0.12+TILT*Math.cos(TAU*(day-SUMMER_MID)/YEAR);return norm([SUN0[0]*Math.cos(e),Math.sin(e),SUN0[2]*Math.cos(e)])}
+const spinAngle=()=>-TAU*state.day;
+const camYaw=()=>state.baseYaw+(state.follow?spinAngle():0);
+
+/* ============================== DOM ============================== */
+const $=id=>document.getElementById(id);
+const app=$('app'),stars=$('stars'),gl=$('gl'),fx=$('fx'),markersEl=$('markers'),codex=$('codex'),toastEl=$('toast');
+const DPR=Math.min(window.devicePixelRatio||1,2);
+let W=1,H=1;
+function resize(){const r=app.getBoundingClientRect();W=Math.max(1,r.width);H=Math.max(1,r.height);for(const c of[stars,gl,fx]){const w=Math.floor(W*DPR),h=Math.floor(H*DPR);if(c.width!==w||c.height!==h){c.width=w;c.height=h}}starData=Array.from({length:Math.min(320,Math.floor(W*H/4200))},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.25+.2,a:Math.random()*.7+.15,p:Math.random()*TAU,c:Math.random()}))}
+let starData=[];
+addEventListener('resize',resize);resize();
+function toast(msg){toastEl.textContent=msg;toastEl.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>toastEl.classList.remove('on'),2200)}
+
+/* ============================== WEBGL ============================== */
+const ctx=gl.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false});
+const errEl=$('error');
+if(!ctx){errEl.style.display='block';errEl.textContent='This browser does not provide WebGL, which Tetra needs to draw the world.';return}
+const VS=`attribute vec3 aPos;attribute vec2 aUV;attribute vec3 aNormal;uniform mat4 uMVP;uniform mat4 uModel;varying vec2 vUV;varying vec3 vWorld;varying vec3 vNormal;
+void main(){vec4 w=uModel*vec4(aPos,1.0);vWorld=w.xyz;vNormal=mat3(uModel)*aNormal;vUV=aUV;gl_Position=uMVP*vec4(aPos,1.0);}`;
+const FS=`precision mediump float;uniform sampler2D uTex;uniform vec3 uSun;uniform float uTime;uniform float uSpinDir;uniform float uAmbient;uniform float uHighlight;uniform vec3 uSunColor;uniform float uFar;
+varying vec2 vUV;varying vec3 vWorld;varying vec3 vNormal;
+void main(){
+  vec3 tex=texture2D(uTex,vUV).rgb;
+  vec3 n=normalize(mix(normalize(vNormal),normalize(vWorld),0.82));
+  float nl=dot(n,uSun);
+  if(uFar>0.5){nl=clamp(nl,-0.21,0.34);}
+  vec3 vel=normalize(vec3(vWorld.z,0.0,-vWorld.x))*uSpinDir;
+  float morning=smoothstep(-0.25,0.25,dot(vel,uSun));
+  float width=mix(0.16,0.50,morning);
+  float day=smoothstep(-0.35*width,width,nl);
+  float band=exp(-pow(nl/width,2.0)*1.6);
+  float shimmer=0.85+0.15*sin(uTime*0.6+vWorld.y*6.0+vWorld.x*3.0);
+  vec3 lit=tex*mix(vec3(uAmbient),uSunColor,day);
+  lit+=vec3(1.0,0.68,0.22)*band*morning*0.30*shimmer;
+  lit+=vec3(0.95,0.45,0.25)*band*(1.0-morning)*0.14;
+  lit+=vec3(0.07,0.11,0.24)*(1.0-day)*0.42;
+  lit+=vec3(0.18,0.14,0.06)*uHighlight;
+  gl_FragColor=vec4(lit,1.0);
+}`;
+function shader(t,src){const s=ctx.createShader(t);ctx.shaderSource(s,src);ctx.compileShader(s);if(!ctx.getShaderParameter(s,ctx.COMPILE_STATUS))throw new Error(ctx.getShaderInfoLog(s));return s}
+let prog;try{prog=ctx.createProgram();ctx.attachShader(prog,shader(ctx.VERTEX_SHADER,VS));ctx.attachShader(prog,shader(ctx.FRAGMENT_SHADER,FS));ctx.linkProgram(prog);if(!ctx.getProgramParameter(prog,ctx.LINK_STATUS))throw new Error(ctx.getProgramInfoLog(prog))}
+catch(e){errEl.style.display='block';errEl.textContent='The 3D renderer could not start: '+e.message;return}
+const loc={p:ctx.getAttribLocation(prog,'aPos'),uv:ctx.getAttribLocation(prog,'aUV'),n:ctx.getAttribLocation(prog,'aNormal'),mvp:ctx.getUniformLocation(prog,'uMVP'),model:ctx.getUniformLocation(prog,'uModel'),tex:ctx.getUniformLocation(prog,'uTex'),sun:ctx.getUniformLocation(prog,'uSun'),time:ctx.getUniformLocation(prog,'uTime'),spin:ctx.getUniformLocation(prog,'uSpinDir'),amb:ctx.getUniformLocation(prog,'uAmbient'),hi:ctx.getUniformLocation(prog,'uHighlight'),sunc:ctx.getUniformLocation(prog,'uSunColor'),far:ctx.getUniformLocation(prog,'uFar')};
+const P=[],UV=[],N=[];
+FACES.forEach(f=>{f.idx.forEach((vi,k)=>{P.push(...V[vi]);UV.push(...f.uv[k]);N.push(...f.normal)})});
+const buf=arr=>{const b=ctx.createBuffer();ctx.bindBuffer(ctx.ARRAY_BUFFER,b);ctx.bufferData(ctx.ARRAY_BUFFER,new Float32Array(arr),ctx.STATIC_DRAW);return b};
+const pb=buf(P),ub=buf(UV),nb=buf(N);
+const aniso=ctx.getExtension('EXT_texture_filter_anisotropic')||ctx.getExtension('WEBKIT_EXT_texture_filter_anisotropic');
+function makeTex(img){const t=ctx.createTexture();ctx.bindTexture(ctx.TEXTURE_2D,t);ctx.pixelStorei(ctx.UNPACK_FLIP_Y_WEBGL,false);ctx.texImage2D(ctx.TEXTURE_2D,0,ctx.RGB,ctx.RGB,ctx.UNSIGNED_BYTE,img);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_WRAP_S,ctx.CLAMP_TO_EDGE);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_WRAP_T,ctx.CLAMP_TO_EDGE);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_MIN_FILTER,ctx.LINEAR_MIPMAP_LINEAR);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_MAG_FILTER,ctx.LINEAR);ctx.generateMipmap(ctx.TEXTURE_2D);if(aniso)ctx.texParameterf(ctx.TEXTURE_2D,aniso.TEXTURE_MAX_ANISOTROPY_EXT,Math.min(8,ctx.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)||1));return t}
+let texReady=false;
+Promise.all(FACES.map(f=>new Promise(res=>{const i=f.tex;if(i.complete&&i.naturalWidth)res();else{i.addEventListener('load',res,{once:true});i.addEventListener('error',res,{once:true})}}))).then(()=>{FACES.forEach(f=>{if(f.tex.naturalWidth)f.texture=makeTex(f.tex)});texReady=FACES.every(f=>f.texture)});
+const attrib=(b,l,n)=>{ctx.bindBuffer(ctx.ARRAY_BUFFER,b);ctx.enableVertexAttribArray(l);ctx.vertexAttribPointer(l,n,ctx.FLOAT,false,0,0)};
+
+/* ============================== CAMERA ============================== */
+const FOV=38*Math.PI/180, TARGET=[0,0.26,0];
+let shift=0,shiftTarget=0,vshift=0,vshiftTarget=0;
+let cam={eye:[0,0,5],f:[0,0,-1],s:[1,0,0],u:[0,1,0],view:ident(),proj:ident(),vp:ident(),mvp:ident(),model:ident(),aspect:1};
+function updateCamera(){const yaw=camYaw(),p=state.pitch,d=state.dist*Math.max(1,0.85*H/W);const eye=[TARGET[0]+d*Math.cos(p)*Math.sin(yaw),TARGET[1]+d*Math.sin(p),TARGET[2]+d*Math.cos(p)*Math.cos(yaw)];
+  cam.eye=eye;cam.f=norm(sub(TARGET,eye));cam.s=norm(cross(cam.f,[0,1,0]));cam.u=cross(cam.s,cam.f);cam.aspect=W/H;
+  cam.view=lookAt(eye,TARGET,[0,1,0]);cam.proj=persp(FOV,cam.aspect,0.1,100);cam.proj[8]+=shift;cam.proj[9]-=vshift;cam.vp=mul(cam.proj,cam.view);cam.model=rotY(spinAngle());cam.mvp=mul(cam.vp,cam.model)}
+function project(m,p){const c=xform(m,p);if(c[3]<=1e-5)return null;return{x:(c[0]/c[3]*0.5+0.5)*W,y:(0.5-c[1]/c[3]*0.5)*H,z:c[2]/c[3],w:c[3]}}
+function screenRay(px,py){const t=Math.tan(FOV/2),x=(px/W)*2-1+shift,y=1-(py/H)*2-vshift;return norm(add(add(cam.f,mulS(cam.s,x*t*cam.aspect)),mulS(cam.u,y*t)))}
+let worldV=[],worldFaces=[];
+function updateWorld(){const a=spinAngle();worldV=V.map(v=>rotYv(a,v));worldFaces=FACES.map(f=>({f,tri:f.idx.map(i=>worldV[i]),n:rotYv(a,f.normal),c:rotYv(a,f.center)}))}
+const facing=wf=>dot(wf.n,norm(sub(cam.eye,wf.c)));
+function occluded(p){const d=sub(p,cam.eye),L=len(d),dir=mulS(d,1/L);for(const wf of worldFaces){const t=rayTri(cam.eye,dir,wf.tri[0],wf.tri[1],wf.tri[2]);if(t!==null&&t<L-1e-4)return true}return false}
+function pickFace(px,py){const d=screenRay(px,py);let best=null;for(const wf of worldFaces){const t=rayTri(cam.eye,d,wf.tri[0],wf.tri[1],wf.tri[2]);if(t!==null&&(best===null||t<best.t))best={t,f:wf.f}}return best?best.f:null}
+function activeFace(){let best=null,bv=-9;for(const wf of worldFaces){const v=facing(wf);if(v>bv){bv=v;best=wf.f}}return best}
+
+/* ============================== SUN / PHASES ============================== */
+function regionLight(r,sun){const a=spinAngle(),pw=rotYv(a,r.pos),n=norm(add(mulS(rotYv(a,faceById[r.face].normal),0.18),mulS(norm(pw),0.82)));const nl=dot(n,sun);const vel=mulS(norm([pw[2],0,-pw[0]]),-1);return{nl,toward:dot(vel,sun)}}
+function phaseFor(r,sun){const {nl,toward}=regionLight(r,sun);
+  if(r.id==='celestial')return{k:'dawn',t:'Twilight, always',d:'Mount Celestial sits on the axis the world turns on. The sun never rises or sets here; the light only shifts a little with the seasons.'};
+  if(r.face==='far')return phaseOf(clamp(nl,-0.21,0.34),toward);   // the Far Face has no high sun and no deep night
+  return phaseOf(nl,toward)}
+function phaseOf(nl,toward){const m=toward>0;
+  if(nl>=0.72)return{k:'sun',t:'High sun',d:'The full light of day.'};
+  if(nl>=0.35)return m?{k:'sun',t:'Morning',d:'The sun climbing, the gold thinning to white.'}:{k:'sun',t:'Afternoon',d:'The long light before the turn.'};
+  if(nl>=0.05)return m?{k:'dawn',t:'The slow morning',d:'Light held back by the magical field, arriving in gold.'}:{k:'dusk',t:'Late light',d:'Shadows lengthening toward the edge.'};
+  if(nl>=-0.22)return m?{k:'dawn',t:'First light',d:'The terminator is crossing here now.'}:{k:'dusk',t:'Dusk',d:'The last of the day going over the edge.'};
+  if(nl>=-0.55)return m?{k:'night',t:'Before dawn',d:'Dark still, but the world is turning toward the sun.'}:{k:'night',t:'Evening',d:'Night settling in behind the day.'};
+  return{k:'night',t:'Deep night',d:'The far side of the turn.'}}
+
+/* ============================== OVERLAY (2D) ============================== */
+const sc=stars.getContext('2d'),fc=fx.getContext('2d');
+function drawStars(t,sun){sc.setTransform(DPR,0,0,DPR,0,0);sc.clearRect(0,0,W,H);
+  for(const s of starData){const a=s.a*(.8+.2*Math.sin(t*.0005+s.p));sc.fillStyle=s.c>.85?`rgba(255,226,180,${a})`:s.c<.12?`rgba(190,214,255,${a})`:`rgba(232,238,255,${a})`;sc.beginPath();sc.arc(s.x,s.y,s.r,0,TAU);sc.fill()}
+  let sp=project(cam.vp,mulS(sun,60));const size=Math.max(W,H)*0.55;
+  if(!sp){const dx=dot(sun,cam.s),dy=-dot(sun,cam.u),l=Math.hypot(dx,dy);if(l>0.05)sp={x:W/2+dx/l*0.95*Math.max(W,H),y:H/2+dy/l*0.95*Math.max(W,H)}}
+  if(sp){const g=sc.createRadialGradient(sp.x,sp.y,0,sp.x,sp.y,size);g.addColorStop(0,'rgba(246,232,255,1)');g.addColorStop(.022,'rgba(214,170,255,1)');g.addColorStop(.06,'rgba(140,60,210,.9)');g.addColorStop(.18,'rgba(96,30,160,.36)');g.addColorStop(.45,'rgba(70,20,130,.10)');g.addColorStop(1,'rgba(60,20,120,0)');sc.fillStyle=g;sc.fillRect(sp.x-size,sp.y-size,size*2,size*2)}
+  let mp=project(cam.vp,mulS(sun,-60));
+  if(!mp){const dx=-dot(sun,cam.s),dy=dot(sun,cam.u),l=Math.hypot(dx,dy);if(l>0.05)mp={x:W/2+dx/l*0.95*Math.max(W,H),y:H/2+dy/l*0.95*Math.max(W,H)}}
+  if(mp){const g=sc.createRadialGradient(mp.x,mp.y,0,mp.x,mp.y,size*1.1);g.addColorStop(0,'rgba(90,150,255,.22)');g.addColorStop(.5,'rgba(70,120,255,.06)');g.addColorStop(1,'rgba(70,120,255,0)');sc.fillStyle=g;sc.fillRect(mp.x-size*1.1,mp.y-size*1.1,size*2.2,size*2.2)}}
+function ringPoints(sun,side,k,count){
+  // both fields go all the way around the world: full rings. Gold rings swing through the sun line (the light they slow and
+  // recolour comes in along it); blue rings are tipped around the world's axis, the way a magnetic field wraps a planet.
+  let n;if(side>0){const ax=Math.abs(sun[1])<.9?[0,1,0]:[1,0,0];const u=norm(cross(sun,ax)),w2=cross(sun,u);const a=(k/count)*Math.PI+0.35;n=norm(add(mulS(u,Math.cos(a)),mulS(w2,Math.sin(a))))}
+  else{const a=(k/count)*TAU+0.6,tilt=0.52;n=norm([Math.sin(tilt)*Math.cos(a),Math.cos(tilt),Math.sin(tilt)*Math.sin(a)])}
+  const ax2=Math.abs(n[1])<.9?[0,1,0]:[1,0,0];const p=norm(cross(n,ax2)),q=cross(n,p);const R=(side>0?1.78:1.86)+0.2*k;const pts=[];
+  for(let i=0;i<=96;i++){const t=i/96*TAU;pts.push(add(mulS(p,R*Math.cos(t)),mulS(q,R*Math.sin(t))))}return pts}
+const arcPoints=ringPoints;
+function strokeArc(pts,color,alpha,width,glow){const runs=[];let run=null;for(let i=0;i<pts.length;i++){const s=project(cam.vp,pts[i]);const occ=s?occluded(pts[i]):null;if(!s||(run&&run.occ!==occ)){if(run&&run.p.length>1)runs.push(run);run=s?{occ,p:[s]}:null;if(!s)continue;if(runs.length){const prev=runs[runs.length-1].p;run.p.unshift(prev[prev.length-1])}}else{if(!run)run={occ,p:[]};run.p.push(s)}}if(run&&run.p.length>1)runs.push(run);
+  fc.strokeStyle=color;fc.lineWidth=width;fc.shadowColor=color;for(const r of runs){fc.globalAlpha=alpha*(r.occ?0.16:1);fc.shadowBlur=r.occ?0:glow;fc.beginPath();fc.moveTo(r.p[0].x,r.p[0].y);for(let i=1;i<r.p.length;i++)fc.lineTo(r.p[i].x,r.p[i].y);fc.stroke()}fc.globalAlpha=1;fc.shadowBlur=0}
+function drawOverlay(t,sun){fc.setTransform(DPR,0,0,DPR,0,0);fc.clearRect(0,0,W,H);fc.lineCap='round';
+  const gold='rgba(255,196,96,1)',blue='rgba(110,170,255,1)';
+  // field rings, all the way around (fixed relative to the sun, not the spinning world)
+  const glow=W<820?0:10;for(let k=0;k<3;k++){strokeArc(arcPoints(sun,1,k,3),gold,0.26+0.06*Math.sin(t*.0007+k),1.1,glow);strokeArc(arcPoints(sun,-1,k,3),blue,0.22+0.06*Math.sin(t*.0009+k),1.0,glow)}
+  // particles riding the arcs: gold slow (light slowed), blue quicker
+  if(!reduceMotion)for(let k=0;k<3;k++){for(const side of[1,-1]){const pts=arcPoints(sun,side,k,3);const speed=side>0?0.045:0.16;for(let j=0;j<3;j++){const u=((t*.001*speed+j/3+k*.17)%1);const i=u*(pts.length-1),i0=Math.floor(i),f=i-i0;const p=add(mulS(pts[i0],1-f),mulS(pts[Math.min(i0+1,pts.length-1)],f));const s=project(cam.vp,p);if(!s)continue;const occ=occluded(p);fc.globalAlpha=occ?0.15:0.9;fc.fillStyle=side>0?'rgba(255,224,150,1)':'rgba(170,210,255,1)';fc.shadowBlur=occ?0:12;fc.shadowColor=side>0?gold:blue;fc.beginPath();fc.arc(s.x,s.y,side>0?2.4:1.8,0,TAU);fc.fill()}}}
+  fc.globalAlpha=1;fc.shadowBlur=0;
+  // edges: colour by sun exposure, dim when hidden behind the world
+  const list=EDGES.map(e=>{const a=worldV[e.a],b=worldV[e.b],mid=mulS(add(a,b),.5);const vis=e.faces.some(f=>facing(worldFaces[FACES.indexOf(f)])>0);const s=dot(norm(mid),sun);return{a:project(cam.vp,a),b:project(cam.vp,b),vis,s,e}}).filter(x=>x.a&&x.b).sort((x,y)=>(x.vis?1:0)-(y.vis?1:0));
+  for(const x of list){const g=smooth(-0.35,0.35,x.s);const col=`rgba(${Math.round(mix(110,255,g))},${Math.round(mix(170,200,g))},${Math.round(mix(255,110,g))},1)`;const hl=state.selectedFace&&x.e.faces.some(f=>f.id===state.selectedFace);
+    fc.strokeStyle=col;fc.lineWidth=x.vis?(hl?2.2:1.5):1;fc.globalAlpha=x.vis?0.92:0.16;fc.shadowBlur=x.vis?16:0;fc.shadowColor=col;fc.beginPath();fc.moveTo(x.a.x,x.a.y);fc.lineTo(x.b.x,x.b.y);fc.stroke()}
+  fc.globalAlpha=1;fc.shadowBlur=0}
+
+/* ============================== RAIN (rain season, Canon face) ============================== */
+const CANON=faceById.canon,CV=CANON.idx.map(i=>V[i]),DOWN=norm(sub(mulS(add(CV[1],CV[2]),.5),CV[0]));
+function randInTri(){let a=Math.random(),b=Math.random();if(a+b>1){a=1-a;b=1-b}return add(add(mulS(CV[0],1-a-b),mulS(CV[1],a)),mulS(CV[2],b))}
+function inTri(p){const e0=sub(CV[1],CV[0]),e1=sub(CV[2],CV[0]),q=sub(p,CV[0]);const d00=dot(e0,e0),d01=dot(e0,e1),d11=dot(e1,e1),d20=dot(q,e0),d21=dot(q,e1),den=d00*d11-d01*d01;const v=(d11*d20-d01*d21)/den,w=(d00*d21-d01*d20)/den;return v>=0&&w>=0&&v+w<=1}
+const drops=Array.from({length:150},()=>({p:randInTri(),s:0.55+Math.random()*0.5,l:0.03+Math.random()*0.03}));
+function drawRain(dt,amount){if(amount<=0)return;const wf=worldFaces[0];if(facing(wf)<0.12)return;const a=spinAngle();fc.strokeStyle='rgba(200,218,245,1)';fc.lineWidth=1;fc.lineCap='round';fc.globalAlpha=0.42*amount;fc.beginPath();
+  for(const d of drops){d.p=add(d.p,mulS(DOWN,d.s*dt));if(!inTri(d.p)){d.p=randInTri();d.p=add(d.p,mulS(DOWN,-Math.random()*0.05))}const a1=project(cam.vp,rotYv(a,d.p)),a2=project(cam.vp,rotYv(a,add(d.p,mulS(DOWN,d.l))));if(a1&&a2){fc.moveTo(a1.x,a1.y);fc.lineTo(a2.x,a2.y)}}
+  fc.stroke();fc.globalAlpha=1}
+
+/* ============================== MARKERS ============================== */
+const markerEls=new Map();
+function buildMarkers(){markersEl.innerHTML='';REGIONS.forEach(r=>{const b=document.createElement('button');b.className='marker face-'+r.face+(LABEL_SIDE[r.id]?' lbl-'+LABEL_SIDE[r.id]:'')+(r.mark==='x'?' mark-x':r.mark==='bolt'?' mark-bolt':'')+(r.tight?' tight':'');b.type='button';b.dataset.id=r.id;b.setAttribute('aria-label',r.name);b.innerHTML='<i class="dot"></i><span class="lbl"></span>';b.querySelector('.lbl').textContent=r.name;b.addEventListener('click',ev=>{ev.stopPropagation();selectRegion(r.id)});markersEl.appendChild(b);markerEls.set(r.id,b)});
+  FACE_ORDER.filter(id=>WORLD.faces[id].unwritten).forEach(id=>{const u=document.createElement('button');u.className='marker unwritten';u.type='button';u.innerHTML='<i class="dot"></i><span class="lbl"></span>';u.querySelector('.lbl').textContent='Still unwritten';u.addEventListener('click',ev=>{ev.stopPropagation();selectFace(id,true)});markersEl.appendChild(u);markerEls.set('__'+id,u)})}
+function updateMarkers(){const narrow=W<820;const act=activeFace();
+  const place=(el,pos,faceId,show)=>{const wf=worldFaces[FACES.indexOf(faceById[faceId])];const pw=rotYv(spinAngle(),pos);const fv=dot(wf.n,norm(sub(cam.eye,pw)));const s=project(cam.vp,pw);if(!s||fv<0.12){el.style.opacity='0';el.style.pointerEvents='none';return}
+    el.style.transform=`translate(${s.x.toFixed(1)}px,${s.y.toFixed(1)}px)`;el.style.opacity=String(clamp((fv-0.12)/0.3,0,1));el.style.pointerEvents='auto';el.style.zIndex=String(Math.round(1000-s.z*100));el.classList.toggle('show-label',show(fv))};
+  REGIONS.forEach(r=>place(markerEls.get(r.id),r.pos,r.face,fv=>narrow?false:(fv>0.5)));
+  FACE_ORDER.filter(id=>WORLD.faces[id].unwritten).forEach(id=>{const f=faceById[id];place(markerEls.get('__'+id),add(f.center,mulS(f.normal,0.01)),id,fv=>fv>0.3)});
+  REGIONS.forEach(r=>markerEls.get(r.id).classList.toggle('selected',state.selected===r.id))}
+
+/* ============================== CODEX UI ============================== */
+const facelist=$('facelist'),reggroups=$('reggroups'),placeBody=$('placeBody'),facingEl=$('facing');
+const loreKey='tetra.lore.v1';let loreEdits={};try{loreEdits=JSON.parse(localStorage.getItem(loreKey)||'{}')||{}}catch(e){loreEdits={}}
+const loreOf=id=>(loreEdits[id]??WORLD.lore[id]??'');
+function renderFaceList(){facelist.innerHTML='';FACE_ORDER.forEach(id=>{const f=WORLD.faces[id],n=REGIONS.filter(r=>r.face===id).length;const li=document.createElement('li');const b=document.createElement('button');b.type='button';b.innerHTML=`<i style="background:${f.color};color:${f.color}"></i><span><b></b><br><small class="tl"></small></span><small></small>`;b.querySelector('b').textContent=f.name;b.querySelector('.tl').textContent=f.tagline;b.lastElementChild.textContent=f.exploring?`${n} places · ${f.explorerShort}`:n?`${n} regions`:'still unwritten';b.addEventListener('click',()=>selectFace(id,true));li.appendChild(b);facelist.appendChild(li)})}
+const phaseCache=new Map();
+function renderRegionGroups(){reggroups.innerHTML='';FACE_ORDER.forEach(id=>{const rs=REGIONS.filter(r=>r.face===id);const f=WORLD.faces[id];if(!rs.length){const g=document.createElement('div');g.className='group';g.innerHTML=`<h3><span></span><button type="button" class="ghost">Turn to face</button></h3><p class="note" style="margin-top:0"></p>`;g.querySelector('span').textContent=f.name;g.querySelector('p').textContent=f.tagline+'. No places written yet.';g.querySelector('button').addEventListener('click',()=>selectFace(id,true));reggroups.appendChild(g);return}const g=document.createElement('div');g.className='group';g.innerHTML=`<h3><span></span><button type="button" class="ghost">Turn to face</button></h3>${f.exploring?'<p class="sub"></p>':''}<ul class="reglist"></ul>`;g.querySelector('span').textContent=f.name;if(f.exploring)g.querySelector('.sub').textContent='Charted by '+f.explorer;g.querySelector('button').addEventListener('click',()=>selectFace(id,true));const ul=g.querySelector('ul');rs.forEach(r=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';b.dataset.id=r.id;b.innerHTML=`<i style="background:${f.color};color:${f.color}"></i><span></span><small><i></i><em></em></small>`;b.querySelector('span').textContent=r.name;if(r.unsure){const u=document.createElement('i');u.className='unsure';u.textContent='spelling?';b.querySelector('span').appendChild(u)}b.querySelector('em').style.fontStyle='normal';b.addEventListener('click',()=>selectRegion(r.id));li.appendChild(b);ul.appendChild(li)});reggroups.appendChild(g)})}
+function renderWorlds(){const ul=$('worlds');ul.innerHTML='';WORLD.worlds.forEach(w=>{const li=document.createElement('li');li.innerHTML=`<i class="${w.id}"></i><div><b></b><span></span></div>`;li.querySelector('b').textContent=w.name;li.querySelector('span').textContent=w.desc;ul.appendChild(li)})}
+function renderNations(){const ul=$('nations');ul.innerHTML='';WORLD.nations.forEach(gr=>{const hd=document.createElement('li');hd.className='hd';hd.textContent=gr.group;ul.appendChild(hd);gr.items.forEach(n=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';const first=REGIONS.find(r=>r.id===n.places[0]);const col=first?WORLD.faces[first.face].color:'#f5b64f';b.innerHTML='<i></i><div><b></b><span></span></div>';b.querySelector('i').style.setProperty('--c',col);b.querySelector('b').textContent=n.name;if(n.unsure){const u=document.createElement('i');u.className='unsure';u.textContent='spelling?';b.querySelector('b').appendChild(u)}b.querySelector('span').textContent=[n.where,n.note].filter(Boolean).join(' \u00b7 ');b.addEventListener('click',()=>selectRegion(n.places[0]));li.appendChild(b);ul.appendChild(li)})})}
+function renderExplorers(){const ul=$('explorers');ul.innerHTML='';WORLD.explorers.forEach(e=>{const li=document.createElement('li');li.innerHTML='<i class="sapphire"></i><div><b></b><span></span></div>';li.querySelector('b').textContent=e.name;li.querySelector('span').textContent=e.desc;ul.appendChild(li)})}
+function renderYear(){const strip=$('yearStrip');strip.innerHTML='';const cells=MONTHS.map((m,i)=>({label:m.slice(0,3),mi:i,sn:SEASONS.find(sn=>sn.months.includes(i))}));cells.push({label:'R',mi:-1,sn:SEASONS.find(sn=>sn.restart),r:true});
+  cells.forEach(c=>{const d=document.createElement('div');d.className='m'+(c.r?' r':'');d.dataset.mi=String(c.mi);d.style.setProperty('--c',c.sn.color);d.textContent=c.label;d.title=c.r?'The Restart Day':MONTHS[c.mi];strip.appendChild(d)});
+  const ul=$('seasonList');ul.innerHTML='';SEASONS.forEach(sn=>{const li=document.createElement('li');li.dataset.id=sn.id;li.style.setProperty('--c',sn.color);const names=sn.months.map(i=>MONTHS[i]);if(sn.restart)names.push('the Restart Day');li.innerHTML='<i></i><div><b></b> <span></span></div>';li.querySelector('b').textContent=sn.name;li.querySelector('span').textContent='· '+names.join(', ');ul.appendChild(li)})}
+let yearKey='';
+function updateYear(){const dp=dateParts(state.day);const key=dp.mi+':'+dp.dom;if(key===yearKey)return;yearKey=key;$('yearStrip').querySelectorAll('.m').forEach(el=>{const on=Number(el.dataset.mi)===dp.mi;el.classList.toggle('now',on);if(on)el.style.setProperty('--x',dp.mi<0?'50%':((dp.dom-0.5)/DPM*100).toFixed(1)+'%')});$('seasonList').querySelectorAll('li').forEach(li=>li.classList.toggle('now',li.dataset.id===dp.season.id))}
+function updateRegionPhases(sun){const els=reggroups.querySelectorAll('button[data-id]');els.forEach(b=>{const r=REGIONS.find(x=>x.id===b.dataset.id);const ph=phaseFor(r,sun);const key=ph.t;if(phaseCache.get(r.id)!==key){phaseCache.set(r.id,key);b.querySelector('em').textContent=ph.t;b.querySelector('small i').className=ph.k}b.classList.toggle('active',state.selected===r.id)})}
+let placeRendered=null,editing=false;
+function renderPlace(){const id=state.selected;const faceId=state.selectedFace;placeRendered=id||('face:'+faceId);editing=false;
+  if(id){const r=REGIONS.find(x=>x.id===id),f=WORLD.faces[r.face];const edited=Object.prototype.hasOwnProperty.call(loreEdits,id)&&loreEdits[id]!==WORLD.lore[id];
+    placeBody.innerHTML=`<p class="eyebrow"></p><h2><span class="nm"></span><small class="fc"></small></h2><p class="tagline"></p>
+      <div class="phase"><i></i><div><b></b><small></small></div></div>
+      <dl class="kv meta"></dl><p class="note pnote" hidden></p><ul class="kingdoms" hidden></ul><figure class="chart" hidden><img alt=""><figcaption></figcaption></figure>
+      <div class="lore"><span class="chip"><span class="chiptext"></span></span><p class="text"></p><div class="edit" hidden><textarea id="loreEdit" aria-label="Lore"></textarea></div>
+      <div class="actions"><button type="button" class="btnEdit">Edit lore</button><button type="button" class="btnSave primary" hidden>Save</button><button type="button" class="btnCancel ghost" hidden>Cancel</button><button type="button" class="btnRestore ghost" ${edited?'':'hidden'}>Restore draft</button><button type="button" class="btnFollow ghost"></button></div>
+      <p class="note">Lore edits are kept in this browser. Copy the world JSON from the Regions tab to keep them for good.</p></div>`;
+    placeBody.querySelector('.eyebrow').textContent=(r.kind||'Region')+' · '+f.short+' Face';placeBody.querySelector('.nm').textContent=r.name;placeBody.querySelector('.fc').textContent=f.name;placeBody.querySelector('.tagline').textContent=f.tagline;
+    const meta=placeBody.querySelector('.meta');const rows=[];if(r.biome)rows.push(['Biome',r.biome]);if(r.nation&&r.nation!==r.name)rows.push(['Nation',r.nation]);if(f.exploring)rows.push(['Charted by',f.explorer],['Mapped by','Opal the explorer']);if(r.nations)rows.push(['Nations',String(r.nations.length)]);
+    if(rows.length){rows.forEach(([k,v])=>{const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=k;dd.textContent=v;meta.append(dt,dd)})}else meta.hidden=true;
+    if(r.note){const pn=placeBody.querySelector('.pnote');pn.hidden=false;pn.textContent=r.note}
+    if(r.nations){const ul=placeBody.querySelector('.kingdoms');ul.hidden=false;r.nations.forEach(k=>{const li=document.createElement('li');li.innerHTML='<b></b><span></span>';li.querySelector('b').textContent=k.name;if(k.unsure){const u=document.createElement('i');u.className='unsure';u.textContent='spelling?';li.querySelector('b').appendChild(u)}li.querySelector('span').textContent=k.biome||'';ul.appendChild(li)})}
+    if(r.unsure){const u=document.createElement('i');u.className='unsure';u.textContent='spelling?';placeBody.querySelector('.nm').appendChild(u)}
+    if(r.chart){const fg=placeBody.querySelector('.chart');fg.hidden=false;fg.querySelector('img').src=r.chart;fg.querySelector('figcaption').textContent=r.chartCaption||''}
+    const hasLore=!!loreOf(id);placeBody.querySelector('.chiptext').textContent=edited?'Edited':hasLore?'Draft lore':'Nothing written yet';placeBody.querySelector('.chip').classList.toggle('edited',edited);placeBody.querySelector('.text').textContent=loreOf(id)||'';
+    const ta=placeBody.querySelector('#loreEdit'),bEdit=placeBody.querySelector('.btnEdit'),bSave=placeBody.querySelector('.btnSave'),bCancel=placeBody.querySelector('.btnCancel'),bRestore=placeBody.querySelector('.btnRestore'),bFollow=placeBody.querySelector('.btnFollow');
+    const setEditing=on=>{editing=on;placeBody.querySelector('.edit').hidden=!on;placeBody.querySelector('.text').hidden=on;bEdit.hidden=on;bSave.hidden=!on;bCancel.hidden=!on;if(on){ta.value=loreOf(id)||'';ta.focus()}};
+    bEdit.addEventListener('click',()=>setEditing(true));bCancel.addEventListener('click',()=>setEditing(false));
+    bSave.addEventListener('click',()=>{const v=ta.value.trim();if(v===(WORLD.lore[id]||''))delete loreEdits[id];else loreEdits[id]=v;try{localStorage.setItem(loreKey,JSON.stringify(loreEdits))}catch(e){}toast('Saved in this browser');renderPlace();refreshJson()});
+    bRestore.addEventListener('click',()=>{delete loreEdits[id];try{localStorage.setItem(loreKey,JSON.stringify(loreEdits))}catch(e){}renderPlace();refreshJson()});
+    bFollow.textContent=state.follow?'Release view':'Follow this place';bFollow.addEventListener('click',()=>{if(state.follow)release();else{setFollow(true);flyTo(r.az,r.el)}renderPlace()});
+  }else if(faceId){const f=WORLD.faces[faceId],rs=REGIONS.filter(r=>r.face===faceId);
+    placeBody.innerHTML=`<p class="eyebrow">Face</p><h2><span class="nm"></span><small class="tl"></small></h2><p class="tagline"></p><p class="note fnote" hidden></p><figure class="chart" hidden><img alt=""><figcaption></figcaption></figure><div class="sect"><ul class="reglist"></ul></div><div class="actions"><button type="button" class="btnFollow ghost"></button></div>`;
+    placeBody.querySelector('.nm').textContent=f.name;placeBody.querySelector('.tl').textContent=f.tagline;placeBody.querySelector('.tagline').textContent=f.blurb;
+    if(f.note){const fn=placeBody.querySelector('.fnote');fn.hidden=false;fn.textContent=f.note}
+    if(f.chart){const fg=placeBody.querySelector('.chart');fg.hidden=false;fg.querySelector('img').src=f.chart;fg.querySelector('figcaption').textContent=f.chartCaption||''}
+    if(f.chart2){const fg=placeBody.querySelector('.chart');const fg2=fg.cloneNode(true);fg2.hidden=false;fg2.querySelector('img').src=f.chart2;fg2.querySelector('figcaption').textContent=f.chart2Caption||'';fg.after(fg2)}
+    const ul=placeBody.querySelector('ul');if(!rs.length){const li=document.createElement('li');li.innerHTML='<p class="note"></p>';li.querySelector('p').textContent='No places written for this face yet.';ul.appendChild(li)}
+    rs.forEach(r=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';b.innerHTML=`<i style="background:${f.color};color:${f.color}"></i><span></span><small></small>`;b.querySelector('span').textContent=r.name;b.addEventListener('click',()=>selectRegion(r.id));li.appendChild(b);ul.appendChild(li)});
+    const bFollow=placeBody.querySelector('.btnFollow');bFollow.textContent=state.follow?'Release view':'Follow this face';bFollow.addEventListener('click',()=>{if(state.follow)release();else{setFollow(true);const fo=faceById[faceId];flyTo(faceYaw(fo),faceId==='far'?-1.1:Math.asin(clamp(fo.normal[1],-1,1)))}renderPlace()});
+  }else{placeBody.innerHTML='<p class="note">Tap a region on the world, or pick one from the Regions tab.</p>'}}
+function updatePlacePhase(sun){if(!state.selected||editing)return;const r=REGIONS.find(x=>x.id===state.selected);const el=placeBody.querySelector('.phase');if(!el)return;const ph=phaseFor(r,sun);if(el.dataset.k!==ph.t){el.dataset.k=ph.t;el.querySelector('i').className=ph.k;el.querySelector('b').textContent=ph.t;el.querySelector('small').textContent=ph.d}}
+const tabs=[['tabWorld','paneWorld'],['tabRegions','paneRegions'],['tabPlace','panePlace']];
+function showTab(id){tabs.forEach(([t,p])=>{const on=t===id;$(t).setAttribute('aria-selected',String(on));$(p).hidden=!on});state.tab=id}
+tabs.forEach(([t])=>$(t).addEventListener('click',()=>{showTab(t);openCodex(true)}));
+function openCodex(on){codex.classList.toggle('closed',!on);codex.classList.toggle('open',on);$('btnCodex').setAttribute('aria-pressed',String(on));shiftTarget=(on&&W>=820)?372/W:0}
+$('btnCodex').addEventListener('click',()=>openCodex(codex.classList.contains('closed')));
+codex.querySelector('.grip').addEventListener('click',()=>openCodex(false));$('btnClose').addEventListener('click',()=>openCodex(false));
+// world JSON export (Regions tab footer)
+const exp=document.createElement('div');exp.className='group';exp.innerHTML='<h3><span>World file</span><button type="button" class="ghost" id="btnCopy">Copy JSON</button></h3><textarea class="json" id="worldJson" readonly aria-label="World JSON"></textarea>';reggroups.after(exp);
+function worldJson(){return JSON.stringify({...WORLD,lore:undefined,places:undefined,faces:Object.fromEntries(Object.entries(WORLD.faces).map(([k,f])=>[k,{...f,chart:undefined,chart2:undefined}])),regions:REGIONS.map(r=>({id:r.id,name:r.name,face:r.face,kind:r.kind||'Region',biome:r.biome,nation:r.nation,note:r.note,nations:r.nations,lore:loreOf(r.id)||undefined}))},null,1)}
+$('btnCopy').addEventListener('click',async()=>{const txt=worldJson();$('worldJson').value=txt;try{await navigator.clipboard.writeText(txt);toast('World JSON copied')}catch(e){$('worldJson').focus();$('worldJson').select();toast('Select the text below to copy')}});
+function refreshJson(){const ta=$('worldJson');if(document.activeElement!==ta)ta.value=worldJson()}
+
+/* ============================== SELECTION / CAMERA MOVES ============================== */
+const FACE_VIEW_YAW={far:-Math.PI/3};
+const faceYaw=f=>(FACE_VIEW_YAW[f.id]??Math.atan2(f.normal[0],f.normal[2]));
+function setFollow(on){if(on===state.follow)return;const yaw=camYaw();state.follow=on;state.baseYaw=on?yaw-spinAngle():yaw}
+function flyTo(yaw,pitch){state.fly={yaw,pitch:clamp(pitch,-1.35,1.35)}}
+function selectRegion(id){state.selected=id;state.selectedFace=REGIONS.find(r=>r.id===id).face;const r=REGIONS.find(x=>x.id===id);setFollow(true);flyTo(r.az,r.el);showTab('tabPlace');renderPlace();openCodex(true)}
+function selectFace(id,fly){state.selected=null;state.selectedFace=id;const f=faceById[id];if(fly){setFollow(true);flyTo(faceYaw(f),id==='far'?-1.1:Math.asin(clamp(f.normal[1],-1,1)))}showTab('tabPlace');renderPlace();if(!fly||W>=820)openCodex(true)}
+function release(){setFollow(false);state.fly=null;state.selected=null;state.selectedFace=null;renderPlace()}
+document.querySelectorAll('[data-face]').forEach(b=>b.addEventListener('click',()=>selectFace(b.dataset.face,true)));
+
+/* ============================== POINTER ============================== */
+const pts=new Map();let drag=null,pinch=null,moved=0,downAt=null;
+gl.addEventListener('pointerdown',e=>{gl.setPointerCapture(e.pointerId);pts.set(e.pointerId,[e.clientX,e.clientY]);drag=[e.clientX,e.clientY];downAt=[e.clientX,e.clientY];moved=0;state.fly=null;gl.classList.add('dragging')});
+gl.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,[e.clientX,e.clientY]);const p=[...pts.values()];
+  if(p.length===1&&drag){const dx=e.clientX-drag[0],dy=e.clientY-drag[1];moved+=Math.abs(dx)+Math.abs(dy);state.baseYaw-=dx*0.0075;state.pitch=clamp(state.pitch+dy*0.0055,-1.35,1.35);drag=[e.clientX,e.clientY]}
+  else if(p.length===2){const d=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);if(pinch)state.dist=clamp(state.dist*pinch/d,3.0,9);pinch=d;moved+=99}});
+function endPtr(e){pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===0){gl.classList.remove('dragging');if(moved<8&&downAt){const r=gl.getBoundingClientRect();const f=pickFace(e.clientX-r.left,e.clientY-r.top);if(f)selectFace(f.id,false);else{release()}}drag=null;downAt=null}}
+gl.addEventListener('pointerup',endPtr);gl.addEventListener('pointercancel',endPtr);
+gl.addEventListener('wheel',e=>{e.preventDefault();state.dist=clamp(state.dist*Math.exp(e.deltaY*0.0012),3.0,9)},{passive:false});
+addEventListener('keydown',e=>{if(e.target.matches('input,textarea'))return;if(e.key===' '){e.preventDefault();togglePlay()}else if(e.key==='ArrowLeft')state.baseYaw+=0.08;else if(e.key==='ArrowRight')state.baseYaw-=0.08;else if(e.key==='ArrowUp')state.pitch=clamp(state.pitch+0.06,-1.35,1.35);else if(e.key==='ArrowDown')state.pitch=clamp(state.pitch-0.06,-1.35,1.35);else if(e.key==='Escape')release()});
+
+/* ============================== TIME CONTROLS ============================== */
+const btnPlay=$('btnPlay'),rngSpin=$('rngSpin'),rngDay=$('rngDay'),spinOut=$('spinOut'),dayOut=$('dayOut'),dateOut=$('dateOut'),dateSub=$('dateSub');
+function togglePlay(){state.playing=!state.playing;btnPlay.textContent=state.playing?'Pause':'Play'}
+btnPlay.addEventListener('click',togglePlay);
+rngSpin.addEventListener('input',()=>{state.speed=Number(rngSpin.value)||0;spinOut.textContent=state.speed.toFixed(1)+'×'});
+let scrubbing=false;rngDay.addEventListener('pointerdown',()=>scrubbing=true);addEventListener('pointerup',()=>scrubbing=false);
+rngDay.addEventListener('input',()=>{const y=Math.floor(state.day/YEAR);state.day=y*YEAR+(Number(rngDay.value)-1)+(state.day%1)});
+$('btnDay').addEventListener('click',()=>{state.day+=1});
+$('btnMonth').addEventListener('click',()=>{state.day+=DPM});
+$('btnReset').addEventListener('click',()=>{state.day=0;state.baseYaw=0;state.pitch=0.36;state.dist=4.5;state.fly=null;setFollow(false);state.selected=null;state.selectedFace=null;renderPlace();toast('Back to the first morning')});
+function updateDate(){const {y,doy,mi,dom,season}=dateParts(state.day);const txt=mi<0?'Restart Day':`${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`Year ${y} · ${season.name} · day ${doy+1} of ${YEAR}`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay){rngDay.value=String(doy+1)}dayOut.textContent=String(doy+1)}
+
+/* ============================== LOOP ============================== */
+let last=performance.now(),uiTick=0;
+function frame(t){const dt=Math.min(0.05,(t-last)/1000);last=t;
+  if(state.playing)state.day+=dt*state.speed/DAY_SECONDS;
+  if(state.fly){const k=1-Math.pow(0.0008,dt);const dy=wrapPi(state.fly.yaw-state.baseYaw);state.baseYaw+=dy*k;state.pitch+=(state.fly.pitch-state.pitch)*k;if(Math.abs(dy)<0.003&&Math.abs(state.fly.pitch-state.pitch)<0.003)state.fly=null}
+  resizeIfNeeded();shiftTarget=(codex.classList.contains('open')&&W>=820)?372/W:0;shift+=(shiftTarget-shift)*(1-Math.pow(0.001,dt));vshiftTarget=W<820?(codex.classList.contains('open')?0.5:0.2):0.05;vshift+=(vshiftTarget-vshift)*(1-Math.pow(0.001,dt));updateCamera();updateWorld();const sun=sunDir(state.day);
+  drawStars(t,sun);
+  ctx.viewport(0,0,gl.width,gl.height);ctx.clearColor(0,0,0,0);ctx.clear(ctx.COLOR_BUFFER_BIT|ctx.DEPTH_BUFFER_BIT);ctx.enable(ctx.DEPTH_TEST);ctx.disable(ctx.CULL_FACE);
+  if(texReady){ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));ctx.uniformMatrix4fv(loc.model,false,new Float32Array(cam.model));ctx.uniform3fv(loc.sun,new Float32Array(sun));ctx.uniform1f(loc.time,t*0.001);ctx.uniform1f(loc.spin,-1);ctx.uniform1f(loc.amb,0.32);ctx.uniform3fv(loc.sunc,new Float32Array(seasonLight(state.day)));ctx.activeTexture(ctx.TEXTURE0);ctx.uniform1i(loc.tex,0);
+    FACES.forEach((f,i)=>{ctx.bindTexture(ctx.TEXTURE_2D,f.texture);ctx.uniform1f(loc.hi,state.selectedFace===f.id&&!state.selected?1:0);ctx.uniform1f(loc.far,f.id==='far'?1:0);ctx.drawArrays(ctx.TRIANGLES,i*3,3)})}
+  drawOverlay(t,sun);drawRain(dt,rainAmount(state.day));updateMarkers();updateDate();
+  if((uiTick++%12)===0){const af=activeFace();facingEl.textContent='Facing · '+WORLD.faces[af.id].name;document.querySelectorAll('[data-face]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.face===(state.selectedFace||af.id))));if(state.tab==='tabWorld')updateYear();if(state.tab==='tabRegions')updateRegionPhases(sun);if(state.tab==='tabPlace')updatePlacePhase(sun);if(uiTick%120===0)refreshJson()}
+  requestAnimationFrame(frame)}
+function resizeIfNeeded(){const r=app.getBoundingClientRect();if(Math.abs(r.width-W)>0.5||Math.abs(r.height-H)>0.5)resize()}
+
+/* ============================== BOOT ============================== */
+function start(saved){try{if(saved&&typeof saved==='object'){if(typeof saved.day==='number')state.day=saved.day;if(typeof saved.baseYaw==='number')state.baseYaw=saved.baseYaw;if(typeof saved.pitch==='number')state.pitch=saved.pitch;if(typeof saved.dist==='number')state.dist=saved.dist;if(typeof saved.speed==='number'){state.speed=saved.speed;rngSpin.value=String(saved.speed);spinOut.textContent=state.speed.toFixed(1)+'×'}if(typeof saved.playing==='boolean'){state.playing=saved.playing}if(saved.selected&&REGIONS.some(r=>r.id===saved.selected)){state.selected=saved.selected;state.selectedFace=REGIONS.find(r=>r.id===saved.selected).face;state.follow=!!saved.follow}}}catch(e){}
+  btnPlay.textContent=state.playing?'Pause':'Play';buildMarkers();renderFaceList();renderRegionGroups();renderWorlds();renderNations();renderExplorers();renderYear();updateYear();renderPlace();refreshJson();
+  if(W>=820)openCodex(true);
+  try{window.claude?.hot?.snapshot?.(()=>({day:state.day,baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,speed:state.speed,playing:state.playing,selected:state.selected,follow:state.follow}))}catch(e){}
+  window.tetra={get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>phaseFor(REGIONS.find(x=>x.id===id),sunDir(state.day))};
+  requestAnimationFrame(frame)}
+try{if(window.claude?.hot?.ready)window.claude.hot.ready(start);else start(window.claude?.hot?.data??{})}catch(e){start({})}
+})();
+</script>

@@ -4,3 +4,7 @@ tests/out/
 pipeline/*_prev.png
 pipeline/pools_sheet.png
 pipeline/edge_check.png
+# bake.py also writes these placeholder stone textures; nothing in the build reads them
+pipeline/tex_west.jpg
+pipeline/tex_south.jpg
+pipeline/tex_far.jpg

@@ -6,7 +6,11 @@ EM = '—'
 RETIRED = ['Mtlshia', 'Tueldan', 'The Swamp', "name:'Tropical'", 'Sunreach', 'Evermere', 'Stonehollow', 'Mistwater',
            'Frostmarch', 'Greenveld', 'Deepwood', 'Stormreach', 'snowy tundra', 'Snowy tundra']
 files = (glob.glob(os.path.join(ROOT, 'pipeline', '*.py')) + glob.glob(os.path.join(ROOT, 'pipeline', 'template.html')) +
-         glob.glob(os.path.join(ROOT, 'dist', '*.html')) + glob.glob(os.path.join(ROOT, '*.md')) + glob.glob(os.path.join(ROOT, 'tests', '*.js')))
+         glob.glob(os.path.join(ROOT, 'dist', '*.html')) + glob.glob(os.path.join(ROOT, '*.md')) + glob.glob(os.path.join(ROOT, 'tests', '*.js')) +
+         # em dashes only, in the rest of the text: legacy scripts, archived tests, tools, the reference notes, the Makefile and manifests
+         glob.glob(os.path.join(ROOT, 'pipeline', 'legacy', '*.py')) + glob.glob(os.path.join(ROOT, 'tests', 'archive', '*.js')) +
+         glob.glob(os.path.join(ROOT, 'tools', '*.py')) + glob.glob(os.path.join(ROOT, 'reference', '*.md')) +
+         [os.path.join(ROOT, f) for f in ('Makefile', 'package.json', 'requirements.txt', '.gitignore')])
 bad = 0
 for f in sorted(files):
     txt = open(f, encoding='utf-8').read()

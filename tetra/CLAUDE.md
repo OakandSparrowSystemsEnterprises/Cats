@@ -7,8 +7,8 @@ Shipped state: **version 10** (2026-10-02). `dist/tetra_world.html` is the singl
 ## Ground rules (Joshua's, and they are firm)
 
 1. **Never invent canon.** Ruby's words are the source. If a request is ambiguous, implement the most literal reading and say which reading was taken. Draft lore (`WORLD.lore` in the template) is first-pass text for Joshua to edit, and it is labelled as such in the page.
-2. **No em dashes anywhere** in copy, code comments, docs or commit messages. Use commas, periods, parentheses, or restructure. `make audit` (tools/audit.py) fails on any em dash in the sources, the docs or `dist/` (base64 stripped), and on retired names and unreplaced placeholders.
-3. **Test before shipping. Every time.** Joshua is not the test bed. Minimum: `npm test` passes (no script or console errors at 1366 px and 393 px, Far-face phase rules hold, phone tap opens the Codex), plus eyeball the screenshots in `tests/out/` and the seam sheet from `npm run seams` after any map change.
+2. **No em dashes anywhere** in copy, code comments, docs or commit messages. Use commas, periods, parentheses, or restructure. `make audit` (tools/audit.py) fails on any em dash in every text file of the repo (pipeline scripts and legacy scripts, template, tests and archived tests, tools, the docs, Makefile and manifests, and `dist/` with the base64 stripped), on retired names in the files that feed the shipped page (`template.html`, `build.py`, `nations.py`, `mapgen2.py`, `tests/`, `dist/`), and on unreplaced `{{...}}` placeholders in `dist/`.
+3. **Test before shipping. Every time.** Joshua is not the test bed. Minimum: `npm test` passes (no script or console errors at 1366 px and 393 px, Far-face phase rules hold, phone tap opens the Codex), plus eyeball the screenshots in `tests/out/` and the six seam screenshots from `npm run seams` (`tests/out/seam_*.png`) after any map change.
 4. **Every face is at least half water** (`mapgen2.py` asserts it) and **every marker sits on land** (asserted too). Landmasses line up across every edge (`check_edges.py`; v10 ships with the worst edge at 3.7% disagreement, so treat anything above about 5% as a regression).
 5. **Use Ruby's outlines, not the explorers' pictures.** In-world, the explorers Sapphire, Amethyst and Obsidian made rough charts and Opal "went back and made complete maps". The page shows Opal's maps (generated from the sketches), never the sketch photos.
 6. Names are spelled exactly as Ruby spells them (`It's Hot` is the nation's full name; `Marshia`, `Baiuland`, `Greeneria`, `Wetia`, `Tredesember`).
@@ -29,7 +29,7 @@ pipeline/                            everything that makes the page; scripts run
   texsynth.py                        patch-quilting texture synthesis from the Canon art (art_latest.png)
   blobs.py                           Ruby's outlines (continent, central island) typed in by hand, in texture space
   nations.py                         where the island / continent nations sit (shared by mapgen2 and build)
-  bake.py, radial.py                 Canon face: warps Ruby's painting (art_latest.png) into tex_canon.jpg + geometry.json
+  bake.py, radial.py                 Canon face: warps Ruby's painting (art_latest.png) into tex_canon.jpg + geometry.json (also writes tex_west/south/far.jpg, unused placeholders, gitignored)
   check_edges.py                     measures land/water agreement along the six edges -> edge_check.png
   art_latest.png                     Ruby's Canon painting (1448x1086). Source of the Canon texture AND of all terrain patches
   tex_canon.jpg, geometry.json       outputs of bake.py (Canon texture, face layouts, Canon region barycentrics)
@@ -37,12 +37,13 @@ pipeline/                            everything that makes the page; scripts run
   codex_{west,south,far,island,continent}.jpg   labelled Codex charts (Opal's maps)
   map_anchors.json                   marker positions in texture px per face (mapgen2 -> build)
   edge_profiles.json                 CACHE of edge profiles. Delete it after changing tex_canon.jpg or the designed intervals
-  blobs.json, water_fractions.json, west_places.json, south_far_places.json   small data files (see "Pipeline")
+  blobs.json, water_fractions.json, west_places.json, south_far_places.json   small data files (see "Pipeline"; blobs.json is an export written by `python3 blobs.py`, nothing reads it)
   zinnia_q.png                       the Umbrella Tree Zinnia cutout shown in the Codex
   fonts/Lora-*.ttf                   label fonts for the Codex charts (OFL)
   legacy/                            sketch-processing scripts from earlier rounds (not in the build path)
 dist/                                build outputs (committed so the shipped state is always reproducible)
 tests/                               Playwright checks; `node tests/<name>.js`; screenshots land in tests/out/
+tools/                               audit.py, what `make audit` runs
 reference/                           Ruby's sketches, the four versions of the Canon art, Joshua's original spin page, v10 screenshots
 ```
 
@@ -55,12 +56,14 @@ npm install && npx playwright install chromium
 make maps      # cd pipeline && python3 mapgen2.py     (~15 s; deterministic, fixed seeds)
 make check     # cd pipeline && python3 check_edges.py  (prints per-edge agreement, writes edge_check.png)
 make build     # python3 pipeline/build.py  -> dist/tetra.html (fragment) and dist/tetra_world.html (standalone)
-make test      # smoke, walkthrough, phases, tap  (all must exit 0)
-make seams     # six seam screenshots in tests/out/seam_*.png: look at them after any map change
+make test      # rebuilds dist/ first, then smoke, walkthrough, phases, tap  (all must exit 0)
+make seams     # rebuilds dist/ first, then six seam screenshots in tests/out/seam_*.png: look at them after any map change
 make audit     # em dashes, retired names, placeholders: must print 'audit clean'
 ```
 
 Verified on 2026-10-02: from a clean copy of this repo, `make maps && make build` reproduces `dist/` byte for byte, and `make test` passes.
+
+Verified again the same day from the repository checkout (Claude Code; Python 3.11, numpy 2.4, OpenCV 4.14, Playwright 1.56, Chromium 141) with the same result. OpenCV 5.x writes slightly different JPEG bytes (the maps are pixel-identical within JPEG noise, anchors and fractions identical), so `requirements.txt` pins `opencv-python-headless<5`.
 
 **Shipping.** `dist/tetra.html` is the body fragment the claude.ai artifact is published from; `dist/tetra_world.html` is the same thing wrapped in a full document and is what Joshua sends to Ruby. Claude Code has no tool to republish the artifact; to update the live link, hand `dist/tetra.html` to a Claude conversation and have it publish to the URL above (version labels so far: "v10 Ruby's fixes, purple star, rings"). Otherwise, deliver `dist/tetra_world.html` directly; it is self-contained (about 1.9 MB, all textures inlined as base64).
 
@@ -78,18 +81,18 @@ Verified on 2026-10-02: from a clean copy of this repo, `make maps && make build
 
 ## Pipeline (what reads and writes what)
 
-1. `bake.py` (only when the Canon art changes): `art_latest.png` -> `tex_canon.jpg`, `geometry.json` (layouts + the Canon regions as barycentric coords). The kite A,P,D,Q in the art is the Canon face; the art's own West/South region names (Sunreach, Evermere, etc.) are NOT canon and are cropped away.
+1. `bake.py` (only when the Canon art changes): `art_latest.png` -> `tex_canon.jpg`, `geometry.json` (layouts + the Canon regions as barycentric coords). The kite A,P,D,Q in the art is the Canon face; the art's own West/South region names (Sunreach, Evermere, etc.) are NOT canon and are cropped away. `bake.py` hard-codes, in art pixels, the kite A,P,D,Q, the radial warp centre `ck` and the 13 Canon region positions in `regions`; a new painting needs all of them re-measured (the barycentric assert only catches a region that lands outside the triangle). It also writes `tex_west/south/far.jpg`, placeholder stone from before mapgen2 that nothing reads; they are gitignored.
 2. `blobs.py`: Ruby's continent and central-island outlines, hand-typed from her sketches, scaled and fitted inside the triangle. Imported by mapgen2.
-3. `mapgen2.py`: `design_west / design_south / design_far` build a land mask from masses (`supergauss`, `wobble`, `band`, `wedge`, `moat`), run `conform`, turn it into heights (`heights`), assert water >= 0.5 and markers on land (`check_markers`), paint it (`paintface.render_painted`, which harvests patches from `art_latest.png` through `texsynth`), then write `map_*.jpg` (clean, for the world), `codex_*.jpg` (labelled, for the Codex), `codex_island.jpg` / `codex_continent.jpg` (nation close-ups), `map_*_prev.png` (markers drawn, for eyeballing), `map_anchors.json`, `water_fractions.json`. Marker positions are the `P` dicts in each design; island/continent nations are offsets in `nations.py`.
+3. `mapgen2.py`: `design_west / design_south / design_far` build a land mask from masses (`supergauss`, `wobble`, `band`, `wedge`, `moat`), run `conform`, turn it into heights (`heights`), assert water >= 0.5 and markers on land at least 14 px from the coast (`check_markers`), paint it (`paintface.render_painted`, which harvests patches from `art_latest.png` through `texsynth`), then write `map_*.jpg` (clean, for the world), `codex_*.jpg` (labelled, for the Codex), `codex_island.jpg` / `codex_continent.jpg` (nation close-ups), `map_*_prev.png` (markers drawn, for eyeballing), `map_anchors.json`, `water_fractions.json`. Marker positions are the `P` dicts in each design; island/continent nations are offsets in `nations.py`.
 4. `check_edges.py`: samples both sides of each edge at depths 14..30 px and reports agreement. Current: 0-1 100%, 0-2 96.3%, 0-3 97.0%, 1-2 98.3%, 1-3 96.7%, 2-3 97.7%.
 5. `build.py`: merges `names` (marker display names for anchors), `nations.py` offsets and `geometry.json` into the GEOMETRY JSON, base64-inlines the textures, writes `dist/`. **If you add a place to a map, add its display name to `names` in build.py and its card to `WORLD.places` in the template.**
-6. `west_places.json`, `south_far_places.json`: inputs of the old `mapgen.py` main (superseded). `mapgen2.py` hard-codes its positions instead.
+6. `west_places.json`, `south_far_places.json`: inputs of the old `mapgen.py` main (superseded). `mapgen2.py` hard-codes its positions instead (except `continent-south`, the centroid of the continent polygon, and `celestial`, the face centre). **Never run `python3 mapgen.py` directly:** its main still writes `map_*.jpg`, `codex_*.jpg`, `map_*_prev.png` and `map_anchors.json` and would overwrite the current maps with the superseded design and its retired labels, which `make audit` cannot see inside a JPEG. `make maps` (mapgen2.py) is the only generator; if it happens, `git checkout -- pipeline/` restores the shipped maps.
 
 ## template.html, where things are
 
 Single file: `<style>` (lines ~4-234), HTML (~236-348: canvas `#gl`, `#markers`, the Codex `#codex` with tabs `tabWorld / tabRegions / tabPlace`, the HUD with `#rngDay`, `#btnPlay`, the four `[data-face]` buttons), `<script>` (~349-740). Find things by grepping for these anchors rather than by line number:
 
-- `const WORLD = {` : all content. `calendar` (13 months x 28 days + 1 Restart Day = 365; seasons), `places` (one card per marker id: name, kind, nation, biome, note, chart), `nations` (grouped list for the World tab), `explorers`, `worlds` (Tetra, The Inverted Planet), `star`, `fields`, `faces` (name, tagline, blurb, note, color), `lore` (draft prose per Canon region).
+- `const WORLD = {` : all content. `calendar` (13 months x 28 days + 1 Restart Day = 365; seasons), `places` (one card per marker id: name, kind, nation, biome, note, chart), `nations` (grouped list for the World tab), `explorers`, `worlds` (Tetra, The Inverted Planet), `star`, `fields`, `faces` (name, tagline, blurb, note, color), `lore` (draft prose for the eight Canon regions from the painting; the four kingdoms and Spikia have none yet and show "Nothing written yet").
 - `LABEL_SIDE` : which side a marker's label sits on (`left` / `below`), to stop overlaps.
 - `const V =` / `const FACES =` : the tetrahedron. `GEO` is the injected geometry JSON (regions with barycentric `b`).
 - `sunDir(day)` : sun direction; `SUN0`, `TILT`, `SUMMER_MID` give the seasons their elevation. `rainAmount(day)` drives rain on the Canon face in rain season.
@@ -98,18 +101,19 @@ Single file: `<style>` (lines ~4-234), HTML (~236-348: canvas `#gl`, `#markers`,
 - `drawStars` : the sky, the star's glow (dark purple since v10), the anti-sun blue glow. `ringPoints` (alias `arcPoints`) : the gold (magical) and blue (magnetic) field rings, full circles since v10, 3 of each. `drawOverlay` strokes them and runs the particles.
 - `selectFace(id, fly)` / `selectRegion(id)` / `openCodex(on)` : navigation. `if(!fly||W>=820)openCodex(true)` is what makes a tap on the world open the Codex on phones.
 - `window.tetra = {state, setDay, select, face, release, phase}` : debug hook used by the tests. `phase(id)` returns the phase object a card would show for the current `state.day`.
-- The World tab has a "World file" group with the JSON export (`worldJson()`), and lore edits are saved to `localStorage` per browser ("Edit lore" on a card).
+- The Regions tab ends with a "World file" group holding the JSON export (`worldJson()`, inserted after `#reggroups` at runtime; the page's own "Copy the world JSON" note points there). Lore edits are saved to `localStorage` per browser ("Edit lore" on a card).
 
-Copy style inside the page: small caps eyebrows, Lora italics for the explorers' voice, no em dashes, British-flavoured spellings already in use ("colour", "centre"). Keep it.
+Copy style inside the page: small caps eyebrows in Cinzel (`var(--display)`), Cormorant Garamond italics (`var(--serif)`: `.tagline`, `.q`) for the explorers' voice, IBM Plex Sans (`var(--ui)`) for the chrome, all three from Google Fonts; no em dashes; British-flavoured spellings already in use ("colour", "centre"). Keep it. Lora is not used by the page at all; it is only the label font that `mapgen.label()` bakes into the Codex chart JPEGs.
 
 ## Testing notes
 
 - Playwright 1.56, Chromium. Headless WebGL needs the swiftshader flags in `tests/_page.js`; on a machine with a GPU they are harmless.
-- `tests/walkthrough.js` prints the card text it saw; read it, the content matters as much as the absence of errors.
-- `tests/phases.js` sweeps a year through `window.tetra.phase`; it fails if any Far-face place reaches High sun or Deep night, if Mount Celestial is ever not twilight, or if the Canon face loses either.
+- `tests/walkthrough.js` prints the card text it saw; read it, the content matters as much as the absence of errors. Its "phone codex open after face tap?" line is informational only (it prints the panel transform and goes through the face-button path); `tests/tap.js` is the real phone tap check.
+- `tests/phases.js` sweeps a year (every 7th day, every half hour) through `window.tetra.phase` for a fixed list of ids; it fails if any of the five Far-face places it knows (`warmia`, `ehia`, `treeland`, `delta-far`, `mountains-far`) reaches anything other than First light, The slow morning, Late light or Dusk (High sun, Morning, Afternoon, Evening, Before dawn and Deep night all fail it), if Mount Celestial is ever not twilight, or if the Canon face loses High sun or Deep night. Add any new Far-face id to that list.
 - `tests/tap.js` performs a real touch tap at phone width and fails if the Codex stays closed.
 - `tests/archive/` holds the ad hoc scripts from earlier rounds (older ids may no longer exist; they are kept for the recipes, not as a suite).
 - For map changes also look at `pipeline/map_*_prev.png` (markers), `tests/out/seam_*.png` (edges), and `edge_check.png`.
+- The page's only external fetch is the Google Fonts stylesheet (Cinzel, Cormorant Garamond, IBM Plex Sans). Offline or behind a proxy it fails, the page falls back to system fonts, and `PAGE.isNetworkError` in `tests/_page.js` keeps that `net::ERR_*` console line out of the error count. Screenshots taken offline show the fallback fonts.
 
 ## How a round from Ruby is processed
 

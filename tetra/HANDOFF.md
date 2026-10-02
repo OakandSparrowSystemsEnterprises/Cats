@@ -6,12 +6,12 @@ Written for the next Claude Code session picking this up from the Claude app con
 
 - Published artifact: `https://claude.ai/artifact/G6JjTxacMzAGCtcSrETb8v`, **version 10**, label "v10 Ruby's fixes, purple star, rings", published 2026-10-01 from `dist/tetra.html`.
 - Standalone copy sent to Joshua the same day: `dist/tetra_world.html` (identical content, wrapped in a full HTML document).
-- Both files in `dist/` are byte-identical to what was published (verified by rebuilding from a clean copy of this repo on 2026-10-02: `make maps && make build` reproduces them, `make test` passes).
+- Both files in `dist/` are byte-identical to what was published (verified by rebuilding from a clean copy of this repo on 2026-10-02: `make maps && make build` reproduces them, `make test` passes). Re-verified from the repository checkout the same day, see section 9.
 - Screenshots of v10 are in `reference/screenshots-v10/` (desktop home, each face, the Mount Celestial card, the World tab, phone views, the six-seam sheet).
 
 ## 2. What the page does
 
-A tetrahedron (four equilateral faces) spins leftward once per world day under a dark purple star. The Canon face carries Ruby's painting; West, South and Far carry generated maps in the same painted style. HTML markers sit on the faces; tapping a marker or a face opens the Codex, a side panel with three tabs: World (calendar, seasons, the two fields, the star, the four faces, the Dice System's other worlds, the Umbrella Tree Zinnia, nations, "Still unwritten", a JSON export), Regions (every place with its current light phase), Place (one card: phase of day, facts, chart, draft lore with an "Edit lore" button saved per browser). The HUD scrubs the day and the year; rain falls on the Canon face in rain season; the star's elevation follows the seasons.
+A tetrahedron (four equilateral faces) spins leftward once per world day under a dark purple star. The Canon face carries Ruby's painting; West, South and Far carry generated maps in the same painted style. HTML markers sit on the faces; tapping a marker or a face opens the Codex, a side panel with three tabs: World (calendar, seasons, the two fields, the star, the four faces, the explorers, the Dice System's other worlds, the Umbrella Tree Zinnia, nations, "Still unwritten"), Regions (every place with its current light phase, with the World file JSON export at the bottom), Place (one card: phase of day, facts, chart, draft lore with an "Edit lore" button saved per browser). The HUD scrubs the day and the year; rain falls on the Canon face in rain season; the star's elevation follows the seasons.
 
 ## 3. The canon ledger (Ruby's words, via Joshua)
 
@@ -95,8 +95,9 @@ Page (`template.html`, `build.py`):
 
 - The Far-face clamp also applies to the Extreme Mountains marker and to Wetia's Far-face delta (they are on the Far face). Ruby said "the far side", which was read as the whole face.
 - The Far face is the base the world spins on; its centre is on the axis, so in the model its light hardly changes through a day. The clamp makes the cards and the shading agree with Ruby's rule rather than with the geometry alone.
-- `texsynth.py` harvests patches from `art_latest.png` with hard-coded label and chrome rectangles (`LABELS`, `MAP_POLY`). If the Canon art changes, those rectangles must be re-checked or text fragments will leak into the side faces.
-- `bake.py` asserts the art is 1448x1086 and uses fixed kite points A, P, D, Q. A new painting needs those points re-measured.
+- `texsynth.py` harvests patches from `art_latest.png` with hard-coded art-pixel geometry: the label rectangles (`LABELS`), the painting's outer diamond (`MAP_POLY`), the glow-line corridors and the `rim` segments. If the Canon art changes, all of them must be re-checked or text fragments will leak into the side faces.
+- `bake.py` asserts the art is 1448x1086 and hard-codes, in art pixels, the kite points A, P, D, Q, the radial warp centre `ck` (727, 530) and the 13 Canon region positions in `regions`. A new painting needs all of these re-measured; the barycentric assert only catches a region that lands outside the triangle. `bake.py` also writes `tex_west/south/far.jpg`, placeholder stone that nothing reads (gitignored).
+- `geometry.json` (from `bake.py`'s `regions`) still names the `hotland` region "The Hot Kingdom". The page shows Ruby's "It's Hot" because `WORLD.places.hotland` overrides the name, but the old string ships inside the GEOMETRY JSON in `dist/`. Fix it in `bake.py` and `geometry.json` at the next content round (it changes `dist/`), then add the name to `RETIRED` in `tools/audit.py`.
 - `edge_profiles.json` is a cache: delete it whenever `tex_canon.jpg` or the designed intervals change, or the maps will conform to stale edges.
 - The Messenger screenshots from Ruby that drove rounds 6 through 10 are not in this repo (they were pasted into the chat); their content is transcribed in section 3. The sketches that are on disk are in `reference/ruby/`.
 - The island outline and the continent outline are hand-typed polygons (`blobs.py`); photo tracing (`legacy/trace.py`) was unreliable and is kept only for reference.
@@ -114,3 +115,26 @@ Page (`template.html`, `build.py`):
 - He wants the work tested before he sees it, and the report in Ruby's terms: for each of her lines, what it became, and which lines needed a reading.
 - No em dashes, in anything.
 - Pasted AI-written reviews of the work are working input; do not flag them.
+
+## 9. Received into the repository (2026-10-02, Claude Code)
+
+- Where: `OakandSparrowSystemsEnterprises/Cats`, branch `ccr-7fbf7180-0d9gil`, folder `tetra/`. Both companion archives are unpacked into `reference/`, so the repository holds the whole package.
+- Verified from the checkout, with Python 3.11, numpy 2.4, OpenCV 4.14, Playwright 1.56 and Chromium 141: `make build` reproduces `dist/` byte for byte from the shipped inputs; `make maps` reproduces all eight JPEGs, `map_anchors.json`, `water_fractions.json` and `edge_profiles.json` byte for byte; `make check` gives the six agreements listed in `CLAUDE.md` (worst 3.7%); `make test`, `make seams` and `make audit` pass. The seam screenshots and the walkthrough screenshots were looked at.
+- With OpenCV 5.0 the maps come out pixel-identical within JPEG noise (land/water masks 99.996% to 100% the same, anchors and fractions identical) but not byte-identical. `requirements.txt` therefore pins `opencv-python-headless<5`.
+- Changes made on receipt, none of them to the page or the maps:
+  - `tests/_page.js` exports `isNetworkError`; `smoke.js` and `walkthrough.js` use it instead of the `ERR_TUNNEL` special case. The page's only external fetch is the Google Fonts stylesheet; when it fails (offline, a proxy, an untrusted certificate) Chromium logs a `net::ERR_*` console error that is not the page's fault. In this environment the first run failed on `ERR_CERT_AUTHORITY_INVALID` for exactly that reason.
+  - `requirements.txt`: the OpenCV pin above.
+  - `package-lock.json`: the `name` field now reads `tetra` (it was generated in a folder called `scratchpad`).
+  - A root `CLAUDE.md` in the repository points at `analyses/` and `tetra/`.
+  - `tools/audit.py`: the em-dash scan now covers every text file in the repo (legacy scripts, archived tests, tools, `reference/*.md`, Makefile, manifests); retired-name and placeholder checks are unchanged.
+  - `.gitignore`: `pipeline/tex_west.jpg`, `tex_south.jpg`, `tex_far.jpg` (written by `bake.py`, read by nothing). `bake.py`'s docstring now says so.
+- Doc corrections, from an audit of `CLAUDE.md`, `HANDOFF.md` and `reference/README.md` against the code (each point was checked by two independent readers before it was changed):
+  - The World file JSON export sits at the bottom of the Regions tab, not in the World tab; the World tab also lists the explorers.
+  - The page's fonts are Cinzel, Cormorant Garamond and IBM Plex Sans from Google Fonts. Lora is only baked into the Codex chart JPEGs by `mapgen.py`.
+  - `bake.py` hard-codes more than the kite points (warp centre, 13 Canon region positions) and writes three unused textures.
+  - `mapgen.py`'s main still writes the same output files as `mapgen2.py`; the docs now say never to run it directly.
+  - `tests/phases.js` bans six phases on the Far face for a fixed list of five ids, not just High sun and Deep night.
+  - The audit's real scope is stated; `make test` and `make seams` rebuild `dist/` first; `check_markers` wants 14 px from the coast; `blobs.json` has no reader; `tools/` is in the layout; `lore` covers the eight painting regions only.
+  - `geometry.json` still carries "The Hot Kingdom" for `hotland` (section 6).
+  - `reference/README.md` now describes this folder as it is; its unzip instruction pointed at the wrong level (the archives carry a `tetra/` prefix).
+- Still not on disk: Ruby's Messenger screenshots from rounds 6 to 10 (section 6).

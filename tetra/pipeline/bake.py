@@ -2,10 +2,9 @@
 
 Art pixel coords (1448x1086): A apex, L/R outer corners, D bottom vertex, P/Q where the
 orange V meets the outer edges.
-  Canon face  = kite A,P,D,Q  -> radial (angle-matched) warp into the triangle
-  Western     = (P, L, D)     -> affine: top, lower-left, lower-right
-  Southern    = (Q, D, R)     -> affine: top, lower-left, lower-right
-  Far         = procedural 'unwritten' stone
+  Canon face  = kite A,P,D,Q  -> radial (angle-matched) warp into the triangle (tex_canon.jpg)
+  West, South, Far = procedural 'unwritten' stone placeholders (tex_west/south/far.jpg). Nothing in the
+                build reads them any more: the side faces come from mapgen2.py (map_*.jpg).
 Destination: equilateral triangle in a square texture, apex top-centre, base at the bottom.
 Regions are emitted as barycentric coords (apex, bl, br) of their face triangle.
 """

@@ -29,6 +29,7 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - Two fields: a magical field that slows light ("Here, the morning moves slower. And light flows like gold.") and a magnetic field that guides worlds. (from the art)
 - "the magnetic field and magical field go all the way around" (v10: both drawn as full rings; the Codex says so).
 - "make the sun a dark purple star and the magical field turns its light to the same color of our sun light" (v10: purple star glow in the sky and page gradient; the ground still lights in sun colour, which is her rule; new "The star" entry in the World tab).
+- 2026-10-03, Ruby herself in the Claude Code session: "what is that purple light?" Answered: it is the dark purple star she asked for; the ground stays sunlight-coloured because the magical field turns the light, her rule. No change made.
 - "The far side does not have high sun, or deep night." (v10: the Far face's lighting is clamped in the shader and on the cards; a year-long sweep shows only First light, The slow morning, Late light, Dusk there.)
 
 ### Spikia and Wetia (across faces)
@@ -40,6 +41,7 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - Regions: Whiteland, Yolkia, Islandia, The Headlands (the rooster-head landmass), Neckia, The Feathers, Llamaland, Footia (from the art).
 - "Discovered kingdoms in the area (compairing to the map "farword") of the sentral island (Area on the edge and NOT the area on the spike)": the four kingdoms Unoooland (jungle), "It's Hot" (sweltering; "the hot nation"'s name is "It's Hot"), Rainia (rain), Uohia (forest) are on the far side of the Canon face, between Islandia and the far edge. (corrected in an earlier round from a placement on the West island)
 - "Why is the cannon face untouchable? It should be touchable" (v10: taken as permission to edit the Canon face, but she gave no Canon change, so her painting is untouched; separately, tapping any face now opens its card on phones). **Ask her which she meant.**
+- 2026-10-03, Ruby herself: "why did the cannon face not change?" Answered: the Canon face is her painting and is only changed when she says what to change; she gave no Canon change in round 10. Asked her what she wants changed on it, and which meaning of "untouchable" she meant. No change made.
 
 ### West face (Sapphire the explorer)
 - Rough map "discovered by sapphire the explorer": the spike at the top, a central island marked with a blue X, a small tropical island Tropicia, a delta (Wetia) at the corner. "forest" on the island.
@@ -57,6 +59,7 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - "extend the extreme mountains to the center of the far side"; Mount Celestial lies at the exact centre; "is it always twilight there???" (v10: the ridge runs from the apex to the centre; `celestial` marker at the exact centre (512, 657.49); its card reads "Twilight, always". **Answer for Ruby: yes.** The centre of the Far face is where the spin axis comes out, so Mount Celestial never turns toward or away from the star; the light only shifts a little with the seasons.)
 - "make ehia on land on the far side" (v10: Ehia is on the Canon-side land, south of Warmia).
 - "extend tree land to connect with the south continent" (v10: Tree Land's coast crosses the South edge into the continent's lobe).
+- 2026-10-03, Ruby herself: "why are treeland and the cannonward nations on the far face not conected?" Her Far nations sketch (`reference/ruby/far_nations.png`) draws Warmia, Ehia and Tree Land inside one outline, one landmass down the Canon side and along the bottom. v10 has Tree Land as a separate landmass at the bottom centre with sea between it and Ehia's land (`design_far` in mapgen2.py builds them as separate masses). That is a build reading, not something she asked for. **Not yet changed: waiting for her to confirm she wants them joined.** Doing it means a land bridge from Ehia into Tree Land inland of the bottom edge (the shared edge 2-3 stays water at t 0.10 to 0.30, so the South face does not change) while the Far face stays at least half water (0.518 now).
 
 ### Process rules Joshua gave
 - "dont use the exact pictures of the explorers (opal the explorer went back and made comlpete maps of them [generate maps based on the schetches please])"
@@ -90,6 +93,8 @@ Page (`template.html`, `build.py`):
 3. Day names, hours in a day, the size of the world.
 4. Where the Umbrella Tree Zinnia grows.
 5. Lore: every card's prose is first-pass draft marked "Nothing written yet" or draft text for Joshua to edit. None of it is canon.
+6. (2026-10-03) Join Tree Land to Ehia and Warmia on the Far face? Her sketch says they are one land; she asked why they are not connected. Waiting for her yes, and whether she wants a wide land or a thin bridge.
+7. (2026-10-03) What, if anything, she wants changed on the Canon painting itself.
 
 ## 6. Known limits and caveats
 

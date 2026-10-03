@@ -85,7 +85,7 @@ regions = [
     ('unoooland', 'Unoooland', 'canon', (540, 730)),
     ('hotland', "It's Hot", 'canon', (790, 665)),
     ('rainia', 'Rainia', 'canon', (860, 745)),
-    ('uohia', 'Uohia', 'canon', (970, 700)),
+    ('uohia', 'Ughia', 'canon', (970, 700)),
 ]
 def apply_affine(M, p):
     return (M[0, 0] * p[0] + M[0, 1] * p[1] + M[0, 2], M[1, 0] * p[0] + M[1, 1] * p[1] + M[1, 2])

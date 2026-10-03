@@ -305,7 +305,7 @@ LABELS = {
     'canon': [('spikia-canon', 'Spikia', 30, False, (0, 56)), ('whiteland', 'Whiteland', 22, False, (-20, 30)), ('yolkia', 'Yolkia', 22, False, (10, 30)),
               ('islandia', 'Islandia', 22, False, (0, 30)), ('headlands', 'The Headlands', 20, False, (0, -30)), ('neckia', 'Neckia', 20, False, (40, 0)),
               ('feathers', 'The Feathers', 20, False, (-40, 28)), ('llamaland', 'Llamaland', 20, False, (50, 24)), ('footia', 'Footia', 22, False, (0, 32)),
-              ('unoooland', 'Unoooland', 20, True, (0, 30)), ('hotland', "It's Hot", 20, True, (0, 30)), ('rainia', 'Rainia', 20, True, (0, 30)), ('uohia', 'Uohia', 20, True, (0, 30))],
+              ('unoooland', 'Unoooland', 20, True, (0, 30)), ('hotland', "It's Hot", 20, True, (0, 30)), ('rainia', 'Rainia', 20, True, (0, 30)), ('uohia', 'Ughia', 20, True, (0, 30))],
     'west': [('spike', 'Spikia', 34, False, (0, 60)), ('delta', 'Wetia', 26, True, (30, -30)),
              ('island', 'The Central Island', 24, False, (0, 0)), ('tropicia', 'Tropicia', 20, True, (0, 40))],
     'south': [('spike-south', 'Spikia', 34, False, (0, 60)), ('continent-south', 'The Southern Continent', 22, False, (0, 0)), ('delta-south', 'Wetia', 26, True, (-40, -30))],

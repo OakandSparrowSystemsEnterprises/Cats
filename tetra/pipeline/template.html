@@ -375,7 +375,7 @@ const WORLD = {
     unoooland:{name:'Unoooland', kind:'Nation', nation:'Unoooland', biome:'jungle', note:'On the far side of the Canon Face, between Islandia and the far edge.'},
     hotland:{name:'It\u2019s Hot', kind:'Nation', nation:'It\u2019s Hot', biome:'sweltering', note:'On the far side of the Canon Face. The nation is called exactly what the chart says.'},
     rainia:{name:'Rainia', kind:'Nation', nation:'Rainia', biome:'rain', note:'On the far side of the Canon Face.'},
-    uohia:{name:'Uohia', kind:'Nation', nation:'Uohia', biome:'forest', note:'On the far side of the Canon Face, at the eastern end.'},
+    uohia:{name:'Ughia', kind:'Nation', nation:'Ughia', biome:'forest', note:'On the far side of the Canon Face, at the eastern end.'},
     spike:{name:'Spikia \u00b7 the spike', kind:'Nation', nation:'Spikia', note:'The top of the West Face, connected to the top area of the Canon Face. All the top corner lands are one country.'},
     delta:{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation. Wetia is all the deltas, and the three of them meet at this corner of the world, where the West, South and Far faces touch.'},
     swampland:{name:'Swampland', kind:'Nation', nation:'Swampland', tight:true, note:'On the central island of the West Face, the one Sapphire marked with a blue X.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
@@ -401,7 +401,7 @@ const WORLD = {
       {name:'Spikia', where:'All the top corner lands: the spikes of the Canon, West and South faces', note:'Pronounced sp-\u012bk-i\u0259. Also written Spikya.', places:['spikia-canon','spike','spike-south']},
       {name:'Wetia', where:'The deltas, one nation, meeting at the one corner where the West, South and Far faces touch', places:['delta','delta-south','delta-far']}]},
     {group:'Canon Face \u00b7 far side', items:[
-      {name:'Unoooland', where:'jungle', places:['unoooland']},{name:'It\u2019s Hot', where:'sweltering', places:['hotland']},{name:'Rainia', where:'rain', places:['rainia']},{name:'Uohia', where:'forest', places:['uohia']}]},
+      {name:'Unoooland', where:'jungle', places:['unoooland']},{name:'It\u2019s Hot', where:'sweltering', places:['hotland']},{name:'Rainia', where:'rain', places:['rainia']},{name:'Ughia', where:'forest', places:['uohia']}]},
     {group:'West Face \u00b7 the central island', items:[
       {name:'Swampland', places:['swampland']},{name:'Greenia', places:['greenia']},{name:'Marshia', places:['marshia']},{name:'Greeneria', places:['greeneria']},{name:'Baiuland', places:['baiuland']}]},
     {group:'South Face \u00b7 the southern continent', items:[
@@ -419,22 +419,22 @@ const WORLD = {
   moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind', craters:'one crater on the one side, two on the two side, three on the three side', note:'How big it is, how far away, and how long it takes to go round: not yet written.'},
   years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
   timeline:[      /* Ruby's comics of the key events (2026-10-03), two pages so far; said = her words as read from the photos */
-    {year:'-2000', said:'octal una terra (?)', shows:'green hills and a figure'},
-    {year:'-1000', said:'Dote (?)', shows:'a figure on a green hill'},
-    {year:'-500', said:'runder tot raen? (?)', shows:'a figure, and a die with dots'},
-    {year:'-100', said:'ohiy (?) \u00b7 boing (?)', shows:'someone setting out from the land that would later be named Unoooland, exploring to find other landmasses (as Ruby explained)'},
+    {year:'-2000', said:'estar una tetragon', shows:'green hills and a figure'},
+    {year:'-1000', said:'Dote', shows:'a figure on a green hill'},
+    {year:'-500', said:'runder tetragon?', shows:'a figure, and a die with dots'},
+    {year:'-100', said:'ohiy (?) \u00b7 boing (?)', shows:'two goodbye words, each a mix of adios and bye, as someone sets out from the land that would later be named Unoooland to find other landmasses (as Ruby explained)'},
     {year:'-90', said:'', shows:'a great hand; no words in this panel'},
     {year:'-50', said:'d3?!', shows:'a figure on the ground looks up at a d3'},
     {year:'-10', said:'we split up!!', shows:'Whiteland and Yolkia, the egg-shaped land in the sea'},
     {year:'-5', said:'we unco\u2026 (?)', shows:'a green hill; the rest of the words run off the page'},
-    {year:'-1', said:'its hot! \u00b7 Uohia \u00b7 rainyia?', shows:'four name bubbles over a green hill, one of them unreadable, with question marks all around'},
+    {year:'-1', said:'its hot! \u00b7 Ughia \u00b7 rainyia?', shows:'four name bubbles over a green hill, with question marks all around; the fourth name is not important right now, Ruby says'},
     {year:'-0', said:'0-0?!', shows:'a bird on a hill, inside a triangle'},
     {year:'0', said:'posibly central island located \u00b7 yay! \u00b7 ISLANDIA!', shows:'people cheering, and the name Islandia in big letters'}
   ],
   fields:[{id:'magical',name:'Magical field',effect:'slows light; turns the star\u2019s purple light to sunlight',extent:'all the way around',quote:'Here, the morning moves slower. And light flows like gold.'},
           {id:'magnetic',name:'Magnetic field',effect:'guides worlds',extent:'all the way around'}],
   faces:{
-    canon:{name:'The Canon Face', short:'Canon', tagline:'A single world · A thousand stories', blurb:'The first face, now drawn like the others: Whiteland and Yolkia to the west, Islandia in the middle sea, the Headlands, Neckia, the Feathers, Llamaland and Footia to the east, and along the far edge the four nations Unoooland, It\u2019s Hot, Rainia and Uohia. Open sea along both sides below Spikia, no clouds, at least half water.', note:'Ruby: the Canon face should not have land on the west and east sides, needs no clouds, must be at least half water, and should look like the other sides.', color:'#f5b64f', chart:'{{MAP_CANON}}', chartCaption:'The Canon Face, drawn from the outline of Ruby\u2019s painting'},
+    canon:{name:'The Canon Face', short:'Canon', tagline:'A single world · A thousand stories', blurb:'The first face, now drawn like the others: Whiteland and Yolkia to the west, Islandia in the middle sea, the Headlands, Neckia, the Feathers, Llamaland and Footia to the east, and along the far edge the four nations Unoooland, It\u2019s Hot, Rainia and Ughia. Open sea along both sides below Spikia, no clouds, at least half water.', note:'Ruby: the Canon face should not have land on the west and east sides, needs no clouds, must be at least half water, and should look like the other sides.', color:'#f5b64f', chart:'{{MAP_CANON}}', chartCaption:'The Canon Face, drawn from the outline of Ruby\u2019s painting'},
     west: {name:'The Western Face', short:'West', tagline:'Uncharted shores · New histories', blurb:'Charted by Sapphire the explorer: the spike at the top, the central island with its five nations, the little island of Tropicia, and Wetia at the corner.', note:'The area at the top of the West Face is connected to the top area of the Canon Face.', color:'#f0a05a', exploring:true, explorer:'Sapphire the explorer', explorerShort:'Sapphire', chart:'{{MAP_WEST}}', chartCaption:'Opal\u2019s complete map of the West, drawn from Sapphire\u2019s chart'},
     south:{name:'The Southern Face', short:'South', tagline:'Further lands · New histories', blurb:'Charted by Amethyst the explorer: tropical at the top, the southern continent in the middle sea with its three nations, and Wetia in the right-hand corner. The continent is joined to Tree Land across the Far edge; it does not touch the West side.', note:'The top connects again: the top of the South Face is part of Spikia with the other spikes.', color:'#86bbff', exploring:true, explorer:'Amethyst the explorer', explorerShort:'Amethyst', chart:'{{MAP_SOUTH}}', chartCaption:'Opal\u2019s complete map of the South, drawn from Amethyst\u2019s chart'},
     far:  {name:'The Far Face', short:'Far', tagline:'\u201cFar\u201d extreme mountains', blurb:'The base the world turns on, charted by Obsidian the explorer. The extreme mountains run from the top of the face to its exact centre, Mount Celestial. Warmia and Ehia lie by the Canon side, Tree Land along the South side, Wetia at the corner. The Far Face has no high sun and no deep night.', note:'Mount Celestial is on the axis the world spins on, so the sun never rises or sets there: twilight that never ends.', color:'#9aa0ad', exploring:true, explorer:'Obsidian the explorer', explorerShort:'Obsidian', chart:'{{MAP_FAR}}', chartCaption:'Opal\u2019s complete map of the Far Face, drawn from Obsidian\u2019s chart'}

@@ -75,7 +75,8 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
   - -2000: "octal una terra" (?) over green hills and a figure.
   - -1000: "Dote" (?), a figure on a green hill.
   - -500: a die with dots and a figure saying "runder tot raen?" (?).
-  - -100: "ohiy" (?) and "boing" (?), and a word written across the green land that may be "Unoooland" (?); a small figure standing in the water, and something orange afloat.
+  - -100: "ohiy" (?) and "boing" (?), and a word written across the green land; a small figure standing in the water, and something orange afloat.
+    - 2026-10-03, Ruby, on this panel: "someone was venturing out to explore from what was to be named uncooland to find other landmasses" (the panel's caption in the Key events list is now her explanation. She wrote "uncooland" here and "Unoooland" in every earlier round, so the page keeps Unoooland until she says which; open question 8.)
   - -90: a great hand, no words.
   - -50: "d3?!": a figure on the ground looks up at a d3 (the moon, by her point 4).
   - -10: "we split up!!": Whiteland and Yolkia drawn as the egg-shaped land in the sea.
@@ -118,7 +119,7 @@ Page (`template.html`, `build.py`):
 5. Lore: every card's prose is first-pass draft marked "Nothing written yet" or draft text for Joshua to edit. None of it is canon.
 6. (Answered 2026-10-03: "yes pleese"; done in v11, about 90 px wide. She can still say wider or thinner.)
 7. (Answered 2026-10-03 by her point 2; done in v11.)
-8. (2026-10-03) The hard-to-read words in her comics: years -2000, -1000, -500, the two bubbles and the word written across the land in the -100 panel (Unoooland?), and the fourth name in the year -1 panel.
+8. (2026-10-03) The hard-to-read words in her comics: years -2000, -1000, -500, the two bubbles in the -100 panel ("ohiy", "boing"), whether the land in that panel is spelled Unoooland (as before) or uncooland (as in her note of 2026-10-03), and the fourth name in the year -1 panel.
 9. (2026-10-03) "We split up!!" at year -10 shows Whiteland and Yolkia parting. On the generated map they are still one land, with no river between them (the painting had a river as their border, and the draft lore still says so). Should they be two separate lands now?
 10. (2026-10-03) The moon: how big, how far, how long it takes to go round, and which side faces Tetra. Needed before it can be drawn in the sky.
 11. (2026-10-03) Does she want the comic pages themselves shown in the Codex, or only the list of events?
@@ -190,4 +191,4 @@ Page (`template.html`):
 
 Reference: Ruby's two comic pages in `reference/ruby/comics/`; version 11 screenshots in `reference/screenshots-v11/`.
 
-Publishing: `dist/tetra.html` was published to `https://claude.ai/artifact/G6JjTxacMzAGCtcSrETb8v` on 2026-10-03 from the Claude Code session, as version 11 with the label "v11 Canon as a map, Tree Land joined, d3 moon, years" (the session had the Artifact tool, so the republish did not need a separate Claude conversation). `dist/tetra_world.html` is the matching standalone file. The artifact is private: Ruby sees it only through the access Joshua has already given, or through the standalone file.
+Publishing: `dist/tetra.html` was published to `https://claude.ai/artifact/G6JjTxacMzAGCtcSrETb8v` on 2026-10-03 from the Claude Code session, as version 11 with the label "v11 Canon as a map, Tree Land joined, d3 moon, years", and again the same day with the -100 caption from Ruby's own explanation (the session had the Artifact tool, so the republish did not need a separate Claude conversation). `dist/tetra_world.html` is the matching standalone file. The artifact is private: Ruby sees it only through the access Joshua has already given, or through the standalone file.

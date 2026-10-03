@@ -14,6 +14,9 @@ FACE_IDX = {'canon': (0, 1, 2), 'west': (0, 3, 1), 'south': (0, 2, 3), 'far': (1
 LOCAL = {0: APEX, 1: BL, 2: BR}     # local corner slot -> texture position
 N = 400
 SPIKE_T = 0.25     # how far down the Canon side edges Spikia reaches (West wedge(305) and South wedge(275) sit at t 0.26 and 0.23)
+CORNER_T = 0.93    # the last 7% of each Canon side edge is land: the bottom corners V1 and V2 are land on every edge that meets them
+                   # (the painted bottom edge 1-2, and the designed 1-3 and 2-3), so the far-side land reaches the two corners.
+                   # A reading of Ruby's "no land on the west and east sides", recorded in HANDOFF.md; she has been asked.
 
 def smooth(a, lo, hi):
     t = np.clip((a - lo) / (hi - lo), 0, 1); return t * t * (3 - 2 * t)
@@ -52,8 +55,8 @@ def profiles():
     p = measure_canon()                            # 1-2, the Canon bottom edge, stays as Ruby painted it (the Far face already follows it)
     # Ruby (2026-10-03): the Canon face "shuld not have land on the west and east sides": open sea along both side edges,
     # from the foot of Spikia (t = SPIKE_T, matching the West and South spikes) down to the corners
-    p['0-1'] = designed([(SPIKE_T, 1.0)])
-    p['0-2'] = designed([(SPIKE_T, 1.0)])
+    p['0-1'] = designed([(SPIKE_T, CORNER_T)])
+    p['0-2'] = designed([(SPIKE_T, CORNER_T)])
     p['0-3'] = designed([(0.40, 0.60)])            # west left / south right: Spikia, a bay in the swamp coast, land down to Wetia
     p['1-3'] = designed([(0.28, 0.75)])            # west bottom / far left: land at both corners, open sea between
     p['2-3'] = designed([(0.10, 0.30), (0.54, 0.80)])            # south bottom / far bottom: Tree Land runs from the V2 corner to the middle and meets the southern continent; open sea; then Wetia

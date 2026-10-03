@@ -192,7 +192,7 @@ def design_far(seed=303):
 # Ruby (2026-10-03): the Canon face "shuld not have land on the west and east sides and needs to not have clouds, be at least
 # 50% water, and look like the other sides (the detail is too much for the cannon side, this is a 4th of a entire planet you know)".
 # So the Canon face is Opal's map too now: Ruby's painting gives the outline and the places, the painter gives the look.
-CANON_IDS = ['whiteland', 'yolkia', 'islandia', 'headlands', 'neckia', 'feathers', 'llamaland', 'footia', 'spikia-canon', 'unoooland', 'hotland', 'rainia', 'uohia']
+SIDE_SEA = 96      # px: the open-sea band along the Canon face's two side edges (full within SIDE_SEA - 30, gone at SIDE_SEA)
 
 def canon_positions():
     """the 13 Canon regions, from their barycentrics in geometry.json (measured on the painting) to texture px"""
@@ -231,19 +231,22 @@ def mask_water(mask):
     return float(((mask < 0.5) & (TRI > 0.5)).sum() / (TRI > 0.5).sum())
 
 def shrink(mask, e):
-    """pull a soft land mask's coast inward by e px; the triangle's edges do not count as coast"""
+    """pull a soft land mask's coast inward by e px (e = 0 leaves the coast where it is); the triangle's edges do not count as coast"""
     lb = ((mask > 0.5) | (TRI < 0.5)).astype(np.uint8)
     d_in = cv2.distanceTransform(lb, cv2.DIST_L2, 5)
-    return np.clip((d_in - e) / 6.0 + 0.5, 0, 1) * TRI
+    return np.clip((d_in - e - 3.0) / 6.0 + 0.5, 0, 1) * TRI
 
-def settle(P, land, min_in=16):
-    """every marker on land, well clear of the coast: a marker the new coast left in the water moves to the nearest safe land"""
+def settle(P, land, min_in=16, max_move=60):
+    """every marker on land, well clear of the coast: a marker that the new coast left in the water, or closer than min_in px
+    to it, moves to the nearest land min_in px inland. A move longer than max_move means the outline changed under a region;
+    that is for a person to place, so it fails loudly instead of landing the region on some other landmass."""
     lb = (land > 0.5).astype(np.uint8); d_in = cv2.distanceTransform(lb, cv2.DIST_L2, 5)
     ys, xs = np.where((d_in >= min_in) & (TRI > 0.5)); out = {}; moved = {}
     for k, (x, y) in P.items():
         if d_in[int(round(y)), int(round(x))] >= min_in: out[k] = (float(x), float(y)); continue
         j = int(np.argmin((xs - x) ** 2 + (ys - y) ** 2)); out[k] = (float(xs[j]), float(ys[j]))
         moved[k] = round(float(math.hypot(xs[j] - x, ys[j] - y)))
+        assert moved[k] <= max_move, (k, 'would move', moved[k], 'px to reach land: place it by hand')
     return out, moved
 
 def design_canon(seed=404):
@@ -251,7 +254,7 @@ def design_canon(seed=404):
     rid = ridged(seed + 2)
     outline = canon_outline()
     # open sea along the west and east sides below Spikia; the spike itself stays, it is the same Spikia as on the West and South faces
-    sides = np.maximum(band(D_LEFT, 96), band(D_RIGHT, 96)) * (1 - wedge(300, 60))
+    sides = np.maximum(band(D_LEFT, SIDE_SEA), band(D_RIGHT, SIDE_SEA)) * (1 - wedge(300, 60))
     top = wedge(290)
     base = np.clip(np.maximum(soft(outline, 5) * (1 - sides), top), 0, 1)
     # "be at least 50% water": pull the coast in until the face is half sea with a little to spare. The pull is proportional to

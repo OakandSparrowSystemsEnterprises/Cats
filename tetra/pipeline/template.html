@@ -310,7 +310,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Key events</p>
-          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 0. The words are hers, as read from the photos; (?) marks a word that was hard to read.</p>
+          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 0. The words are hers, in her spelling, as read from the photos; (?) marks a word that was hard to read. The small line under each is what the panel shows.</p>
           <ul class="timeline" id="timeline"></ul>
         </div>
         <div class="sect">
@@ -422,19 +422,19 @@ const WORLD = {
     {year:'-2000', said:'octal una terra (?)', shows:'green hills and a figure'},
     {year:'-1000', said:'Dote (?)', shows:'a figure on a green hill'},
     {year:'-500', said:'runder tot raen? (?)', shows:'a figure, and a die with dots'},
-    {year:'-100', said:'ohiy (?) \u00b7 boing (?)', shows:'green land, and something orange in blue water'},
-    {year:'-90', said:'', shows:'a great hand'},
+    {year:'-100', said:'ohiy (?) \u00b7 boing (?) \u00b7 Unoooland (?) written across the land', shows:'green land with a word written across it, a small figure standing in the water, and something orange afloat'},
+    {year:'-90', said:'', shows:'a great hand; no words in this panel'},
     {year:'-50', said:'d3?!', shows:'a figure on the ground looks up at a d3'},
-    {year:'-10', said:'We split up!!', shows:'Whiteland and Yolkia, the egg-shaped land in the sea'},
-    {year:'-5', said:'We uncover\u2026 (the rest runs off the page)', shows:'a green hill'},
-    {year:'-1', said:'It\u2019s hot! \u00b7 Uohia \u00b7 Rainyia? \u00b7 and one more name (?)', shows:'the nations on the far side of the Canon Face get their names'},
-    {year:'-0', said:'0-0?!', shows:'a bird on the face'},
-    {year:'0', said:'Possibly central island located \u00b7 Yay! \u00b7 ISLANDIA!', shows:'Islandia is found'}
+    {year:'-10', said:'we split up!!', shows:'Whiteland and Yolkia, the egg-shaped land in the sea'},
+    {year:'-5', said:'we unco\u2026 (?)', shows:'a green hill; the rest of the words run off the page'},
+    {year:'-1', said:'its hot! \u00b7 Uohia \u00b7 rainyia?', shows:'four name bubbles over a green hill, one of them unreadable, with question marks all around'},
+    {year:'-0', said:'0-0?!', shows:'a bird on a hill, inside a triangle'},
+    {year:'0', said:'posibly central island located \u00b7 yay! \u00b7 ISLANDIA!', shows:'people cheering, and the name Islandia in big letters'}
   ],
   fields:[{id:'magical',name:'Magical field',effect:'slows light; turns the star\u2019s purple light to sunlight',extent:'all the way around',quote:'Here, the morning moves slower. And light flows like gold.'},
           {id:'magnetic',name:'Magnetic field',effect:'guides worlds',extent:'all the way around'}],
   faces:{
-    canon:{name:'The Canon Face', short:'Canon', tagline:'A single world · A thousand stories', blurb:'The first face, now drawn like the others: Whiteland and Yolkia to the west, Islandia in the middle sea, the Headlands, Neckia, the Feathers, Llamaland and Footia to the east, and along the far edge the four nations Unoooland, It\u2019s Hot, Rainia and Uohia. Open sea along both sides below Spikia, no clouds, at least half water.', note:'Ruby: the Canon face should not have land on the west and east sides, needs no clouds, must be at least half water, and should look like the other sides.', color:'#f5b64f', chart:'{{MAP_CANON}}', chartCaption:'The Canon Face as Opal would draw it, from the outline of Ruby\u2019s painting'},
+    canon:{name:'The Canon Face', short:'Canon', tagline:'A single world · A thousand stories', blurb:'The first face, now drawn like the others: Whiteland and Yolkia to the west, Islandia in the middle sea, the Headlands, Neckia, the Feathers, Llamaland and Footia to the east, and along the far edge the four nations Unoooland, It\u2019s Hot, Rainia and Uohia. Open sea along both sides below Spikia, no clouds, at least half water.', note:'Ruby: the Canon face should not have land on the west and east sides, needs no clouds, must be at least half water, and should look like the other sides.', color:'#f5b64f', chart:'{{MAP_CANON}}', chartCaption:'The Canon Face, drawn from the outline of Ruby\u2019s painting'},
     west: {name:'The Western Face', short:'West', tagline:'Uncharted shores · New histories', blurb:'Charted by Sapphire the explorer: the spike at the top, the central island with its five nations, the little island of Tropicia, and Wetia at the corner.', note:'The area at the top of the West Face is connected to the top area of the Canon Face.', color:'#f0a05a', exploring:true, explorer:'Sapphire the explorer', explorerShort:'Sapphire', chart:'{{MAP_WEST}}', chartCaption:'Opal\u2019s complete map of the West, drawn from Sapphire\u2019s chart'},
     south:{name:'The Southern Face', short:'South', tagline:'Further lands · New histories', blurb:'Charted by Amethyst the explorer: tropical at the top, the southern continent in the middle sea with its three nations, and Wetia in the right-hand corner. The continent is joined to Tree Land across the Far edge; it does not touch the West side.', note:'The top connects again: the top of the South Face is part of Spikia with the other spikes.', color:'#86bbff', exploring:true, explorer:'Amethyst the explorer', explorerShort:'Amethyst', chart:'{{MAP_SOUTH}}', chartCaption:'Opal\u2019s complete map of the South, drawn from Amethyst\u2019s chart'},
     far:  {name:'The Far Face', short:'Far', tagline:'\u201cFar\u201d extreme mountains', blurb:'The base the world turns on, charted by Obsidian the explorer. The extreme mountains run from the top of the face to its exact centre, Mount Celestial. Warmia and Ehia lie by the Canon side, Tree Land along the South side, Wetia at the corner. The Far Face has no high sun and no deep night.', note:'Mount Celestial is on the axis the world spins on, so the sun never rises or sets there: twilight that never ends.', color:'#9aa0ad', exploring:true, explorer:'Obsidian the explorer', explorerShort:'Obsidian', chart:'{{MAP_FAR}}', chartCaption:'Opal\u2019s complete map of the Far Face, drawn from Obsidian\u2019s chart'}
@@ -702,7 +702,7 @@ $('btnCodex').addEventListener('click',()=>openCodex(codex.classList.contains('c
 codex.querySelector('.grip').addEventListener('click',()=>openCodex(false));$('btnClose').addEventListener('click',()=>openCodex(false));
 // world JSON export (Regions tab footer)
 const exp=document.createElement('div');exp.className='group';exp.innerHTML='<h3><span>World file</span><button type="button" class="ghost" id="btnCopy">Copy JSON</button></h3><textarea class="json" id="worldJson" readonly aria-label="World JSON"></textarea>';reggroups.after(exp);
-(function(){const tl=document.getElementById('timeline');if(!tl)return;WORLD.timeline.forEach(t=>{const li=document.createElement('li');li.innerHTML='<b></b><div><span></span><em></em></div>';li.querySelector('b').textContent=t.year;li.querySelector('span').textContent=t.said||'(no words in this panel)';li.querySelector('em').textContent=t.shows;tl.appendChild(li)})})();
+(function(){const tl=document.getElementById('timeline');if(!tl)return;WORLD.timeline.forEach(t=>{const li=document.createElement('li');li.innerHTML='<b></b><div><span></span><em></em></div>';li.querySelector('b').textContent=t.year;li.querySelector('span').textContent=t.said||'';li.querySelector('em').textContent=t.shows;tl.appendChild(li)})})();
 function worldJson(){return JSON.stringify({...WORLD,lore:undefined,places:undefined,faces:Object.fromEntries(Object.entries(WORLD.faces).map(([k,f])=>[k,{...f,chart:undefined,chart2:undefined}])),regions:REGIONS.map(r=>({id:r.id,name:r.name,face:r.face,kind:r.kind||'Region',biome:r.biome,nation:r.nation,note:r.note,nations:r.nations,lore:loreOf(r.id)||undefined}))},null,1)}
 $('btnCopy').addEventListener('click',async()=>{const txt=worldJson();$('worldJson').value=txt;try{await navigator.clipboard.writeText(txt);toast('World JSON copied')}catch(e){$('worldJson').focus();$('worldJson').select();toast('Select the text below to copy')}});
 function refreshJson(){const ta=$('worldJson');if(document.activeElement!==ta)ta.value=worldJson()}

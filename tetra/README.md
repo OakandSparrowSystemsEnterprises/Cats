@@ -1,6 +1,6 @@
 # Tetra
 
-Ruby's four-sided world, as an interactive page. `dist/tetra_world.html` is the shipped build (version 10); open it in any browser, no server needed.
+Ruby's four-sided world, as an interactive page. `dist/tetra_world.html` is the shipped build (version 11); open it in any browser, no server needed.
 
 Start with `CLAUDE.md` (rules, layout, conventions) and `HANDOFF.md` (state, canon ledger, open questions).
 
@@ -10,7 +10,7 @@ Start with `CLAUDE.md` (rules, layout, conventions) and `HANDOFF.md` (state, can
 pip install -r requirements.txt
 npm install && npx playwright install chromium
 
-make maps     # regenerate the West, South and Far maps (deterministic)
+make maps     # regenerate the four maps, Canon, West, South and Far (deterministic)
 make check    # edge agreement between faces
 make build    # dist/tetra.html + dist/tetra_world.html
 make test     # Playwright: smoke, walkthrough, phases, tap

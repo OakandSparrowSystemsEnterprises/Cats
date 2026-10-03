@@ -230,12 +230,6 @@ def canon_outline(path='tex_canon.jpg'):
 def mask_water(mask):
     return float(((mask < 0.5) & (TRI > 0.5)).sum() / (TRI > 0.5).sum())
 
-def shrink(mask, e):
-    """pull a soft land mask's coast inward by e px (e = 0 leaves the coast where it is); the triangle's edges do not count as coast"""
-    lb = ((mask > 0.5) | (TRI < 0.5)).astype(np.uint8)
-    d_in = cv2.distanceTransform(lb, cv2.DIST_L2, 5)
-    return np.clip((d_in - e - 3.0) / 6.0 + 0.5, 0, 1) * TRI
-
 def settle(P, land, min_in=16, max_move=60):
     """every marker on land, well clear of the coast: a marker that the new coast left in the water, or closer than min_in px
     to it, moves to the nearest land min_in px inland. A move longer than max_move means the outline changed under a region;
@@ -249,39 +243,109 @@ def settle(P, land, min_in=16, max_move=60):
         assert moved[k] <= max_move, (k, 'would move', moved[k], 'px to reach land: place it by hand')
     return out, moved
 
+# Ruby (2026-10-03), on seeing the first generated Canon face: "we need to make islandia, egg island, and chicken island smaller
+# so they can keep their shapes and for the south continent, make it sort of semi circly please". So the painting's landmasses
+# are cut out whole, scaled down about their own centres (shapes kept) and moved just clear of the side sea, and the southern
+# land is a half-disc rising from the middle of the bottom edge.
+CANON_GROUPS = {'egg': ['whiteland', 'yolkia'], 'islandia': ['islandia'],
+                'chicken': ['headlands', 'neckia', 'feathers', 'llamaland', 'footia'],
+                'south': ['unoooland', 'hotland', 'rainia', 'uohia'], 'spike': ['spikia-canon']}
+ISLAND_SCALE = {'egg': 0.72, 'chicken': 0.72, 'islandia': 0.80}   # how much smaller each island is than in the painting
+SIDE_CLEAR = SIDE_SEA + 16                                          # px from a side edge that an island must keep
+CHANNEL = 40                                                        # px of open water kept between two islands
+DOME_A = 290                                                        # half-width of the southern half-disc; its height is solved for half water
+
+def canon_pieces(outline, P):
+    """the painting's landmasses as one mask per group. Where two groups share a landmass (the egg joins the southern land,
+    Spikia's neck does too) it is cut along the line of equal distance to the groups' markers."""
+    lb = (outline > 0.5).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(lb, 8)
+    names = list(CANON_GROUPS)
+    best = np.full((S, S), -1, np.int32); bestd = np.full((S, S), np.inf, np.float32)
+    for gi, g in enumerate(names):
+        for k in CANON_GROUPS[g]:
+            x, y = P[k]; d = (XS - x) ** 2 + (YS - y) ** 2
+            m = d < bestd; bestd[m] = d[m]; best[m] = gi
+    pieces = {}
+    for gi, g in enumerate(names):
+        comps = {int(lab[int(round(P[k][1])), int(round(P[k][0]))]) for k in CANON_GROUPS[g]} - {0}
+        m = (np.isin(lab, list(comps)) & (best == gi)).astype(np.uint8)
+        m = cv2.morphologyEx(m, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15)))
+        n2, lab2, _, _ = cv2.connectedComponentsWithStats(m, 8)
+        keep = {int(lab2[int(round(P[k][1])), int(round(P[k][0]))]) for k in CANON_GROUPS[g]} - {0}
+        pieces[g] = np.isin(lab2, list(keep)).astype(np.float32)
+    return pieces
+
+def place(mask, pts, s, shift=(0.0, 0.0)):
+    """scale a mask, and the points on it, about the mask's centroid by s, then move both by shift"""
+    ys, xs = np.where(mask > 0.5); cx, cy = float(xs.mean()), float(ys.mean())
+    A = np.array([[s, 0, cx * (1 - s) + shift[0]], [0, s, cy * (1 - s) + shift[1]]], np.float32)
+    out = cv2.warpAffine(mask, A, (S, S), flags=cv2.INTER_LINEAR, borderValue=0)
+    return out, {k: (s * x + float(A[0, 2]), s * y + float(A[1, 2])) for k, (x, y) in pts.items()}
+
+def dome(a, b, seed):
+    """a half-disc (half-ellipse when a != b) standing on the bottom edge, centred on it, with a slightly wandering coast"""
+    r = np.sqrt(((XS - 512.0) / a) ** 2 + ((YS - BL[1]) / b) ** 2)
+    return wobble(np.clip((1.0 - r) * b / 6.0 + 0.5, 0, 1), seed + 9, 18)
+
 def design_canon(seed=404):
     P0 = canon_positions()
     rid = ridged(seed + 2)
-    outline = canon_outline()
-    # open sea along the west and east sides below Spikia; the spike itself stays, it is the same Spikia as on the West and South faces
-    sides = np.maximum(band(D_LEFT, SIDE_SEA), band(D_RIGHT, SIDE_SEA)) * (1 - wedge(300, 60))
+    pieces = canon_pieces(canon_outline(), P0)
+    scales = dict(ISLAND_SCALE)
+    def placed(g):
+        pts = {k: P0[k] for k in CANON_GROUPS[g]}
+        m, pts2 = place(pieces[g], pts, scales[g])
+        d = float(np.minimum(D_LEFT, D_RIGHT)[m > 0.5].min())
+        if d < SIDE_CLEAR:          # too close to a side edge: slide it toward the middle of the face (the side edges lean at 60 degrees)
+            dx = (SIDE_CLEAR - d) / math.sin(math.pi / 3) * (1 if np.where(m > 0.5)[1].mean() < 512 else -1)
+            m, pts2 = place(pieces[g], pts, scales[g], (dx, 0.0))
+        return m, pts2
+    # the islands must stay islands: if two come closer than CHANNEL px of water, both shrink a notch and try again
+    for _ in range(12):
+        got = {g: placed(g) for g in ('egg', 'chicken', 'islandia')}
+        gaps = {}
+        for a, b in (('egg', 'islandia'), ('islandia', 'chicken'), ('egg', 'chicken')):
+            da = cv2.distanceTransform((got[a][0] < 0.5).astype(np.uint8), cv2.DIST_L2, 5)
+            gaps[(a, b)] = float(da[got[b][0] > 0.5].min())
+        tight = [pair for pair, gp in gaps.items() if gp < CHANNEL]
+        if not tight: break
+        for pair in tight:
+            for g in pair: scales[g] *= 0.95
+    print('canon: island scales', {g: round(v, 2) for g, v in scales.items()}, 'gaps px', {f'{a}-{b}': round(v) for (a, b), v in gaps.items()})
+    parts = {}; P = {'spikia-canon': P0['spikia-canon']}
+    for g, (m, pts2) in got.items(): parts[g] = soft(m, 2); P.update(pts2)
+    for k in CANON_GROUPS['south']: P[k] = P0[k]
     top = wedge(290)
-    base = np.clip(np.maximum(soft(outline, 5) * (1 - sides), top), 0, 1)
-    # "be at least 50% water": pull the coast in until the face is half sea with a little to spare. The pull is proportional to
-    # how thick the land is locally, so the thin shapes (the egg of Whiteland and Yolkia, the rooster of the Headlands) keep
-    # their width and the water comes out of the broad southern land instead
-    d0 = cv2.distanceTransform(((base > 0.5) | (TRI < 0.5)).astype(np.uint8), cv2.DIST_L2, 5)
-    thick = cv2.dilate(d0, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (81, 81)))
-    weight = np.clip(thick / 70.0, 0.4, 1.7)
-    land = None
-    for e in range(0, 80):
-        land = np.clip(conform(shrink(base, e * weight), 'canon', seed), 0, 1) * TRI
-        if mask_water(land) >= 0.512: break
-    print('canon: outline water', round(mask_water(base), 3), '-> pulled in by', e, 'px (x thickness weight) ->', round(mask_water(land), 3))
-    P, moved = settle(P0, land)
+    islands = np.clip(np.maximum.reduce([top, parts['egg'], parts['chicken'], parts['islandia']]), 0, 1)
+    # the southern half-disc: as tall as it can be with the face still at least half water (with a little to spare)
+    # and CHANNEL px of open water between it and the islands above
+    d_isl = cv2.distanceTransform((islands < 0.5).astype(np.uint8), cv2.DIST_L2, 5)
+    lo, hi = 60.0, 480.0
+    for _ in range(14):
+        b = (lo + hi) / 2
+        dm = dome(DOME_A, b, seed)
+        land = np.clip(conform(np.clip(np.maximum(islands, dm), 0, 1), 'canon', seed), 0, 1) * TRI
+        ok = mask_water(land) >= 0.512 and float(d_isl[dm > 0.5].min()) >= CHANNEL
+        if ok: lo = b
+        else: hi = b
+    b = lo
+    land = np.clip(conform(np.clip(np.maximum(islands, dome(DOME_A, b, seed)), 0, 1), 'canon', seed), 0, 1) * TRI
+    print('canon: southern half-disc', DOME_A, 'x', round(b), 'px; water', round(mask_water(land), 3))
+    P, moved = settle(P, land)
     if moved: print('canon: markers moved onto land (px):', moved)
     h, d_in = heights(land, seed)
     spike = gauss(APEX[0], APEX[1] + 120, 170, 160)
     h += spike * (0.2 + 0.32 * rid) * np.clip(d_in / 20, 0, 1)
     F, Hd = P['feathers'], P['headlands']
-    feathers = gauss(F[0], F[1], 95, 70, rot=0.5); heads = gauss(Hd[0], Hd[1], 70, 60)
+    feathers = gauss(F[0], F[1], 70, 52, rot=0.5); heads = gauss(Hd[0], Hd[1], 50, 44)
     h += (feathers * 0.34 + heads * 0.22) * (0.5 + rid) * np.clip(d_in / 25, 0, 1)
     def near(k, r): x, y = P[k]; return gauss(x, y, r, r)
-    white = near('whiteland', 95)
-    gold = np.maximum(near('yolkia', 100), 0.7 * near('llamaland', 90))
-    forest = np.maximum.reduce([near('islandia', 90), near('unoooland', 95), near('uohia', 90), 0.6 * near('feathers', 80)])
-    green = np.maximum.reduce([near('neckia', 80), near('rainia', 90), near('footia', 90), 0.6 * near('islandia', 100)])
-    red = np.maximum(near('headlands', 80), near('hotland', 95))
+    white = near('whiteland', 70)
+    gold = np.maximum(near('yolkia', 75), 0.7 * near('llamaland', 65))
+    forest = np.maximum.reduce([near('islandia', 75), near('unoooland', 95), near('uohia', 90), 0.6 * near('feathers', 60)])
+    green = np.maximum.reduce([near('neckia', 60), near('rainia', 90), near('footia', 65), 0.6 * near('islandia', 80)])
+    red = np.maximum(near('headlands', 60), near('hotland', 95))
     vary = fbm(seed + 41, base=7, octaves=3)
     temp = np.clip(0.5 - 0.35 * np.clip((h - 0.5) / 0.5, 0, 1) + 0.3 * near('hotland', 110) - 0.3 * white, 0, 1)
     moist = np.clip(0.5 + 0.3 * near('rainia', 110) + 0.2 * forest - 0.2 * gold, 0, 1)
@@ -295,16 +359,16 @@ def design_canon(seed=404):
     }
     tints = {'hot': near('hotland', 110) * 0.8, 'cold': white * 0.5}
     sources = [(int(APEX[0] + dx), int(APEX[1] + 150 + dy)) for dx, dy in [(-50, 30), (55, 20), (-20, 90), (80, 100)]]
-    sources += [(int(F[0] + dx), int(F[1] + dy)) for dx, dy in [(-40, -20), (30, 20)]]
+    sources += [(int(F[0] + dx), int(F[1] + dy)) for dx, dy in [(-30, -15), (20, 15)]]
     peak = np.clip(smooth(spike, 0.4, 0.8) * (h > 0.64) + smooth(feathers, 0.5, 0.9) * (h > 0.62), 0, 1)
     d = dict(height=h, temp=temp, moist=moist, sea_level=0.5, zones=zones, tints=tints, peak=peak, river_sources=sources)
     anchors = {k: [float(x), float(y)] for k, (x, y) in P.items()}
     return d, anchors
 
 LABELS = {
-    'canon': [('spikia-canon', 'Spikia', 30, False, (0, 56)), ('whiteland', 'Whiteland', 22, False, (-20, 30)), ('yolkia', 'Yolkia', 22, False, (10, 30)),
-              ('islandia', 'Islandia', 22, False, (0, 30)), ('headlands', 'The Headlands', 20, False, (0, -30)), ('neckia', 'Neckia', 20, False, (40, 0)),
-              ('feathers', 'The Feathers', 20, False, (-40, 28)), ('llamaland', 'Llamaland', 20, False, (50, 24)), ('footia', 'Footia', 22, False, (0, 32)),
+    'canon': [('spikia-canon', 'Spikia', 30, False, (0, 56)), ('whiteland', 'Whiteland', 20, False, (-54, 14)), ('yolkia', 'Yolkia', 20, False, (26, -28)),
+              ('islandia', 'Islandia', 20, False, (-8, 38)), ('headlands', 'The Headlands', 20, False, (0, -30)), ('neckia', 'Neckia', 20, False, (46, -6)),
+              ('feathers', 'The Feathers', 18, False, (10, 34)), ('llamaland', 'Llamaland', 18, False, (54, 2)), ('footia', 'Footia', 20, False, (36, 20)),
               ('unoooland', 'Unoooland', 20, True, (0, 30)), ('hotland', "It's Hot", 20, True, (0, 30)), ('rainia', 'Rainia', 20, True, (0, 30)), ('uohia', 'Ughia', 20, True, (0, 30))],
     'west': [('spike', 'Spikia', 34, False, (0, 60)), ('delta', 'Wetia', 26, True, (30, -30)),
              ('island', 'The Central Island', 24, False, (0, 0)), ('tropicia', 'Tropicia', 20, True, (0, 40))],

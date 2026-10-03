@@ -283,7 +283,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The moon</p>
-          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind. One crater on its one side, two craters on its two side, three craters on its three side.</span><span class="q">How big it is, how far away, and how long it takes to go round: not yet written.</span></div></div>
+          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind. One crater on its one side, two craters on its two side, three craters on its three side.</span><span class="q">It is drawn in the sky at a stand-in size and spot. How big it really is, how far away, and how it moves: not yet written.</span></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">The four faces</p>
@@ -315,7 +315,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Still unwritten</p>
-          <ul class="unwritten-list"><li>Day names</li><li>Hours in a day</li><li>Size of the world</li><li>A second Restart Day?</li><li>Where the Umbrella Tree Zinnia grows</li><li>The moon: how big, how far, how long to go round</li><li>The key events after year 0 (Ruby’s comics continue)</li><li>More of every face</li></ul>
+          <ul class="unwritten-list"><li>Day names</li><li>Hours in a day</li><li>Size of the world</li><li>A second Restart Day?</li><li>Where the Umbrella Tree Zinnia grows</li><li>The moon: how big, how far, how it moves (drawn at a stand-in spot for now)</li><li>The key events after year 0 (Ruby’s comics continue)</li><li>More of every face</li></ul>
           <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
         </div>
       </section>
@@ -416,7 +416,7 @@ const WORLD = {
   worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},
           {id:'inverted',name:'The Inverted Planet',desc:'A 16 \u00d7 16 \u00d7 16 cube, lived in from the inside: an overworld cave biome.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
-  moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind', craters:'one crater on the one side, two on the two side, three on the three side', note:'How big it is, how far away, and how long it takes to go round: not yet written.'},
+  moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind', craters:'one crater on the one side, two on the two side, three on the three side', note:'Drawn in the sky at a stand-in size and spot. How big it really is, how far away, and how it moves: not yet written.'},
   years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
   timeline:[      /* Ruby's comics of the key events (2026-10-03), two pages so far; said = her words as read from the photos */
     {year:'-2000', said:'estar una tetragon', shows:'green hills and a figure'},
@@ -600,7 +600,35 @@ function drawStars(t,sun){sc.setTransform(DPR,0,0,DPR,0,0);sc.clearRect(0,0,W,H)
   if(sp){const g=sc.createRadialGradient(sp.x,sp.y,0,sp.x,sp.y,size);g.addColorStop(0,'rgba(246,232,255,1)');g.addColorStop(.022,'rgba(214,170,255,1)');g.addColorStop(.06,'rgba(140,60,210,.9)');g.addColorStop(.18,'rgba(96,30,160,.36)');g.addColorStop(.45,'rgba(70,20,130,.10)');g.addColorStop(1,'rgba(60,20,120,0)');sc.fillStyle=g;sc.fillRect(sp.x-size,sp.y-size,size*2,size*2)}
   let mp=project(cam.vp,mulS(sun,-60));
   if(!mp){const dx=-dot(sun,cam.s),dy=dot(sun,cam.u),l=Math.hypot(dx,dy);if(l>0.05)mp={x:W/2+dx/l*0.95*Math.max(W,H),y:H/2+dy/l*0.95*Math.max(W,H)}}
-  if(mp){const g=sc.createRadialGradient(mp.x,mp.y,0,mp.x,mp.y,size*1.1);g.addColorStop(0,'rgba(90,150,255,.22)');g.addColorStop(.5,'rgba(70,120,255,.06)');g.addColorStop(1,'rgba(70,120,255,0)');sc.fillStyle=g;sc.fillRect(mp.x-size*1.1,mp.y-size*1.1,size*2.2,size*2.2)}}
+  if(mp){const g=sc.createRadialGradient(mp.x,mp.y,0,mp.x,mp.y,size*1.1);g.addColorStop(0,'rgba(90,150,255,.22)');g.addColorStop(.5,'rgba(70,120,255,.06)');g.addColorStop(1,'rgba(70,120,255,0)');sc.fillStyle=g;sc.fillRect(mp.x-size*1.1,mp.y-size*1.1,size*2.2,size*2.2)}
+  drawMoon(sun)}
+// Ruby (2026-10-03): "the moon of tetra is a d3 (with one crater on the one side, two craters on the two side, and three craters on
+// the three side)(perferably NOT the cubic d3)", and "where is the moon???". Drawn as a three-sided rolling die seen from the side,
+// two of its faces showing (one crater, two craters; the three-crater face is turned away), lit from the star. Its size, distance and
+// path are not yet written, so it hangs at a stand-in spot, MOON_SPOT radians round from the star (about five eighths of a turn), at a stand-in size.
+const MOON_SPOT=3.9,MOON_SIZE=1/46,MOON_TILT=-0.42;    // 3.9 rad round from the star keeps it in view on the home screen, desktop and phone
+function roundedRect(c,x,y,w,h,r){c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arcTo(x+w,y,x+w,y+r,r);c.lineTo(x+w,y+h-r);c.arcTo(x+w,y+h,x+w-r,y+h,r);c.lineTo(x+r,y+h);c.arcTo(x,y+h,x,y+h-r,r);c.lineTo(x,y+r);c.arcTo(x,y,x+r,y,r);c.closePath()}
+function moonSpot(sun,spot){const md=norm(rotYv(spot===undefined?MOON_SPOT:spot,sun)),far=mulS(md,60);let mp=project(cam.vp,far);
+  if(!mp){const dx=dot(md,cam.s),dy=-dot(md,cam.u),l=Math.hypot(dx,dy);if(l>0.05)mp={x:W/2+dx/l*0.95*Math.max(W,H),y:H/2+dy/l*0.95*Math.max(W,H),rim:true}}
+  if(!mp||mp.x<-40||mp.x>W+40||mp.y<-40||mp.y>H+40||occluded(far))return null;return mp}
+function drawMoon(sun){const mp=moonSpot(sun);if(!mp)return;
+  const r=Math.max(8,Math.min(W,H)*MOON_SIZE),L=r*2.2;
+  let sp=project(cam.vp,mulS(sun,60));if(!sp){const dx=dot(sun,cam.s),dy=-dot(sun,cam.u),l=Math.hypot(dx,dy)||1;sp={x:W/2+dx/l*W,y:H/2+dy/l*H}}
+  const lit=Math.atan2(sp.y-mp.y,sp.x-mp.x)-MOON_TILT;
+  sc.save();sc.translate(mp.x,mp.y);
+  const halo=sc.createRadialGradient(0,0,r*0.5,0,0,r*3.4);halo.addColorStop(0,'rgba(216,208,238,.26)');halo.addColorStop(1,'rgba(216,208,238,0)');sc.fillStyle=halo;sc.fillRect(-r*3.4,-r*3.4,r*6.8,r*6.8);
+  sc.rotate(MOON_TILT);
+  sc.beginPath();roundedRect(sc,-L,-r,2*L,2*r,r*0.92);sc.save();sc.clip();
+  sc.fillStyle='#d8d2e6';sc.fillRect(-L,-r,2*L,r);
+  sc.fillStyle='#a19ab8';sc.fillRect(-L,0,2*L,r);
+  sc.fillStyle='#6f6888';sc.fillRect(-L,r*0.74,2*L,r*0.26);
+  const crater=(x,y,cr)=>{sc.fillStyle='rgba(58,50,88,.55)';sc.beginPath();sc.arc(x,y,cr,0,TAU);sc.fill();sc.strokeStyle='rgba(255,250,255,.4)';sc.lineWidth=1;sc.beginPath();sc.arc(x,y,cr,Math.PI*1.05,Math.PI*1.95);sc.stroke()};
+  crater(0,-r*0.5,r*0.26);crater(-L*0.42,r*0.36,r*0.2);crater(L*0.42,r*0.36,r*0.2);
+  const sh=sc.createLinearGradient(Math.cos(lit)*L,Math.sin(lit)*L,-Math.cos(lit)*L,-Math.sin(lit)*L);sh.addColorStop(0,'rgba(18,14,36,0)');sh.addColorStop(0.55,'rgba(18,14,36,.15)');sh.addColorStop(1,'rgba(18,14,36,.6)');sc.fillStyle=sh;sc.fillRect(-L,-r,2*L,2*r);
+  sc.restore();
+  sc.strokeStyle='rgba(44,38,70,.55)';sc.lineWidth=1;sc.beginPath();sc.moveTo(-L+r*0.3,0);sc.lineTo(L-r*0.3,0);sc.stroke();
+  sc.strokeStyle='rgba(242,238,252,.55)';sc.lineWidth=1.2;sc.beginPath();roundedRect(sc,-L,-r,2*L,2*r,r*0.92);sc.stroke();
+  sc.restore()}
 function ringPoints(sun,side,k,count){
   // both fields go all the way around the world: full rings. Gold rings swing through the sun line (the light they slow and
   // recolour comes in along it); blue rings are tipped around the world's axis, the way a magnetic field wraps a planet.
@@ -760,7 +788,7 @@ function start(saved){try{if(saved&&typeof saved==='object'){if(typeof saved.day
   btnPlay.textContent=state.playing?'Pause':'Play';buildMarkers();renderFaceList();renderRegionGroups();renderWorlds();renderNations();renderExplorers();renderYear();updateYear();renderPlace();refreshJson();
   if(W>=820)openCodex(true);
   try{window.claude?.hot?.snapshot?.(()=>({day:state.day,baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,speed:state.speed,playing:state.playing,selected:state.selected,follow:state.follow}))}catch(e){}
-  window.tetra={get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>phaseFor(REGIONS.find(x=>x.id===id),sunDir(state.day))};
+  window.tetra={moon:(spot)=>moonSpot(sunDir(state.day),spot),get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>phaseFor(REGIONS.find(x=>x.id===id),sunDir(state.day))};
   requestAnimationFrame(frame)}
 try{if(window.claude?.hot?.ready)window.claude.hot.ready(start);else start(window.claude?.hot?.data??{})}catch(e){start({})}
 })();

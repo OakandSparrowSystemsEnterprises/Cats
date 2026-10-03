@@ -284,8 +284,18 @@ def place(mask, pts, s, shift=(0.0, 0.0)):
     return out, {k: (s * x + float(A[0, 2]), s * y + float(A[1, 2])) for k, (x, y) in pts.items()}
 
 def disc(cx, cy, r):
-    """a perfectly round island"""
+    """a round island"""
     return np.clip((r - np.hypot(XS - cx, YS - cy)) / 3.0 + 0.5, 0, 1)
+
+def egg_shape(cx, cy, rx, ry, rot, seed):
+    """an egg: an oval, narrower at its top end, with a slightly wandering coast (Ruby: "egg island shuld be egg shaped (also no
+    perfict circular stuff")"""
+    c, s_ = math.cos(rot), math.sin(rot)
+    x, y = XS - cx, YS - cy
+    x, y = c * x + s_ * y, -s_ * x + c * y
+    taper = 1.0 - 0.22 * np.clip(-y / ry, -1, 1)            # the top end is the narrow one
+    r = np.sqrt((x / (rx * taper)) ** 2 + (y / ry) ** 2)
+    return wobble(np.clip((1.0 - r) * min(rx, ry) / 3.0 + 0.5, 0, 1), seed + 13, 7)
 
 def arch(h, R, seed):
     """the southern land: a circular segment h px tall standing on the middle of the bottom edge, cut from a circle of radius R
@@ -297,7 +307,7 @@ def arch(h, R, seed):
 # make egia and islandia perfectly shperical plz also put the chicken island above islandia now that we have the room".
 DOME_H = 213                       # px: the height the half-disc had ("as tall as that")
 ARC_GOAL = 1 / 6                   # the slice of a circle she asked for; the arc gets as flat as half water allows, up to this
-ISLAND_R = {'egg': 66, 'islandia': 50}   # px: the two round islands (their sizes are a reading)
+ISLAND_R = {'egg': 66, 'islandia': 50}   # px: the egg's mean radius (it is drawn 58 x 76, tilted) and Islandia's (their sizes are a reading)
 ISLANDIA_AT = (512.0, 640.0)
 CHICKEN_SCALE = 0.60               # starting size of chicken island; it shrinks a notch at a time until it fits above Islandia
 
@@ -311,10 +321,13 @@ def design_canon(seed=404):
     ys_, xs_ = np.where(pieces['egg'] > 0.5); ex, ey = float(xs_.mean()), float(ys_.mean()); r_e = ISLAND_R['egg']
     short = SIDE_CLEAR + r_e - float(D_LEFT[int(ey), int(ex)])
     if short > 0: ex += short / math.sin(math.pi / 3)
-    egg = disc(ex, ey, r_e); P['whiteland'] = (ex - 0.45 * r_e, ey - 0.08 * r_e); P['yolkia'] = (ex + 0.45 * r_e, ey + 0.08 * r_e)
+    EGG_RX, EGG_RY, EGG_ROT = 58, 76, -0.22
+    egg = egg_shape(ex, ey, EGG_RX, EGG_RY, EGG_ROT, seed)
+    # Whiteland west of the egg's long axis, Yolkia east of it; the border between them is a river (see the heights below)
+    P['whiteland'] = (ex - 0.46 * EGG_RX, ey + 0.05 * EGG_RY); P['yolkia'] = (ex + 0.46 * EGG_RX, ey + 0.05 * EGG_RY)
     ix, iy = ISLANDIA_AT; r_i = ISLAND_R['islandia']
     ix = max(ix, ex + r_e + CHANNEL + r_i)       # Islandia keeps CHANNEL px of water from the egg (the face is narrow this high up)
-    islandia = disc(ix, iy, r_i); P['islandia'] = (ix, iy)
+    islandia = wobble(disc(ix, iy, r_i), seed + 17, 9); P['islandia'] = (ix, iy)     # round, not perfectly: "no perfict circular stuff"
     # chicken island above Islandia: its painted shape, as big as fits between Spikia's coast and Islandia with CHANNEL px of water
     ch = pieces['chicken']; ys_, xs_ = np.where(ch > 0.5); cx, cy, cy_max = float(xs_.mean()), float(ys_.mean()), float(ys_.max())
     bx = (float(xs_.min()) + float(xs_.max())) / 2                 # the middle of its width
@@ -354,6 +367,14 @@ def design_canon(seed=404):
     F, Hd = P['feathers'], P['headlands']
     feathers = gauss(F[0], F[1], 70, 52, rot=0.5); heads = gauss(Hd[0], Hd[1], 50, 44)
     h += (feathers * 0.34 + heads * 0.22) * (0.5 + rid) * np.clip(d_in / 25, 0, 1)
+    # Ruby: "whiteland and yolkia need to have a rivver on the border". The egg's long axis is the border: a shallow valley runs
+    # along it, highest at the north end, so a river rising there flows south down the border to the sea
+    on_egg = (egg > 0.5)
+    c_, s_ = math.cos(EGG_ROT), math.sin(EGG_ROT)
+    ax = c_ * (XS - ex) + s_ * (YS - ey); ay = -s_ * (XS - ex) + c_ * (YS - ey)      # the egg's own axes
+    valley = np.exp(-0.5 * (ax / 7.0) ** 2); slope = np.clip((ey - YS) / EGG_RY, -1, 1)
+    h = np.where(on_egg, h + 0.025 * slope * np.clip(d_in / 12, 0, 1) - 0.03 * valley * np.clip(d_in / 10, 0, 1), h)
+    river_top = (ex - s_ * (-0.55 * EGG_RY), ey + c_ * (-0.55 * EGG_RY))             # on the border, near the north end
     def near(k, r): x, y = P[k]; return gauss(x, y, r, r)
     white = near('whiteland', 55)
     gold = np.maximum(near('yolkia', 55), 0.7 * near('llamaland', 65))
@@ -374,6 +395,7 @@ def design_canon(seed=404):
     tints = {'hot': near('hotland', 110) * 0.8, 'cold': white * 0.5}
     sources = [(int(APEX[0] + dx), int(APEX[1] + 150 + dy)) for dx, dy in [(-50, 30), (55, 20), (-20, 90), (80, 100)]]
     sources += [(int(F[0] + dx), int(F[1] + dy)) for dx, dy in [(-30, -15), (20, 15)]]
+    sources += [(int(river_top[0]), int(river_top[1]))]                                   # the border river of egg island
     peak = np.clip(smooth(spike, 0.4, 0.8) * (h > 0.64) + smooth(feathers, 0.5, 0.9) * (h > 0.62), 0, 1)
     d = dict(height=h, temp=temp, moist=moist, sea_level=0.5, zones=zones, tints=tints, peak=peak, river_sources=sources)
     anchors = {k: [float(x), float(y)] for k, (x, y) in P.items()}

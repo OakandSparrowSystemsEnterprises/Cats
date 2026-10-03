@@ -7,7 +7,7 @@ Not needed for the build. What is here:
 - `art-versions/`: the four versions of the Canon painting; v4 (28-day) is `pipeline/art_latest.png`.
 - `tetra_world_spin_original.html`, `original_spin_page_phone.png`: Joshua's original spinning tetrahedron page, before any of this.
 - `screenshots-v10/`: what version 10 looks like on desktop and phone, plus the six-seam sheet (composed by hand from `tests/out/seam_*.png`; `npm run seams` writes the six files, not the sheet).
-- `screenshots-v11/`: version 11 (2026-10-03): home, the Canon face card and its chart, a Whiteland card, the calendar with the years, the moon, the key events, the Far, West and South faces, the Mount Celestial card, the World tab, two phone views, the phone tap, the moon on desktop and phone (`moon_desk`, `moon_phone`), and the six-seam sheet.
+- `screenshots-v11/`: version 11 (2026-10-03): home, the Canon face card and its chart, a Whiteland card, the calendar with the years, the moon, the key events, the Far, West and South faces, the Mount Celestial card, the World tab, two phone views, the phone tap, the moon and the eclipse on desktop and phone (`moon_*`, `eclipse_*`), and the six-seam sheet.
 - `previews/`: marker previews of the three generated maps, the maps sheet, the edge check, the blocky-edge check, the outline preview.
 
 Provenance: the handoff arrived as three archives, `tetra-repo-v10.zip`, `tetra-reference-ruby-and-art.zip` and `tetra-reference-screenshots.zip`, each with a top-level `tetra/` folder. The two reference archives were split off to stay under the chat's upload limit; both are unpacked here in full, so nothing further needs unzipping.

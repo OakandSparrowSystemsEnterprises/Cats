@@ -266,7 +266,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The calendar</p>
-          <dl class="kv"><dt>Months</dt><dd>13 · 28 days each</dd><dt>Year</dt><dd>364 days + the Restart Day</dd><dt>One day</dt><dd>One full turn</dd><dt>Spin</dt><dd>Leftward</dd><dt>Years</dt><dd>Counted from year 0. There is a year -0 as well, and it is not the same year as 0. The years before run backwards, the way BCE does on Earth.</dd><dt>Now</dt><dd>Year 1700. In technology, about Earth’s 1750.</dd></dl>
+          <dl class="kv"><dt>Months</dt><dd>13 · 28 days each</dd><dt>Year</dt><dd>364 days + the Restart Day, which is one and a quarter days long: 365¼ days, so there are no leap years</dd><dt>One day</dt><dd>One full turn</dd><dt>Spin</dt><dd>Leftward</dd><dt>Years</dt><dd>Counted from year 0. There is a year -0 as well, and it is not the same year as 0. The years before run backwards, the way BCE does on Earth.</dd><dt>Now</dt><dd>Year 1700. In technology, about Earth’s 1750.</dd></dl>
           <div class="year" id="yearStrip" aria-label="The year, month by month"></div>
           <p class="eyebrow" style="margin-top:16px">Seasons on the Canon Face · on average</p>
           <ul class="seasons" id="seasonList"></ul>
@@ -283,7 +283,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The moon</p>
-          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind. One crater on its one side, two craters on its two side, three craters on its three side.</span><span class="q">It is drawn in the sky at a stand-in size and spot. How big it really is, how far away, and how it moves: not yet written.</span></div></div>
+          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind. One crater on its one side, two craters on its two side, three craters on its three side. It is a third of the size of Tetra and circles a little farther out than the magical field. Every ordinary day it sits on the opposite side from the star, full. Every month, on the new moon, it swings round in front of the star: a solar eclipse.</span><span class="q">Which day of the month is the new moon: not yet written (the first day of each month for now).</span></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">The four faces</p>
@@ -315,7 +315,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Still unwritten</p>
-          <ul class="unwritten-list"><li>Day names</li><li>Hours in a day</li><li>Size of the world</li><li>A second Restart Day?</li><li>Where the Umbrella Tree Zinnia grows</li><li>The moon: how big, how far, how it moves (drawn at a stand-in spot for now)</li><li>The key events after year 0 (Ruby’s comics continue)</li><li>More of every face</li></ul>
+          <ul class="unwritten-list"><li>Day names</li><li>Hours in a day</li><li>Size of the world</li><li>Where the Umbrella Tree Zinnia grows</li><li>Which day of the month is the new moon (the first, for now)</li><li>The key events after year 0 (Ruby’s comics continue)</li><li>More of every face</li></ul>
           <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
         </div>
       </section>
@@ -329,7 +329,7 @@
   </aside>
 
   <div class="dock" id="dock">
-    <div class="date"><strong id="dateOut">1 January</strong><span id="dateSub">Year 1700 · Rain season · day 1 of 365</span></div>
+    <div class="date"><strong id="dateOut">1 January</strong><span id="dateSub">Year 1700 · Rain season · day 1 of 365¼</span></div>
     <button id="btnCodex" type="button" aria-pressed="false" aria-controls="codex">Codex</button>
     <div class="time">
       <label><span class="k">Spin</span><input id="rngSpin" type="range" min="0" max="8" step="0.1" value="1" aria-label="Spin speed"><span class="v" id="spinOut">1.0×</span></label>
@@ -364,7 +364,7 @@ const GEO = {{GEOMETRY}};
 const WORLD = {
   name:'Tetra', tagline:'A single world · A thousand stories',
   system:{name:'The Dice System', tagline:'Worlds beyond chance', quote:'Different worlds. Same imagination.'},
-  calendar:{months:['January','February','Tredesember','March','April','May','June','July','August','September','October','November','December'], daysPerMonth:28, restartDays:1, yearDays:365, spin:'leftward', quote:'A slower turn, a richer world.',
+  calendar:{months:['January','February','Tredesember','March','April','May','June','July','August','September','October','November','December'], daysPerMonth:28, restartDays:1.25, yearDays:365.25, spin:'leftward', quote:'A slower turn, a richer world.',
     seasons:[{id:'rain',name:'Rain season',months:[0],restart:true,color:'#7f9fc4',light:[0.80,0.87,0.98]},
              {id:'spring',name:'Spring',months:[1,2,3],color:'#8cc98a',light:[0.94,1.0,0.9]},
              {id:'summer',name:'Summer',months:[4,5,6],color:'#f5b64f',light:[1.0,0.95,0.84]},
@@ -416,7 +416,7 @@ const WORLD = {
   worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},
           {id:'inverted',name:'The Inverted Planet',desc:'A 16 \u00d7 16 \u00d7 16 cube, lived in from the inside: an overworld cave biome.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
-  moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind', craters:'one crater on the one side, two on the two side, three on the three side', note:'Drawn in the sky at a stand-in size and spot. How big it really is, how far away, and how it moves: not yet written.'},
+  moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day', eclipse:'a solar eclipse every month on the new moon', note:'Which day of the month is the new moon: not yet written (drawn on the first day of each month for now).'},
   years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
   timeline:[      /* Ruby's comics of the key events (2026-10-03), two pages so far; said = her words as read from the photos */
     {year:'-2000', said:'estar una tetragon', shows:'green hills and a figure'},
@@ -500,7 +500,8 @@ const EDGES=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]].map(([a,b])=>({a,b,faces:FACES
 const DAY_SECONDS=30, YEAR=WORLD.calendar.yearDays, DPM=WORLD.calendar.daysPerMonth, MONTHS=WORLD.calendar.months, SEASONS=WORLD.calendar.seasons, TILT=23.4*Math.PI/180;
 const SUMMER_MID=(4*DPM+7*DPM)/2, RAIN_START=MONTHS.length*DPM; // doy 364 = Restart Day, then January
 const YEAR0=WORLD.years.now;      // Ruby (2026-10-03): "in tetra years they are in 1700"
-function dateParts(day){const d=Math.floor(day),y=YEAR0+Math.floor(d/YEAR),doy=((d%YEAR)+YEAR)%YEAR;const mi=doy>=RAIN_START?-1:Math.floor(doy/DPM),dom=mi<0?0:doy%DPM+1;const season=SEASONS.find(sn=>mi<0?sn.restart:sn.months.includes(mi));return{y,doy,mi,dom,season}}
+// Ruby (2026-10-03): "reset dayes are one and a quarter days so there arent leap years": the year is 365.25 days, the Restart Day being 1.25 days long
+function dateParts(day){const y=YEAR0+Math.floor(day/YEAR),df=((day%YEAR)+YEAR)%YEAR,doy=Math.floor(df);const mi=doy>=RAIN_START?-1:Math.floor(doy/DPM),dom=mi<0?0:doy%DPM+1;const season=SEASONS.find(sn=>mi<0?sn.restart:sn.months.includes(mi));return{y,doy:Math.min(doy,RAIN_START),mi,dom,season,df}}
 const seasonCenters=SEASONS.map(sn=>{const ds=sn.months.flatMap(m=>[m*DPM,m*DPM+DPM-1]);if(sn.restart)ds.push(YEAR-1,YEAR-1+DPM);const lo=Math.min(...ds),hi=Math.max(...ds);return{sn,c:sn.restart?((YEAR-1+YEAR+DPM-1)/2)%YEAR:(lo+hi)/2}}).sort((a,b)=>a.c-b.c);
 function seasonLight(day){const doy=((day%YEAR)+YEAR)%YEAR;const n=seasonCenters.length;for(let i=0;i<n;i++){const a=seasonCenters[i],b=seasonCenters[(i+1)%n];let c0=a.c,c1=b.c;if(c1<=c0)c1+=YEAR;let x=doy;if(x<c0)x+=YEAR;if(x>=c0&&x<=c1){const t=(x-c0)/(c1-c0);return a.sn.light.map((v,k)=>v+(b.sn.light[k]-v)*t)}}return[1,1,1]}
 function rainAmount(day){const doy=((day%YEAR)+YEAR)%YEAR;let x=doy<RAIN_START?doy+YEAR:doy;const a=RAIN_START,b=RAIN_START+1+DPM;if(x<a-1||x>b)return 0;return clamp(Math.min(x-(a-1),b-x),0,1)}
@@ -597,38 +598,48 @@ function drawStars(t,sun){sc.setTransform(DPR,0,0,DPR,0,0);sc.clearRect(0,0,W,H)
   for(const s of starData){const a=s.a*(.8+.2*Math.sin(t*.0005+s.p));sc.fillStyle=s.c>.85?`rgba(255,226,180,${a})`:s.c<.12?`rgba(190,214,255,${a})`:`rgba(232,238,255,${a})`;sc.beginPath();sc.arc(s.x,s.y,s.r,0,TAU);sc.fill()}
   let sp=project(cam.vp,mulS(sun,60));const size=Math.max(W,H)*0.55;
   if(!sp){const dx=dot(sun,cam.s),dy=-dot(sun,cam.u),l=Math.hypot(dx,dy);if(l>0.05)sp={x:W/2+dx/l*0.95*Math.max(W,H),y:H/2+dy/l*0.95*Math.max(W,H)}}
-  if(sp){const g=sc.createRadialGradient(sp.x,sp.y,0,sp.x,sp.y,size);g.addColorStop(0,'rgba(246,232,255,1)');g.addColorStop(.022,'rgba(214,170,255,1)');g.addColorStop(.06,'rgba(140,60,210,.9)');g.addColorStop(.18,'rgba(96,30,160,.36)');g.addColorStop(.45,'rgba(70,20,130,.10)');g.addColorStop(1,'rgba(60,20,120,0)');sc.fillStyle=g;sc.fillRect(sp.x-size,sp.y-size,size*2,size*2)}
+  if(sp){const g=sc.createRadialGradient(sp.x,sp.y,0,sp.x,sp.y,size);g.addColorStop(0,'rgba(246,232,255,1)');g.addColorStop(.022,'rgba(214,170,255,1)');g.addColorStop(.06,'rgba(140,60,210,.9)');g.addColorStop(.18,'rgba(96,30,160,.36)');g.addColorStop(.45,'rgba(70,20,130,.10)');g.addColorStop(1,'rgba(60,20,120,0)');sc.fillStyle=g;sc.globalAlpha=1-0.8*MOON.eclipse;sc.fillRect(sp.x-size,sp.y-size,size*2,size*2);sc.globalAlpha=1}
   let mp=project(cam.vp,mulS(sun,-60));
   if(!mp){const dx=-dot(sun,cam.s),dy=dot(sun,cam.u),l=Math.hypot(dx,dy);if(l>0.05)mp={x:W/2+dx/l*0.95*Math.max(W,H),y:H/2+dy/l*0.95*Math.max(W,H)}}
   if(mp){const g=sc.createRadialGradient(mp.x,mp.y,0,mp.x,mp.y,size*1.1);g.addColorStop(0,'rgba(90,150,255,.22)');g.addColorStop(.5,'rgba(70,120,255,.06)');g.addColorStop(1,'rgba(70,120,255,0)');sc.fillStyle=g;sc.fillRect(mp.x-size*1.1,mp.y-size*1.1,size*2.2,size*2.2)}
-  drawMoon(sun)}
+  drawMoon(sc,false)}
 // Ruby (2026-10-03): "the moon of tetra is a d3 (with one crater on the one side, two craters on the two side, and three craters on
-// the three side)(perferably NOT the cubic d3)", and "where is the moon???". Drawn as a three-sided rolling die seen from the side,
-// two of its faces showing (one crater, two craters; the three-crater face is turned away), lit from the star. Its size, distance and
-// path are not yet written, so it hangs at a stand-in spot, MOON_SPOT radians round from the star (about five eighths of a turn), at a stand-in size.
-const MOON_SPOT=3.9,MOON_SIZE=1/46,MOON_TILT=-0.42;    // 3.9 rad round from the star keeps it in view on the home screen, desktop and phone
+// the three side)(perferably NOT the cubic d3)", "where is the moon???", and then: "it shuld be a 1/3 of the size of tetra and solar
+// eclipse every month on the new moon, but every other day it is just on oposite side of sun, and is a little bit farther than the
+// magical field." So: a three-sided rolling die a third of Tetra's width, orbiting just outside the outermost gold ring; on every
+// ordinary day it sits opposite the star (full from Tetra); on the new moon it swings once round the orbit, through the line to the
+// star at midday, and the world darkens (a solar eclipse). Readings: the new moon is the first day of each month (she has not said
+// which day); the swing takes the whole day.
+const EDGE=len(sub(V[1],V[2])),MOON_LEN=EDGE/3,MOON_HALF=MOON_LEN/2,MOON_W=MOON_HALF/2.2,MOON_ORBIT=2.18+0.3,MOON_TILT=-0.42;
+const rotAxis=(v,a,th)=>{const c=Math.cos(th),sn=Math.sin(th),x=cross(a,v);return add(add(mulS(v,c),mulS(x,sn)),mulS(a,dot(a,v)*(1-c)))};
+let MOON={dir:[0,0,1],pos:[0,0,MOON_ORBIT],theta:0,eclipse:0,newMoon:false};
+function moonState(day,sun){const {mi,dom}=dateParts(day);const newMoon=mi>=0&&dom===1;const theta=newMoon?TAU*(day-Math.floor(day)):0;
+  const axis=norm(cross(sun,Math.abs(sun[1])<.9?[0,1,0]:[1,0,0]));const dir=norm(rotAxis(mulS(sun,-1),axis,theta));
+  const ang=Math.acos(Math.max(-1,Math.min(1,dot(dir,sun))));const half=Math.atan(MOON_HALF/MOON_ORBIT);   // the die's half-length seen from Tetra
+  const eclipse=Math.max(0,Math.min(1,(half*1.3-ang)/(half*0.9)));
+  return{dir,pos:mulS(dir,MOON_ORBIT),theta,eclipse,newMoon}}
+function moonScreen(){const mp=project(cam.vp,MOON.pos);if(!mp)return null;const up=project(cam.vp,add(MOON.pos,mulS(cam.u,MOON_HALF)));
+  const half=up?Math.hypot(up.x-mp.x,up.y-mp.y):0;const front=len(sub(MOON.pos,cam.eye))<len(sub(TARGET,cam.eye));return{x:mp.x,y:mp.y,half,front}}
 function roundedRect(c,x,y,w,h,r){c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arcTo(x+w,y,x+w,y+r,r);c.lineTo(x+w,y+h-r);c.arcTo(x+w,y+h,x+w-r,y+h,r);c.lineTo(x+r,y+h);c.arcTo(x,y+h,x,y+h-r,r);c.lineTo(x,y+r);c.arcTo(x,y,x+r,y,r);c.closePath()}
-function moonSpot(sun,spot){const md=norm(rotYv(spot===undefined?MOON_SPOT:spot,sun)),far=mulS(md,60);let mp=project(cam.vp,far);
-  if(!mp){const dx=dot(md,cam.s),dy=-dot(md,cam.u),l=Math.hypot(dx,dy);if(l>0.05)mp={x:W/2+dx/l*0.95*Math.max(W,H),y:H/2+dy/l*0.95*Math.max(W,H),rim:true}}
-  if(!mp||mp.x<-40||mp.x>W+40||mp.y<-40||mp.y>H+40||occluded(far))return null;return mp}
-function drawMoon(sun){const mp=moonSpot(sun);if(!mp)return;
-  const r=Math.max(8,Math.min(W,H)*MOON_SIZE),L=r*2.2;
+function drawMoon(c,wantFront){const m=moonScreen();if(!m||m.front!==wantFront||m.half<2)return;
+  if(m.x<-m.half*2||m.x>W+m.half*2||m.y<-m.half*2||m.y>H+m.half*2)return;
+  const L=m.half,r=L/2.2,sun=sunDir(state.day);
   let sp=project(cam.vp,mulS(sun,60));if(!sp){const dx=dot(sun,cam.s),dy=-dot(sun,cam.u),l=Math.hypot(dx,dy)||1;sp={x:W/2+dx/l*W,y:H/2+dy/l*H}}
-  const lit=Math.atan2(sp.y-mp.y,sp.x-mp.x)-MOON_TILT;
-  sc.save();sc.translate(mp.x,mp.y);
-  const halo=sc.createRadialGradient(0,0,r*0.5,0,0,r*3.4);halo.addColorStop(0,'rgba(216,208,238,.26)');halo.addColorStop(1,'rgba(216,208,238,0)');sc.fillStyle=halo;sc.fillRect(-r*3.4,-r*3.4,r*6.8,r*6.8);
-  sc.rotate(MOON_TILT);
-  sc.beginPath();roundedRect(sc,-L,-r,2*L,2*r,r*0.92);sc.save();sc.clip();
-  sc.fillStyle='#d8d2e6';sc.fillRect(-L,-r,2*L,r);
-  sc.fillStyle='#a19ab8';sc.fillRect(-L,0,2*L,r);
-  sc.fillStyle='#6f6888';sc.fillRect(-L,r*0.74,2*L,r*0.26);
-  const crater=(x,y,cr)=>{sc.fillStyle='rgba(58,50,88,.55)';sc.beginPath();sc.arc(x,y,cr,0,TAU);sc.fill();sc.strokeStyle='rgba(255,250,255,.4)';sc.lineWidth=1;sc.beginPath();sc.arc(x,y,cr,Math.PI*1.05,Math.PI*1.95);sc.stroke()};
+  const lit=Math.atan2(sp.y-m.y,sp.x-m.x)-MOON_TILT;
+  c.save();c.translate(m.x,m.y);c.globalAlpha=1;c.shadowBlur=0;
+  const halo=c.createRadialGradient(0,0,r*0.5,0,0,r*3.4);halo.addColorStop(0,'rgba(216,208,238,.22)');halo.addColorStop(1,'rgba(216,208,238,0)');c.fillStyle=halo;c.fillRect(-r*3.4,-r*3.4,r*6.8,r*6.8);
+  c.rotate(MOON_TILT);
+  c.beginPath();roundedRect(c,-L,-r,2*L,2*r,r*0.92);c.save();c.clip();
+  c.fillStyle='#d8d2e6';c.fillRect(-L,-r,2*L,r);
+  c.fillStyle='#a19ab8';c.fillRect(-L,0,2*L,r);
+  c.fillStyle='#6f6888';c.fillRect(-L,r*0.74,2*L,r*0.26);
+  const crater=(x,y,cr)=>{c.fillStyle='rgba(58,50,88,.55)';c.beginPath();c.arc(x,y,cr,0,TAU);c.fill();c.strokeStyle='rgba(255,250,255,.4)';c.lineWidth=Math.max(1,r*0.05);c.beginPath();c.arc(x,y,cr,Math.PI*1.05,Math.PI*1.95);c.stroke()};
   crater(0,-r*0.5,r*0.26);crater(-L*0.42,r*0.36,r*0.2);crater(L*0.42,r*0.36,r*0.2);
-  const sh=sc.createLinearGradient(Math.cos(lit)*L,Math.sin(lit)*L,-Math.cos(lit)*L,-Math.sin(lit)*L);sh.addColorStop(0,'rgba(18,14,36,0)');sh.addColorStop(0.55,'rgba(18,14,36,.15)');sh.addColorStop(1,'rgba(18,14,36,.6)');sc.fillStyle=sh;sc.fillRect(-L,-r,2*L,2*r);
-  sc.restore();
-  sc.strokeStyle='rgba(44,38,70,.55)';sc.lineWidth=1;sc.beginPath();sc.moveTo(-L+r*0.3,0);sc.lineTo(L-r*0.3,0);sc.stroke();
-  sc.strokeStyle='rgba(242,238,252,.55)';sc.lineWidth=1.2;sc.beginPath();roundedRect(sc,-L,-r,2*L,2*r,r*0.92);sc.stroke();
-  sc.restore()}
+  const sh=c.createLinearGradient(Math.cos(lit)*L,Math.sin(lit)*L,-Math.cos(lit)*L,-Math.sin(lit)*L);sh.addColorStop(0,'rgba(18,14,36,0)');sh.addColorStop(0.55,'rgba(18,14,36,.15)');sh.addColorStop(1,'rgba(18,14,36,.72)');c.fillStyle=sh;c.fillRect(-L,-r,2*L,2*r);
+  c.restore();
+  c.strokeStyle='rgba(44,38,70,.55)';c.lineWidth=Math.max(1,r*0.05);c.beginPath();c.moveTo(-L+r*0.3,0);c.lineTo(L-r*0.3,0);c.stroke();
+  c.strokeStyle='rgba(242,238,252,.55)';c.lineWidth=Math.max(1.2,r*0.06);c.beginPath();roundedRect(c,-L,-r,2*L,2*r,r*0.92);c.stroke();
+  c.restore()}
 function ringPoints(sun,side,k,count){
   // both fields go all the way around the world: full rings. Gold rings swing through the sun line (the light they slow and
   // recolour comes in along it); blue rings are tipped around the world's axis, the way a magnetic field wraps a planet.
@@ -645,7 +656,7 @@ function drawOverlay(t,sun){fc.setTransform(DPR,0,0,DPR,0,0);fc.clearRect(0,0,W,
   const glow=W<820?0:10;for(let k=0;k<3;k++){strokeArc(arcPoints(sun,1,k,3),gold,0.26+0.06*Math.sin(t*.0007+k),1.1,glow);strokeArc(arcPoints(sun,-1,k,3),blue,0.22+0.06*Math.sin(t*.0009+k),1.0,glow)}
   // particles riding the arcs: gold slow (light slowed), blue quicker
   if(!reduceMotion)for(let k=0;k<3;k++){for(const side of[1,-1]){const pts=arcPoints(sun,side,k,3);const speed=side>0?0.045:0.16;for(let j=0;j<3;j++){const u=((t*.001*speed+j/3+k*.17)%1);const i=u*(pts.length-1),i0=Math.floor(i),f=i-i0;const p=add(mulS(pts[i0],1-f),mulS(pts[Math.min(i0+1,pts.length-1)],f));const s=project(cam.vp,p);if(!s)continue;const occ=occluded(p);fc.globalAlpha=occ?0.15:0.9;fc.fillStyle=side>0?'rgba(255,224,150,1)':'rgba(170,210,255,1)';fc.shadowBlur=occ?0:12;fc.shadowColor=side>0?gold:blue;fc.beginPath();fc.arc(s.x,s.y,side>0?2.4:1.8,0,TAU);fc.fill()}}}
-  fc.globalAlpha=1;fc.shadowBlur=0;
+  fc.globalAlpha=1;fc.shadowBlur=0;drawMoon(fc,true);
   // edges: colour by sun exposure, dim when hidden behind the world
   const list=EDGES.map(e=>{const a=worldV[e.a],b=worldV[e.b],mid=mulS(add(a,b),.5);const vis=e.faces.some(f=>facing(worldFaces[FACES.indexOf(f)])>0);const s=dot(norm(mid),sun);return{a:project(cam.vp,a),b:project(cam.vp,b),vis,s,e}}).filter(x=>x.a&&x.b).sort((x,y)=>(x.vis?1:0)-(y.vis?1:0));
   for(const x of list){const g=smooth(-0.35,0.35,x.s);const col=`rgba(${Math.round(mix(110,255,g))},${Math.round(mix(170,200,g))},${Math.round(mix(255,110,g))},1)`;const hl=state.selectedFace&&x.e.faces.some(f=>f.id===state.selectedFace);
@@ -766,17 +777,17 @@ rngDay.addEventListener('input',()=>{const y=Math.floor(state.day/YEAR);state.da
 $('btnDay').addEventListener('click',()=>{state.day+=1});
 $('btnMonth').addEventListener('click',()=>{state.day+=DPM});
 $('btnReset').addEventListener('click',()=>{state.day=0;state.baseYaw=0;state.pitch=0.36;state.dist=4.5;state.fly=null;setFollow(false);state.selected=null;state.selectedFace=null;renderPlace();toast('Back to the first morning')});
-function updateDate(){const {y,doy,mi,dom,season}=dateParts(state.day);const txt=mi<0?'Restart Day':`${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`Year ${y} · ${season.name} · day ${doy+1} of ${YEAR}`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay){rngDay.value=String(doy+1)}dayOut.textContent=String(doy+1)}
+function updateDate(){const {y,doy,mi,dom,season}=dateParts(state.day);const txt=mi<0?'Restart Day · 1¼ days':`${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`Year ${y} · ${season.name} · day ${doy+1} of 365¼`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay){rngDay.value=String(doy+1)}dayOut.textContent=String(doy+1)}
 
 /* ============================== LOOP ============================== */
 let last=performance.now(),uiTick=0;
 function frame(t){const dt=Math.min(0.05,(t-last)/1000);last=t;
   if(state.playing)state.day+=dt*state.speed/DAY_SECONDS;
   if(state.fly){const k=1-Math.pow(0.0008,dt);const dy=wrapPi(state.fly.yaw-state.baseYaw);state.baseYaw+=dy*k;state.pitch+=(state.fly.pitch-state.pitch)*k;if(Math.abs(dy)<0.003&&Math.abs(state.fly.pitch-state.pitch)<0.003)state.fly=null}
-  resizeIfNeeded();shiftTarget=(codex.classList.contains('open')&&W>=820)?372/W:0;shift+=(shiftTarget-shift)*(1-Math.pow(0.001,dt));vshiftTarget=W<820?(codex.classList.contains('open')?0.5:0.2):0.05;vshift+=(vshiftTarget-vshift)*(1-Math.pow(0.001,dt));updateCamera();updateWorld();const sun=sunDir(state.day);
+  resizeIfNeeded();shiftTarget=(codex.classList.contains('open')&&W>=820)?372/W:0;shift+=(shiftTarget-shift)*(1-Math.pow(0.001,dt));vshiftTarget=W<820?(codex.classList.contains('open')?0.5:0.2):0.05;vshift+=(vshiftTarget-vshift)*(1-Math.pow(0.001,dt));updateCamera();updateWorld();const sun=sunDir(state.day);MOON=moonState(state.day,sun);
   drawStars(t,sun);
   ctx.viewport(0,0,gl.width,gl.height);ctx.clearColor(0,0,0,0);ctx.clear(ctx.COLOR_BUFFER_BIT|ctx.DEPTH_BUFFER_BIT);ctx.enable(ctx.DEPTH_TEST);ctx.disable(ctx.CULL_FACE);
-  if(texReady){ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));ctx.uniformMatrix4fv(loc.model,false,new Float32Array(cam.model));ctx.uniform3fv(loc.sun,new Float32Array(sun));ctx.uniform1f(loc.time,t*0.001);ctx.uniform1f(loc.spin,-1);ctx.uniform1f(loc.amb,0.32);ctx.uniform3fv(loc.sunc,new Float32Array(seasonLight(state.day)));ctx.activeTexture(ctx.TEXTURE0);ctx.uniform1i(loc.tex,0);
+  if(texReady){ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));ctx.uniformMatrix4fv(loc.model,false,new Float32Array(cam.model));ctx.uniform3fv(loc.sun,new Float32Array(sun));ctx.uniform1f(loc.time,t*0.001);ctx.uniform1f(loc.spin,-1);ctx.uniform1f(loc.amb,0.32*(1-0.45*MOON.eclipse));ctx.uniform3fv(loc.sunc,new Float32Array(seasonLight(state.day).map(v=>v*(1-0.85*MOON.eclipse))));ctx.activeTexture(ctx.TEXTURE0);ctx.uniform1i(loc.tex,0);
     FACES.forEach((f,i)=>{ctx.bindTexture(ctx.TEXTURE_2D,f.texture);ctx.uniform1f(loc.hi,state.selectedFace===f.id&&!state.selected?1:0);ctx.uniform1f(loc.far,f.id==='far'?1:0);ctx.drawArrays(ctx.TRIANGLES,i*3,3)})}
   drawOverlay(t,sun);drawRain(dt,rainAmount(state.day));updateMarkers();updateDate();
   if((uiTick++%12)===0){const af=activeFace();facingEl.textContent='Facing · '+WORLD.faces[af.id].name;document.querySelectorAll('[data-face]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.face===(state.selectedFace||af.id))));if(state.tab==='tabWorld')updateYear();if(state.tab==='tabRegions')updateRegionPhases(sun);if(state.tab==='tabPlace')updatePlacePhase(sun);if(uiTick%120===0)refreshJson()}
@@ -788,7 +799,7 @@ function start(saved){try{if(saved&&typeof saved==='object'){if(typeof saved.day
   btnPlay.textContent=state.playing?'Pause':'Play';buildMarkers();renderFaceList();renderRegionGroups();renderWorlds();renderNations();renderExplorers();renderYear();updateYear();renderPlace();refreshJson();
   if(W>=820)openCodex(true);
   try{window.claude?.hot?.snapshot?.(()=>({day:state.day,baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,speed:state.speed,playing:state.playing,selected:state.selected,follow:state.follow}))}catch(e){}
-  window.tetra={moon:(spot)=>moonSpot(sunDir(state.day),spot),get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>phaseFor(REGIONS.find(x=>x.id===id),sunDir(state.day))};
+  window.tetra={moon:()=>({...(moonScreen()||{}),theta:MOON.theta,eclipse:MOON.eclipse,newMoon:MOON.newMoon}),get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>phaseFor(REGIONS.find(x=>x.id===id),sunDir(state.day))};
   requestAnimationFrame(frame)}
 try{if(window.claude?.hot?.ready)window.claude.hot.ready(start);else start(window.claude?.hot?.data??{})}catch(e){start({})}
 })();

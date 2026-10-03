@@ -156,6 +156,9 @@ Page (`template.html`, `build.py`):
 14. (2026-10-03) Chicken island came out small (0.40 of the painting) because it has to fit between Spikia's coast and Islandia with water around it. If she wants it bigger, Islandia or the egg could sit lower, or the southern arch a little lower.
 12. (2026-10-03) The two bottom corners of the Canon face are land: the far-side land reaches them, because the bottom edge is her painted coast and the three other faces are land at those corners. Her words were "no land on the west and east sides". May the corners stay land, or should they be water too? Water there would also change the Far face's Canon-side coast.
 
+### Proposals awaiting Ruby (drafts, not canon)
+- 2026-10-03, asked (Joshua or Ruby): "Use The current lore to decipher days of the week names". Derived from her canon, nothing added: a month is 28 days, so a week is either 7 days (4 weeks a month, Earth's way, which she keeps comparing to) or 4 days (7 weeks a month, Tetra's way: a four-sided world, four faces, four explorers, and Tredesember shows she names from number words). Recommended: a 4-day week named for the faces in the order the world shows them, Canonday, Westday, Southday, Farday; variant: the explorers' stones, Sapphireday, Amethystday, Obsidianday, Opalday. 7-day alternative from the sky and the land: Starday, Moonday, Goldday (the magical field, "light flows like gold"), Blueday (the magnetic field), Spikeday (Spikia), Wetday (Wetia), Twilightday (Mount Celestial). The Restart Day stays outside every week, as it is outside the months. Nothing is in the page until she picks; the Still unwritten item stands.
+
 ## 6. Known limits and caveats
 
 - The Far-face clamp applies to every Far-face place, Wetia's delta included. Ruby said "the far side", which was read as the whole face.

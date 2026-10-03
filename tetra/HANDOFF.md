@@ -26,6 +26,9 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - "the inverted planet is a 16x16x16 cube (inside) overworld cave biome" (another Dice System world; listed in the World tab).
 - "The umbrella tree zinnia It culd be a element of our world (by the way the stem is not wood and the top is petals)". Where it grows is unwritten.
 - Day names, hours in a day and the size of the world are not yet defined (listed as "Still unwritten").
+- 2026-10-03, Ruby: "1 (the bigest problem): the sliders are locked on the lowest posible witch means the spin is locked on 0.0x and you cant tamper with the day slider, JUST REMOVE +1 day and +1 month to fix" (v11: a real bug, and her diagnosis was right. On a computer-width screen the dock is a four-column grid; the row of six buttons grew so wide that the sliders' column collapsed to zero width, so the sliders could not be dragged and read their minimum when clicked (measured: the spin slider was 0 px wide at 1366 px; phones stack the dock and were fine). The +1 day and +1 month buttons are removed as she asked, and the sliders' column now keeps a minimum width of 240 px so no row of buttons can squeeze it out again.)
+- 2026-10-03, Ruby: "compliment: i cant make one because i CANT oh wait the year buttons work" (noted.)
+- 2026-10-03, Ruby: "3: i dont know for the rest of unwriten stuff i will discuss with daddy" (the Still unwritten items stay open.)
 - 2026-10-03, Ruby: "there is no way to go backwards in years!!!" (v11: "−1 year" and "+1 year" buttons in the dock; the year count runs below zero her way: after year 0 comes -0, then -1, `yearLabel`.)
 - 2026-10-03, Ruby: "reset dayes are one and a quarter days so there arent leap years" (v11: the Restart Day is 1.25 days long, so the year is 365.25 days and there are no leap years: `WORLD.calendar.yearDays` 365.25, `restartDays` 1.25; the HUD shows "Restart Day · 1¼ days" and "of 365¼"; the day slider still runs 1 to 365, the last position being the whole Restart Day. Reading: "reset day" = the Restart Day, one of them (answers open question 2: no second Restart Day).)
 
@@ -149,7 +152,7 @@ Page (`template.html`, `build.py`):
 11. (2026-10-03) Does she want the comic pages themselves shown in the Codex, or only the list of events?
 13. (Answered 2026-10-03 in effect: her next message called the Canon face's bottom land "the semi sircle" and shaped it further, so the reading was right. The Southern Continent on the South face is unchanged.)
 15. (Answered 2026-10-03: the middle of the month; day 14 taken, 15 would do as well.)
-16. (2026-10-03) What the land at the top of the Far Face is called, now that the Extreme Mountains are gone.
+16. (2026-10-03) What the land at the top of the Far Face is called, now that the Extreme Mountains are gone. (She asked what this means; explained in chat: the piece of land in the Far Face's top corner, where the mountains used to begin, which stays because the Canon and West faces have land at that corner.)
 14. (2026-10-03) Chicken island came out small (0.40 of the painting) because it has to fit between Spikia's coast and Islandia with water around it. If she wants it bigger, Islandia or the egg could sit lower, or the southern arch a little lower.
 12. (2026-10-03) The two bottom corners of the Canon face are land: the far-side land reaches them, because the bottom edge is her painted coast and the three other faces are land at those corners. Her words were "no land on the west and east sides". May the corners stay land, or should they be water too? Water there would also change the Far face's Canon-side coast.
 

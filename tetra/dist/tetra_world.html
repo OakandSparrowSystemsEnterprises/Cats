@@ -114,7 +114,7 @@
   .date strong{font:600 15px/1.1 var(--display);letter-spacing:.14em;color:var(--gold-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
   .date span{font:400 11px/1.3 var(--ui);color:var(--muted);white-space:nowrap}
   .date em{font-style:normal;color:var(--ink)}
-  .time{display:grid;grid-template-columns:auto 1fr auto;gap:8px 10px;align-items:center;min-width:0}
+  .time{display:grid;grid-template-columns:auto 1fr auto;gap:8px 10px;align-items:center;min-width:240px}
   .time label{display:contents}
   .time .k{font:500 10px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .time .v{font:500 11px/1 var(--ui);color:var(--ink);font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
@@ -345,8 +345,6 @@
     </div>
     <div class="btns">
       <button id="btnPlay" type="button" class="primary">Pause</button>
-      <button id="btnDay" type="button" title="Advance one day">+1 day</button>
-      <button id="btnMonth" type="button" title="Advance one month">+1 month</button>
       <button id="btnYearBack" type="button" title="Back one year">−1 year</button>
       <button id="btnYear" type="button" title="Forward one year">+1 year</button>
       <button id="btnReset" type="button" title="Reset the view and the calendar">Reset</button>
@@ -825,8 +823,6 @@ btnPlay.addEventListener('click',togglePlay);
 rngSpin.addEventListener('input',()=>{state.speed=Number(rngSpin.value)||0;spinOut.textContent=state.speed.toFixed(1)+'×'});
 let scrubbing=false;rngDay.addEventListener('pointerdown',()=>scrubbing=true);addEventListener('pointerup',()=>scrubbing=false);
 rngDay.addEventListener('input',()=>{const y=Math.floor(state.day/YEAR);state.day=y*YEAR+(Number(rngDay.value)-1)+(state.day%1)});
-$('btnDay').addEventListener('click',()=>{state.day+=1});
-$('btnMonth').addEventListener('click',()=>{state.day+=DPM});
 // Ruby (2026-10-03): "there is no way to go backwards in years!!!": step the years either way; the count runs below zero her way (0, then -0, then -1)
 $('btnYearBack').addEventListener('click',()=>{state.day-=YEAR});$('btnYear').addEventListener('click',()=>{state.day+=YEAR});
 const yearLabel=y=>y>=0?String(y):'-'+String(-(y+1));

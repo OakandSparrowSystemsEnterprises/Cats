@@ -92,7 +92,7 @@
   .legend .g{color:var(--gold-soft)} .legend .g i{background:linear-gradient(90deg,transparent,var(--gold));box-shadow:0 0 8px var(--gold)}
   .legend .b{color:var(--blue-soft)} .legend .b i{background:linear-gradient(90deg,transparent,var(--blue));box-shadow:0 0 8px var(--blue)}
   .legend .p{color:#d9b8ff} .legend .p i{background:linear-gradient(90deg,transparent,#9b5cff);box-shadow:0 0 8px #9b5cff}
-  .field.p i{background:#9b5cff;box-shadow:0 0 10px #9b5cff} .field.p b{color:#d9b8ff}
+  .field.p i{background:#9b5cff;box-shadow:0 0 10px #9b5cff} .field.p b{color:#d9b8ff}.field.m i{background:#d8d4c8;box-shadow:0 0 10px #d8d4c8}.field.m b{color:#e9e6dc}
   .facing{position:absolute;z-index:5;left:50%;top:calc(18px + env(safe-area-inset-top,0px));translate:-50% 0;pointer-events:none;
     font:400 10px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);text-shadow:0 2px 10px #000;white-space:nowrap}
   .hint{position:absolute;z-index:4;left:50%;bottom:calc(126px + env(safe-area-inset-bottom,0px));translate:-50% 0;pointer-events:none;
@@ -156,6 +156,7 @@
   .field.g b{color:var(--gold-soft)} .field.b b{color:var(--blue-soft)}
   .field span{display:block;font:400 15px/1.4 var(--serif);color:var(--ink)}
   .field .q{font-style:italic;color:var(--muted)}
+.timeline{list-style:none;margin:0;padding:0}.timeline li{display:grid;grid-template-columns:58px 1fr;gap:10px;padding:7px 0;border-top:1px solid rgba(255,255,255,.08)}.timeline b{font:600 13px/1.4 var(--ui);color:var(--gold-soft);letter-spacing:.04em}.timeline span{display:block;font:400 15px/1.4 var(--serif);color:var(--ink)}.timeline em{display:block;font:italic 400 13px/1.4 var(--serif);color:var(--muted)}
   .facelist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
   .facelist button,.reglist button{width:100%;text-align:left;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 11px;font-weight:500;border-radius:12px;background:rgba(242,232,211,.04)}
   .facelist button i,.reglist button i{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px currentColor}
@@ -265,7 +266,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The calendar</p>
-          <dl class="kv"><dt>Months</dt><dd>13 · 28 days each</dd><dt>Year</dt><dd>364 days + the Restart Day</dd><dt>One day</dt><dd>One full turn</dd><dt>Spin</dt><dd>Leftward</dd></dl>
+          <dl class="kv"><dt>Months</dt><dd>13 · 28 days each</dd><dt>Year</dt><dd>364 days + the Restart Day</dd><dt>One day</dt><dd>One full turn</dd><dt>Spin</dt><dd>Leftward</dd><dt>Years</dt><dd>Counted from year 0. There is a year -0 as well, and it is not the same year as 0. The years before run backwards, the way BCE does on Earth.</dd><dt>Now</dt><dd>Year 1700. In technology, about Earth’s 1750.</dd></dl>
           <div class="year" id="yearStrip" aria-label="The year, month by month"></div>
           <p class="eyebrow" style="margin-top:16px">Seasons on the Canon Face · on average</p>
           <ul class="seasons" id="seasonList"></ul>
@@ -279,6 +280,10 @@
         <div class="sect">
           <p class="eyebrow">The star</p>
           <div class="field p"><i></i><div><b>A dark purple star</b><span>Tetra’s sun is a dark purple star. Its light reaches the ground the colour of our own sun’s light, because the magical field turns it on the way in.</span></div></div>
+        </div>
+        <div class="sect">
+          <p class="eyebrow">The moon</p>
+          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind. One crater on its one side, two craters on its two side, three craters on its three side.</span><span class="q">How big it is, how far away, and how long it takes to go round: not yet written.</span></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">The four faces</p>
@@ -304,8 +309,13 @@
           <ul class="worlds" id="explorers"></ul>
         </div>
         <div class="sect">
+          <p class="eyebrow">Key events</p>
+          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 0. The words are hers, as read from the photos; (?) marks a word that was hard to read.</p>
+          <ul class="timeline" id="timeline"></ul>
+        </div>
+        <div class="sect">
           <p class="eyebrow">Still unwritten</p>
-          <ul class="unwritten-list"><li>Day names</li><li>Hours in a day</li><li>Size of the world</li><li>A second Restart Day?</li><li>Where the Umbrella Tree Zinnia grows</li><li>More of every face</li></ul>
+          <ul class="unwritten-list"><li>Day names</li><li>Hours in a day</li><li>Size of the world</li><li>A second Restart Day?</li><li>Where the Umbrella Tree Zinnia grows</li><li>The moon: how big, how far, how long to go round</li><li>The key events after year 0 (Ruby’s comics continue)</li><li>More of every face</li></ul>
           <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
         </div>
       </section>
@@ -319,7 +329,7 @@
   </aside>
 
   <div class="dock" id="dock">
-    <div class="date"><strong id="dateOut">1 January</strong><span id="dateSub">Year 1 · Rain season · day 1 of 365</span></div>
+    <div class="date"><strong id="dateOut">1 January</strong><span id="dateSub">Year 1700 · Rain season · day 1 of 365</span></div>
     <button id="btnCodex" type="button" aria-pressed="false" aria-controls="codex">Codex</button>
     <div class="time">
       <label><span class="k">Spin</span><input id="rngSpin" type="range" min="0" max="8" step="0.1" value="1" aria-label="Spin speed"><span class="v" id="spinOut">1.0×</span></label>
@@ -406,10 +416,25 @@ const WORLD = {
   worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},
           {id:'inverted',name:'The Inverted Planet',desc:'A 16 \u00d7 16 \u00d7 16 cube, lived in from the inside: an overworld cave biome.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
+  moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind', craters:'one crater on the one side, two on the two side, three on the three side', note:'How big it is, how far away, and how long it takes to go round: not yet written.'},
+  years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
+  timeline:[      /* Ruby's comics of the key events (2026-10-03), two pages so far; said = her words as read from the photos */
+    {year:'-2000', said:'octal una terra (?)', shows:'green hills and a figure'},
+    {year:'-1000', said:'Dote (?)', shows:'a figure on a green hill'},
+    {year:'-500', said:'runder tot raen? (?)', shows:'a figure, and a die with dots'},
+    {year:'-100', said:'ohiy (?) \u00b7 boing (?)', shows:'green land, and something orange in blue water'},
+    {year:'-90', said:'', shows:'a great hand'},
+    {year:'-50', said:'d3?!', shows:'a figure on the ground looks up at a d3'},
+    {year:'-10', said:'We split up!!', shows:'Whiteland and Yolkia, the egg-shaped land in the sea'},
+    {year:'-5', said:'We uncover\u2026 (the rest runs off the page)', shows:'a green hill'},
+    {year:'-1', said:'It\u2019s hot! \u00b7 Uohia \u00b7 Rainyia? \u00b7 and one more name (?)', shows:'the nations on the far side of the Canon Face get their names'},
+    {year:'-0', said:'0-0?!', shows:'a bird on the face'},
+    {year:'0', said:'Possibly central island located \u00b7 Yay! \u00b7 ISLANDIA!', shows:'Islandia is found'}
+  ],
   fields:[{id:'magical',name:'Magical field',effect:'slows light; turns the star\u2019s purple light to sunlight',extent:'all the way around',quote:'Here, the morning moves slower. And light flows like gold.'},
           {id:'magnetic',name:'Magnetic field',effect:'guides worlds',extent:'all the way around'}],
   faces:{
-    canon:{name:'The Canon Face', short:'Canon', tagline:'A single world · A thousand stories', blurb:'The first face: eight regions around an inland sea, from the egg-shaped western land to the rooster-crested east. On its far side, between Islandia and the far edge, four nations. Its top corner is part of Spikia.', color:'#f5b64f'},
+    canon:{name:'The Canon Face', short:'Canon', tagline:'A single world · A thousand stories', blurb:'The first face, now drawn like the others: Whiteland and Yolkia to the west, Islandia in the middle sea, the Headlands, Neckia, the Feathers, Llamaland and Footia to the east, and along the far edge the four nations Unoooland, It\u2019s Hot, Rainia and Uohia. Open sea along both sides below Spikia, no clouds, at least half water.', note:'Ruby: the Canon face should not have land on the west and east sides, needs no clouds, must be at least half water, and should look like the other sides.', color:'#f5b64f', chart:'{{MAP_CANON}}', chartCaption:'The Canon Face as Opal would draw it, from the outline of Ruby\u2019s painting'},
     west: {name:'The Western Face', short:'West', tagline:'Uncharted shores · New histories', blurb:'Charted by Sapphire the explorer: the spike at the top, the central island with its five nations, the little island of Tropicia, and Wetia at the corner.', note:'The area at the top of the West Face is connected to the top area of the Canon Face.', color:'#f0a05a', exploring:true, explorer:'Sapphire the explorer', explorerShort:'Sapphire', chart:'{{MAP_WEST}}', chartCaption:'Opal\u2019s complete map of the West, drawn from Sapphire\u2019s chart'},
     south:{name:'The Southern Face', short:'South', tagline:'Further lands · New histories', blurb:'Charted by Amethyst the explorer: tropical at the top, the southern continent in the middle sea with its three nations, and Wetia in the right-hand corner. The continent is joined to Tree Land across the Far edge; it does not touch the West side.', note:'The top connects again: the top of the South Face is part of Spikia with the other spikes.', color:'#86bbff', exploring:true, explorer:'Amethyst the explorer', explorerShort:'Amethyst', chart:'{{MAP_SOUTH}}', chartCaption:'Opal\u2019s complete map of the South, drawn from Amethyst\u2019s chart'},
     far:  {name:'The Far Face', short:'Far', tagline:'\u201cFar\u201d extreme mountains', blurb:'The base the world turns on, charted by Obsidian the explorer. The extreme mountains run from the top of the face to its exact centre, Mount Celestial. Warmia and Ehia lie by the Canon side, Tree Land along the South side, Wetia at the corner. The Far Face has no high sun and no deep night.', note:'Mount Celestial is on the axis the world spins on, so the sun never rises or sets there: twilight that never ends.', color:'#9aa0ad', exploring:true, explorer:'Obsidian the explorer', explorerShort:'Obsidian', chart:'{{MAP_FAR}}', chartCaption:'Opal\u2019s complete map of the Far Face, drawn from Obsidian\u2019s chart'}
@@ -474,7 +499,8 @@ const EDGES=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]].map(([a,b])=>({a,b,faces:FACES
 /* ============================== STATE ============================== */
 const DAY_SECONDS=30, YEAR=WORLD.calendar.yearDays, DPM=WORLD.calendar.daysPerMonth, MONTHS=WORLD.calendar.months, SEASONS=WORLD.calendar.seasons, TILT=23.4*Math.PI/180;
 const SUMMER_MID=(4*DPM+7*DPM)/2, RAIN_START=MONTHS.length*DPM; // doy 364 = Restart Day, then January
-function dateParts(day){const d=Math.floor(day),y=Math.floor(d/YEAR)+1,doy=((d%YEAR)+YEAR)%YEAR;const mi=doy>=RAIN_START?-1:Math.floor(doy/DPM),dom=mi<0?0:doy%DPM+1;const season=SEASONS.find(sn=>mi<0?sn.restart:sn.months.includes(mi));return{y,doy,mi,dom,season}}
+const YEAR0=WORLD.years.now;      // Ruby (2026-10-03): "in tetra years they are in 1700"
+function dateParts(day){const d=Math.floor(day),y=YEAR0+Math.floor(d/YEAR),doy=((d%YEAR)+YEAR)%YEAR;const mi=doy>=RAIN_START?-1:Math.floor(doy/DPM),dom=mi<0?0:doy%DPM+1;const season=SEASONS.find(sn=>mi<0?sn.restart:sn.months.includes(mi));return{y,doy,mi,dom,season}}
 const seasonCenters=SEASONS.map(sn=>{const ds=sn.months.flatMap(m=>[m*DPM,m*DPM+DPM-1]);if(sn.restart)ds.push(YEAR-1,YEAR-1+DPM);const lo=Math.min(...ds),hi=Math.max(...ds);return{sn,c:sn.restart?((YEAR-1+YEAR+DPM-1)/2)%YEAR:(lo+hi)/2}}).sort((a,b)=>a.c-b.c);
 function seasonLight(day){const doy=((day%YEAR)+YEAR)%YEAR;const n=seasonCenters.length;for(let i=0;i<n;i++){const a=seasonCenters[i],b=seasonCenters[(i+1)%n];let c0=a.c,c1=b.c;if(c1<=c0)c1+=YEAR;let x=doy;if(x<c0)x+=YEAR;if(x>=c0&&x<=c1){const t=(x-c0)/(c1-c0);return a.sn.light.map((v,k)=>v+(b.sn.light[k]-v)*t)}}return[1,1,1]}
 function rainAmount(day){const doy=((day%YEAR)+YEAR)%YEAR;let x=doy<RAIN_START?doy+YEAR:doy;const a=RAIN_START,b=RAIN_START+1+DPM;if(x<a-1||x>b)return 0;return clamp(Math.min(x-(a-1),b-x),0,1)}
@@ -676,6 +702,7 @@ $('btnCodex').addEventListener('click',()=>openCodex(codex.classList.contains('c
 codex.querySelector('.grip').addEventListener('click',()=>openCodex(false));$('btnClose').addEventListener('click',()=>openCodex(false));
 // world JSON export (Regions tab footer)
 const exp=document.createElement('div');exp.className='group';exp.innerHTML='<h3><span>World file</span><button type="button" class="ghost" id="btnCopy">Copy JSON</button></h3><textarea class="json" id="worldJson" readonly aria-label="World JSON"></textarea>';reggroups.after(exp);
+(function(){const tl=document.getElementById('timeline');if(!tl)return;WORLD.timeline.forEach(t=>{const li=document.createElement('li');li.innerHTML='<b></b><div><span></span><em></em></div>';li.querySelector('b').textContent=t.year;li.querySelector('span').textContent=t.said||'(no words in this panel)';li.querySelector('em').textContent=t.shows;tl.appendChild(li)})})();
 function worldJson(){return JSON.stringify({...WORLD,lore:undefined,places:undefined,faces:Object.fromEntries(Object.entries(WORLD.faces).map(([k,f])=>[k,{...f,chart:undefined,chart2:undefined}])),regions:REGIONS.map(r=>({id:r.id,name:r.name,face:r.face,kind:r.kind||'Region',biome:r.biome,nation:r.nation,note:r.note,nations:r.nations,lore:loreOf(r.id)||undefined}))},null,1)}
 $('btnCopy').addEventListener('click',async()=>{const txt=worldJson();$('worldJson').value=txt;try{await navigator.clipboard.writeText(txt);toast('World JSON copied')}catch(e){$('worldJson').focus();$('worldJson').select();toast('Select the text below to copy')}});
 function refreshJson(){const ta=$('worldJson');if(document.activeElement!==ta)ta.value=worldJson()}

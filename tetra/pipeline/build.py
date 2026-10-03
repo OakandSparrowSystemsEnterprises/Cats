@@ -24,12 +24,17 @@ I = anchors['west']['island']
 extra += [dict(id=i, name=n, face='west', b=bary_of((I[0] + dx, I[1] + dy))) for i, n, (dx, dy), _ in ISLAND_NATIONS]
 C = anchors['south']['continent-south']
 extra += [dict(id=i, name=n, face='south', b=bary_of((C[0] + dx, C[1] + dy))) for i, n, (dx, dy), _ in CONTINENT_NATIONS]
-geo['regions'] = [r for r in geo['regions'] if r['face'] == 'canon'] + extra
-page = (tpl.replace('{{TEX_CANON}}', b64('tex_canon.jpg'))
+# the Canon regions keep their order and names from geometry.json (the painting) but sit where mapgen2 settled them on the generated map
+canon_name = {r['id']: r['name'] for r in geo['regions'] if r['face'] == 'canon'}
+canon = [dict(id=k, name=canon_name[k], face='canon', b=bary_of(anchors['canon'][k])) for k in canon_name if k in anchors['canon']]
+assert len(canon) == len(canon_name), 'a Canon region has no anchor on the generated map'
+geo['regions'] = canon + extra
+page = (tpl.replace('{{TEX_CANON}}', b64('map_canon.jpg'))
            .replace('{{TEX_WEST}}', b64('map_west.jpg'))
            .replace('{{TEX_SOUTH}}', b64('map_south.jpg'))
            .replace('{{TEX_FAR}}', b64('map_far.jpg'))
            .replace('{{ZINNIA}}', b64('zinnia_q.png', 'image/png'))
+           .replace('{{MAP_CANON}}', b64('codex_canon.jpg'))
            .replace('{{MAP_WEST}}', b64('codex_west.jpg'))
            .replace('{{MAP_SOUTH}}', b64('codex_south.jpg'))
            .replace('{{MAP_FAR}}', b64('codex_far.jpg'))

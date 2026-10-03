@@ -4,7 +4,7 @@ import re, sys, os, glob
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EM = '—'
 RETIRED = ['Mtlshia', 'Tueldan', 'The Swamp', "name:'Tropical'", 'Sunreach', 'Evermere', 'Stonehollow', 'Mistwater',
-           'Frostmarch', 'Greenveld', 'Deepwood', 'Stormreach', 'snowy tundra', 'Snowy tundra']
+           'Frostmarch', 'Greenveld', 'Deepwood', 'Stormreach', 'snowy tundra', 'Snowy tundra', 'The Hot Kingdom']
 files = (glob.glob(os.path.join(ROOT, 'pipeline', '*.py')) + glob.glob(os.path.join(ROOT, 'pipeline', 'template.html')) +
          glob.glob(os.path.join(ROOT, 'dist', '*.html')) + glob.glob(os.path.join(ROOT, '*.md')) + glob.glob(os.path.join(ROOT, 'tests', '*.js')) +
          # em dashes only, in the rest of the text: legacy scripts, archived tests, tools, the reference notes, the Makefile and manifests

@@ -1,5 +1,6 @@
 """Opal's complete maps, second pass: at least half of every face is water, landmasses follow Ruby's outlines,
 the southern continent is an island of its own, and all three deltas meet at the same corner (Wetia).
+Since version 11 the Canon face is generated too, from the outline of Ruby's painting (design_canon).
 Texture space 1024x1024, apex-up: apex (512,75.5), bl (8,948.5), br (1016,948.5)."""
 import json, math
 import numpy as np, cv2
@@ -139,12 +140,13 @@ def design_south(seed=202):
 
 # ----------------------------------------------------------------------------- Far
 CENTRE = (512.0, (APEX[1] + BL[1] + BR[1]) / 3)
+NECK_ROT = math.atan2(915 - 693, 600 - 786)      # the neck points from Ehia toward Tree Land
 def design_far(seed=303):
     P = {'mountains-far': (470, 430), 'celestial': CENTRE, 'delta-far': (118, 872), 'warmia': (666, 518), 'ehia': (736, 685), 'treeland': (600, 868)}
     rid = ridged(seed + 2); rid2 = ridged(seed + 5)
     top = wedge(235)
     # the Extreme Mountains: a massif from the apex down the middle of the face to its exact centre, Mount Celestial
-    ridge = supergauss(506, 405, 66, 178, rot=0.1, p=3.0)
+    ridge = supergauss(506, 405, 60, 178, rot=0.1, p=3.0)      # (rx 66 until v11: a little slimmer to pay for the neck to Tree Land)
     celestial = supergauss(CENTRE[0], CENTRE[1], 74, 66, p=3.0)
     # the Canon-side coast, with Warmia and Ehia on broad lobes of land
     right = band(D_RIGHT, 50) * (YS > 240)
@@ -152,8 +154,12 @@ def design_far(seed=303):
     ehia = supergauss(P['ehia'][0] + 50, P['ehia'][1] + 8, 86, 70, rot=0.2, p=3.0)
     # Tree Land: the whole South edge from the Canon corner to the middle, where it meets the southern continent
     treeland = supergauss(600, 915, 140, 72, rot=0.0, p=4.0)
-    delta = supergauss(P['delta-far'][0] + 10, P['delta-far'][1] - 5, 108, 82, p=3.0)
-    land = wobble(np.clip(np.maximum.reduce([top, ridge, celestial, right, warmia, ehia, treeland, delta]), 0, 1), seed, 26)
+    # Ruby (2026-10-03), asked whether Tree Land and the Canon-side nations should join: "yes pleese". Her Far sketch draws
+    # Warmia, Ehia and Tree Land inside one outline, so a neck of land runs from Ehia down to Tree Land, inland of the
+    # bottom edge (the shared edge with the South face keeps its open water there)
+    neck = supergauss(700, 790, 112, 46, rot=NECK_ROT, p=3.0)
+    delta = supergauss(P['delta-far'][0] + 10, P['delta-far'][1] - 5, 102, 78, p=3.0)
+    land = wobble(np.clip(np.maximum.reduce([top, ridge, celestial, right, warmia, ehia, neck, treeland, delta]), 0, 1), seed, 26)
     land = soft(land, 4)
     land = np.clip(conform(land, 'far', seed), 0, 1) * TRI
     h, d_in = heights(land, seed)
@@ -182,7 +188,121 @@ def design_far(seed=303):
     anchors = {k: list(v) for k, v in P.items()}
     return d, anchors
 
+# ----------------------------------------------------------------------------- Canon
+# Ruby (2026-10-03): the Canon face "shuld not have land on the west and east sides and needs to not have clouds, be at least
+# 50% water, and look like the other sides (the detail is too much for the cannon side, this is a 4th of a entire planet you know)".
+# So the Canon face is Opal's map too now: Ruby's painting gives the outline and the places, the painter gives the look.
+CANON_IDS = ['whiteland', 'yolkia', 'islandia', 'headlands', 'neckia', 'feathers', 'llamaland', 'footia', 'spikia-canon', 'unoooland', 'hotland', 'rainia', 'uohia']
+
+def canon_positions():
+    """the 13 Canon regions, from their barycentrics in geometry.json (measured on the painting) to texture px"""
+    geo = json.load(open('geometry.json')); out = {}
+    for r in geo['regions']:
+        if r['face'] != 'canon': continue
+        l1, l2, l3 = r['b']
+        out[r['id']] = (l1 * APEX[0] + l2 * BL[0] + l3 * BR[0], l1 * APEX[1] + l2 * BL[1] + l3 * BR[1])
+    return out
+
+def canon_outline(path='tex_canon.jpg'):
+    """Ruby's painting as a plain outline: land wherever the painting is neither sea nor cloud. A cloud pixel takes the class of
+    the nearest clear pixel (so clouds over the sea vanish and clouds over land become land), then the coast is simplified."""
+    tex = cv2.cvtColor(cv2.imread(path), cv2.COLOR_BGR2RGB).astype(np.float32)
+    r, g, b = tex[..., 0], tex[..., 1], tex[..., 2]
+    water = (b > r + 30) & (b > 95) & (g > r + 8)
+    lum = tex.mean(2); sat = tex.max(2) - tex.min(2)
+    cloud = (lum > 196) & (sat < 40) & ~water
+    _, labels = cv2.distanceTransformWithLabels(cloud.astype(np.uint8), cv2.DIST_L2, 5, labelType=cv2.DIST_LABEL_PIXEL)
+    ys, xs = np.where(~cloud)
+    lut = np.zeros(int(labels.max()) + 1, np.uint8); lut[labels[ys, xs]] = water[ys, xs]
+    water = lut[labels].astype(bool)
+    land = (~water & (TRI > 0.5)).astype(np.uint8)
+    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13))
+    land = cv2.morphologyEx(cv2.morphologyEx(land, cv2.MORPH_OPEN, k), cv2.MORPH_CLOSE, k)
+    for _ in range(2):      # drop islets and ponds smaller than ~45 px across, both ways
+        n, lab, st, _ = cv2.connectedComponentsWithStats(land, 8)
+        for i in range(1, n):
+            if st[i, cv2.CC_STAT_AREA] < 1800: land[lab == i] = 0
+        n, lab, st, _ = cv2.connectedComponentsWithStats(1 - land, 8)
+        for i in range(1, n):
+            if st[i, cv2.CC_STAT_AREA] < 1800: land[lab == i] = 1
+    return land.astype(np.float32)
+
+def mask_water(mask):
+    return float(((mask < 0.5) & (TRI > 0.5)).sum() / (TRI > 0.5).sum())
+
+def shrink(mask, e):
+    """pull a soft land mask's coast inward by e px; the triangle's edges do not count as coast"""
+    lb = ((mask > 0.5) | (TRI < 0.5)).astype(np.uint8)
+    d_in = cv2.distanceTransform(lb, cv2.DIST_L2, 5)
+    return np.clip((d_in - e) / 6.0 + 0.5, 0, 1) * TRI
+
+def settle(P, land, min_in=16):
+    """every marker on land, well clear of the coast: a marker the new coast left in the water moves to the nearest safe land"""
+    lb = (land > 0.5).astype(np.uint8); d_in = cv2.distanceTransform(lb, cv2.DIST_L2, 5)
+    ys, xs = np.where((d_in >= min_in) & (TRI > 0.5)); out = {}; moved = {}
+    for k, (x, y) in P.items():
+        if d_in[int(round(y)), int(round(x))] >= min_in: out[k] = (float(x), float(y)); continue
+        j = int(np.argmin((xs - x) ** 2 + (ys - y) ** 2)); out[k] = (float(xs[j]), float(ys[j]))
+        moved[k] = round(float(math.hypot(xs[j] - x, ys[j] - y)))
+    return out, moved
+
+def design_canon(seed=404):
+    P0 = canon_positions()
+    rid = ridged(seed + 2)
+    outline = canon_outline()
+    # open sea along the west and east sides below Spikia; the spike itself stays, it is the same Spikia as on the West and South faces
+    sides = np.maximum(band(D_LEFT, 96), band(D_RIGHT, 96)) * (1 - wedge(300, 60))
+    top = wedge(290)
+    base = np.clip(np.maximum(soft(outline, 5) * (1 - sides), top), 0, 1)
+    # "be at least 50% water": pull the coast in until the face is half sea with a little to spare. The pull is proportional to
+    # how thick the land is locally, so the thin shapes (the egg of Whiteland and Yolkia, the rooster of the Headlands) keep
+    # their width and the water comes out of the broad southern land instead
+    d0 = cv2.distanceTransform(((base > 0.5) | (TRI < 0.5)).astype(np.uint8), cv2.DIST_L2, 5)
+    thick = cv2.dilate(d0, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (81, 81)))
+    weight = np.clip(thick / 70.0, 0.4, 1.7)
+    land = None
+    for e in range(0, 80):
+        land = np.clip(conform(shrink(base, e * weight), 'canon', seed), 0, 1) * TRI
+        if mask_water(land) >= 0.512: break
+    print('canon: outline water', round(mask_water(base), 3), '-> pulled in by', e, 'px (x thickness weight) ->', round(mask_water(land), 3))
+    P, moved = settle(P0, land)
+    if moved: print('canon: markers moved onto land (px):', moved)
+    h, d_in = heights(land, seed)
+    spike = gauss(APEX[0], APEX[1] + 120, 170, 160)
+    h += spike * (0.2 + 0.32 * rid) * np.clip(d_in / 20, 0, 1)
+    F, Hd = P['feathers'], P['headlands']
+    feathers = gauss(F[0], F[1], 95, 70, rot=0.5); heads = gauss(Hd[0], Hd[1], 70, 60)
+    h += (feathers * 0.34 + heads * 0.22) * (0.5 + rid) * np.clip(d_in / 25, 0, 1)
+    def near(k, r): x, y = P[k]; return gauss(x, y, r, r)
+    white = near('whiteland', 95)
+    gold = np.maximum(near('yolkia', 100), 0.7 * near('llamaland', 90))
+    forest = np.maximum.reduce([near('islandia', 90), near('unoooland', 95), near('uohia', 90), 0.6 * near('feathers', 80)])
+    green = np.maximum.reduce([near('neckia', 80), near('rainia', 90), near('footia', 90), 0.6 * near('islandia', 100)])
+    red = np.maximum(near('headlands', 80), near('hotland', 95))
+    vary = fbm(seed + 41, base=7, octaves=3)
+    temp = np.clip(0.5 - 0.35 * np.clip((h - 0.5) / 0.5, 0, 1) + 0.3 * near('hotland', 110) - 0.3 * white, 0, 1)
+    moist = np.clip(0.5 + 0.3 * near('rainia', 110) + 0.2 * forest - 0.2 * gold, 0, 1)
+    zones = {
+        'white': np.clip(1.1 * white, 0, 1),
+        'gold': np.clip(gold, 0, 1),
+        'forest': np.clip(forest + 0.3 * smooth(vary, 0.55, 0.75), 0, 1),
+        'green': np.clip(0.9 * green + 0.2, 0, 1),
+        'redrock': np.clip(0.9 * red, 0, 1),
+        'plains': np.clip(0.3 + 0.5 * smooth(vary, 0.3, 0.5), 0, 1),
+    }
+    tints = {'hot': near('hotland', 110) * 0.8, 'cold': white * 0.5}
+    sources = [(int(APEX[0] + dx), int(APEX[1] + 150 + dy)) for dx, dy in [(-50, 30), (55, 20), (-20, 90), (80, 100)]]
+    sources += [(int(F[0] + dx), int(F[1] + dy)) for dx, dy in [(-40, -20), (30, 20)]]
+    peak = np.clip(smooth(spike, 0.4, 0.8) * (h > 0.64) + smooth(feathers, 0.5, 0.9) * (h > 0.62), 0, 1)
+    d = dict(height=h, temp=temp, moist=moist, sea_level=0.5, zones=zones, tints=tints, peak=peak, river_sources=sources)
+    anchors = {k: [float(x), float(y)] for k, (x, y) in P.items()}
+    return d, anchors
+
 LABELS = {
+    'canon': [('spikia-canon', 'Spikia', 30, False, (0, 56)), ('whiteland', 'Whiteland', 22, False, (-20, 30)), ('yolkia', 'Yolkia', 22, False, (10, 30)),
+              ('islandia', 'Islandia', 22, False, (0, 30)), ('headlands', 'The Headlands', 20, False, (0, -30)), ('neckia', 'Neckia', 20, False, (40, 0)),
+              ('feathers', 'The Feathers', 20, False, (-40, 28)), ('llamaland', 'Llamaland', 20, False, (50, 24)), ('footia', 'Footia', 22, False, (0, 32)),
+              ('unoooland', 'Unoooland', 20, True, (0, 30)), ('hotland', "It's Hot", 20, True, (0, 30)), ('rainia', 'Rainia', 20, True, (0, 30)), ('uohia', 'Uohia', 20, True, (0, 30))],
     'west': [('spike', 'Spikia', 34, False, (0, 60)), ('delta', 'Wetia', 26, True, (30, -30)),
              ('island', 'The Central Island', 24, False, (0, 0)), ('tropicia', 'Tropicia', 20, True, (0, 40))],
     'south': [('spike-south', 'Spikia', 34, False, (0, 60)), ('continent-south', 'The Southern Continent', 22, False, (0, 0)), ('delta-south', 'Wetia', 26, True, (-40, -30))],
@@ -205,7 +325,7 @@ def check_markers(face, d, P):
 if __name__ == '__main__':
     anchors_all = {}
     fractions = {}
-    for face, fn, seed in [('west', design_west, 101), ('south', design_south, 202), ('far', design_far, 303)]:
+    for face, fn, seed in [('canon', design_canon, 404), ('west', design_west, 101), ('south', design_south, 202), ('far', design_far, 303)]:
         d, P = fn(seed)
         frac = water_fraction(d['height']); fractions[face] = round(frac, 3)
         assert frac >= 0.5, (face, frac)

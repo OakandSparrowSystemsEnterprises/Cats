@@ -1,9 +1,11 @@
-# Handoff: Tetra, version 10 (2026-10-02)
+# Handoff: Tetra, version 11 (2026-10-03)
 
 Written for the next Claude Code session picking this up from the Claude app conversation where versions 1 through 10 were built. Read `CLAUDE.md` first for the rules and the layout; this file is the state.
 
 ## 1. What is shipped
 
+- **Version 11 (2026-10-03)** is the current build in `dist/`, made in the repository from Ruby's round of 2026-10-03 (sections 3 and 10): the Canon face generated like the other faces, Tree Land joined to Ehia, the d3 moon, the count of years, her key events. Screenshots in `reference/screenshots-v11/`. See section 10 for the publishing status.
+- Version 10 (2026-10-02), the previous build, is what the lines below describe:
 - Published artifact: `https://claude.ai/artifact/G6JjTxacMzAGCtcSrETb8v`, **version 10**, label "v10 Ruby's fixes, purple star, rings", published 2026-10-01 from `dist/tetra.html`.
 - Standalone copy sent to Joshua the same day: `dist/tetra_world.html` (identical content, wrapped in a full HTML document).
 - Both files in `dist/` are byte-identical to what was published (verified by rebuilding from a clean copy of this repo on 2026-10-02: `make maps && make build` reproduces them, `make test` passes). Re-verified from the repository checkout the same day, see section 9.
@@ -30,6 +32,7 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - "the magnetic field and magical field go all the way around" (v10: both drawn as full rings; the Codex says so).
 - "make the sun a dark purple star and the magical field turns its light to the same color of our sun light" (v10: purple star glow in the sky and page gradient; the ground still lights in sun colour, which is her rule; new "The star" entry in the World tab).
 - 2026-10-03, Ruby herself in the Claude Code session: "what is that purple light?" Answered: it is the dark purple star she asked for; the ground stays sunlight-coloured because the magical field turns the light, her rule. No change made.
+- 2026-10-03, Ruby: "1: thank you just comfirming." (confirmed, no change)
 - "The far side does not have high sun, or deep night." (v10: the Far face's lighting is clamped in the shader and on the cards; a year-long sweep shows only First light, The slow morning, Late light, Dusk there.)
 
 ### Spikia and Wetia (across faces)
@@ -42,6 +45,7 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - "Discovered kingdoms in the area (compairing to the map "farword") of the sentral island (Area on the edge and NOT the area on the spike)": the four kingdoms Unoooland (jungle), "It's Hot" (sweltering; "the hot nation"'s name is "It's Hot"), Rainia (rain), Uohia (forest) are on the far side of the Canon face, between Islandia and the far edge. (corrected in an earlier round from a placement on the West island)
 - "Why is the cannon face untouchable? It should be touchable" (v10: taken as permission to edit the Canon face, but she gave no Canon change, so her painting is untouched; separately, tapping any face now opens its card on phones). **Ask her which she meant.**
 - 2026-10-03, Ruby herself: "why did the cannon face not change?" Answered: the Canon face is her painting and is only changed when she says what to change; she gave no Canon change in round 10. Asked her what she wants changed on it, and which meaning of "untouchable" she meant. No change made.
+- 2026-10-03, Ruby: "2: the cannon face shuld not have land on the west and east sides and needs to not have clouds, be at least 50% water, and look like the other sides (the detail is too much for the cannon side, this is a 4th of a entire planet you know)" (v11: the Canon face is generated like the other three, from the outline of her painting (`design_canon` in mapgen2.py): open sea along both side edges below Spikia, no clouds, 51.6% water, painted in the same patch style. Readings taken: "west and east sides" = the two side edges of the Canon triangle; Spikia at the top corner stays because she made it one country across the three faces; the bottom edge keeps the painting's coast so the Far face still matches. The coast was pulled in to reach half water, more where the land is thick and less where it is thin, so the egg of Whiteland and Yolkia and the rooster of the Headlands keep their width; five markers moved onto the new coast: Whiteland 41 px, the Headlands 43, Llamaland 38, Footia 16, It's Hot 7. The Canon regions' names and order are still the painting's.)
 
 ### West face (Sapphire the explorer)
 - Rough map "discovered by sapphire the explorer": the spike at the top, a central island marked with a blue X, a small tropical island Tropicia, a delta (Wetia) at the corner. "forest" on the island.
@@ -59,7 +63,26 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - "extend the extreme mountains to the center of the far side"; Mount Celestial lies at the exact centre; "is it always twilight there???" (v10: the ridge runs from the apex to the centre; `celestial` marker at the exact centre (512, 657.49); its card reads "Twilight, always". **Answer for Ruby: yes.** The centre of the Far face is where the spin axis comes out, so Mount Celestial never turns toward or away from the star; the light only shifts a little with the seasons.)
 - "make ehia on land on the far side" (v10: Ehia is on the Canon-side land, south of Warmia).
 - "extend tree land to connect with the south continent" (v10: Tree Land's coast crosses the South edge into the continent's lobe).
-- 2026-10-03, Ruby herself: "why are treeland and the cannonward nations on the far face not conected?" Her Far nations sketch (`reference/ruby/far_nations.png`) draws Warmia, Ehia and Tree Land inside one outline, one landmass down the Canon side and along the bottom. v10 has Tree Land as a separate landmass at the bottom centre with sea between it and Ehia's land (`design_far` in mapgen2.py builds them as separate masses). That is a build reading, not something she asked for. **Not yet changed: waiting for her to confirm she wants them joined.** Doing it means a land bridge from Ehia into Tree Land inland of the bottom edge (the shared edge 2-3 stays water at t 0.10 to 0.30, so the South face does not change) while the Far face stays at least half water (0.518 now).
+- 2026-10-03, Ruby, asked whether Tree Land should join Ehia and Warmia: "3: yes pleese" (v11: a neck of land runs from Ehia down to Tree Land, inland of the South edge, so the South face is unchanged there. She did not say wide or thin; it is about 90 px wide, as her sketch's single outline suggests. To keep the Far face at half water (0.504) the Extreme Mountains ridge is a little slimmer (rx 66 to 60) and Wetia's delta lobe a little smaller (108x82 to 102x78); nothing else moved.)
+- 2026-10-03, Ruby herself: "why are treeland and the cannonward nations on the far face not conected?" Her Far nations sketch (`reference/ruby/far_nations.png`) draws Warmia, Ehia and Tree Land inside one outline, one landmass down the Canon side and along the bottom. v10 has Tree Land as a separate landmass at the bottom centre with sea between it and Ehia's land (`design_far` in mapgen2.py builds them as separate masses). That is a build reading, not something she asked for. Done in v11 after her "yes pleese", see the line above.
+
+### The moon
+- 2026-10-03, Ruby: "4: we bouth agree that the moon of tetra is a d3 (with one crater on the one side, two craters on the two side, and three craters on the three side)(perferably NOT the cubic d3(its dumb))" (v11: "The moon" entry in the World tab and `WORLD.moon` in the world JSON. Not drawn in the sky: its size, distance and orbit are unwritten and listed under Still unwritten.)
+
+### Years and the key events
+- 2026-10-03, Ruby: "5: dad will send you some comics i made on kea events, the number is the year, negaive years is the same as bce on earth (also -0 and 0 are not the same year) (im not done with it yet but i got to around year 1 and it is curently around year 1750 of earth in teck and in tetra years they are in 1700" (v11: calendar rows "Years" and "Now" in the World tab; the HUD counts years from 1700 (`YEAR0`); a "Key events" list in the World tab from the two comic pages she then sent herself; "the key events after year 0" under Still unwritten.)
+- 2026-10-03, Ruby, with the two pages: "sorry about the blurryness in the first comick hopefully you can read it". The pages are `reference/ruby/comics/key_events_p1.jpg` and `key_events_p2.jpg`. Panel by panel, as read from the photos ((?) = hard to read, to be confirmed by her):
+  - -2000: "octal una terra" (?) over green hills and a figure.
+  - -1000: "Dote" (?), a figure on a green hill.
+  - -500: a die with dots and a figure saying "runder tot raen?" (?).
+  - -100: "ohiy" (?) and "boing" (?); green land and something orange in blue water.
+  - -90: a great hand, no words.
+  - -50: "d3?!": a figure on the ground looks up at a d3 (the moon, by her point 4).
+  - -10: "We split up!!": Whiteland and Yolkia drawn as the egg-shaped land in the sea.
+  - -5: "We uncover..." (the rest runs off the page), a green hill.
+  - -1: "It's hot!", "Uohia", "Rainyia?" and one more name (?): the nations on the far side of the Canon face get their names.
+  - -0: "0-0?!" and a bird on the face.
+  - 0: "Possibly central island located", "Yay!", "ISLANDIA!": Islandia is found.
 
 ### Process rules Joshua gave
 - "dont use the exact pictures of the explorers (opal the explorer went back and made comlpete maps of them [generate maps based on the schetches please])"
@@ -88,13 +111,17 @@ Page (`template.html`, `build.py`):
 
 ## 5. Open questions for Ruby (do not guess these)
 
-1. "Why is the cannon face untouchable? It should be touchable": did she mean the page (tapping the Canon face on her phone did nothing before v10, fixed) or that the Canon painting may be edited (nothing was changed on it)?
+1. (Answered 2026-10-03: she wanted the Canon face itself changed, see her point 2 in section 3; done in v11.)
 2. One Restart Day or two?
 3. Day names, hours in a day, the size of the world.
 4. Where the Umbrella Tree Zinnia grows.
 5. Lore: every card's prose is first-pass draft marked "Nothing written yet" or draft text for Joshua to edit. None of it is canon.
-6. (2026-10-03) Join Tree Land to Ehia and Warmia on the Far face? Her sketch says they are one land; she asked why they are not connected. Waiting for her yes, and whether she wants a wide land or a thin bridge.
-7. (2026-10-03) What, if anything, she wants changed on the Canon painting itself.
+6. (Answered 2026-10-03: "yes pleese"; done in v11, about 90 px wide. She can still say wider or thinner.)
+7. (Answered 2026-10-03 by her point 2; done in v11.)
+8. (2026-10-03) The hard-to-read words in her comics: years -2000, -1000, -500, -100, and the fourth name in the year -1 panel.
+9. (2026-10-03) "We split up!!" at year -10 shows Whiteland and Yolkia parting. On the map they are still one land with a river between them. Should they be two separate lands now?
+10. (2026-10-03) The moon: how big, how far, how long it takes to go round, and which side faces Tetra. Needed before it can be drawn in the sky.
+11. (2026-10-03) Does she want the comic pages themselves shown in the Codex, or only the list of events?
 
 ## 6. Known limits and caveats
 
@@ -102,7 +129,8 @@ Page (`template.html`, `build.py`):
 - The Far face is the base the world spins on; its centre is on the axis, so in the model its light hardly changes through a day. The clamp makes the cards and the shading agree with Ruby's rule rather than with the geometry alone.
 - `texsynth.py` harvests patches from `art_latest.png` with hard-coded art-pixel geometry: the label rectangles (`LABELS`), the painting's outer diamond (`MAP_POLY`), the glow-line corridors and the `rim` segments. If the Canon art changes, all of them must be re-checked or text fragments will leak into the side faces.
 - `bake.py` asserts the art is 1448x1086 and hard-codes, in art pixels, the kite points A, P, D, Q, the radial warp centre `ck` (727, 530) and the 13 Canon region positions in `regions`. A new painting needs all of these re-measured; the barycentric assert only catches a region that lands outside the triangle. `bake.py` also writes `tex_west/south/far.jpg`, placeholder stone that nothing reads (gitignored).
-- `geometry.json` (from `bake.py`'s `regions`) still names the `hotland` region "The Hot Kingdom". The page shows Ruby's "It's Hot" because `WORLD.places.hotland` overrides the name, but the old string ships inside the GEOMETRY JSON in `dist/`. Fix it in `bake.py` and `geometry.json` at the next content round (it changes `dist/`), then add the name to `RETIRED` in `tools/audit.py`.
+- (Fixed in v11: `geometry.json` and `bake.py` now name the `hotland` region "It's Hot", and "The Hot Kingdom" is in `RETIRED`.)
+- The Canon outline is read off the painting by colour (`canon_outline`: sea by the blue classifier, clouds by brightness and low saturation, filled from their surroundings), then simplified and pulled in to reach half water. A different painting, or a different classifier threshold, gives a different outline. The 13 Canon positions still come from `geometry.json` (measured on the painting) and are settled onto the generated land by `settle`; `map_anchors.json['canon']` holds where they ended up.
 - `edge_profiles.json` is a cache: delete it whenever `tex_canon.jpg` or the designed intervals change, or the maps will conform to stale edges.
 - The Messenger screenshots from Ruby that drove rounds 6 through 10 are not in this repo (they were pasted into the chat); their content is transcribed in section 3. The sketches that are on disk are in `reference/ruby/`.
 - The island outline and the continent outline are hand-typed polygons (`blobs.py`); photo tracing (`legacy/trace.py`) was unreliable and is kept only for reference.
@@ -143,3 +171,20 @@ Page (`template.html`, `build.py`):
   - `geometry.json` still carries "The Hot Kingdom" for `hotland` (section 6).
   - `reference/README.md` now describes this folder as it is; its unzip instruction pointed at the wrong level (the archives carry a `tetra/` prefix).
 - Still not on disk: Ruby's Messenger screenshots from rounds 6 to 10 (section 6).
+
+## 10. What changed in version 11 (2026-10-03, Claude Code, from Ruby's round of the same day)
+
+Maps (`mapgen2.py`, `edges.py`, `check_edges.py`, `build.py`):
+- The Canon face is generated (`design_canon`): outline from the painting (`canon_outline`), open sea along the two side edges below Spikia, coast pulled in with a thickness weight until the face is half water, markers settled on land (`settle`), painted with the same patches as the other faces, labelled Codex chart `codex_canon.jpg`. Water: Canon 0.516, West 0.691, South 0.562, Far 0.504.
+- Edges: `0-1` and `0-2` (the Canon side edges) are designed now, land (0, 0.25) for Spikia and water below; `1-2` is still measured from `tex_canon.jpg`. The West and South faces re-conformed to the open sea on their Canon sides. Edge agreement: 0-1 99.3%, 0-2 98.7%, 0-3 97.0%, 1-2 100%, 1-3 96.7%, 2-3 97.7%.
+- Far: a neck of land from Ehia to Tree Land; the Extreme Mountains ridge and Wetia's delta slightly slimmer to pay for it.
+- `build.py` takes the Canon regions from `map_anchors.json` (names and order from `geometry.json`), inlines `map_canon.jpg` as the Canon texture and `codex_canon.jpg` as `{{MAP_CANON}}`. `check_edges.py` measures the Canon side from `map_canon.jpg`.
+- `hotland` is named "It's Hot" in `geometry.json` and `bake.py`; "The Hot Kingdom" is a retired name in the audit.
+
+Page (`template.html`):
+- World tab: "The moon" (a d3, craters 1, 2, 3, not the cube kind), calendar rows "Years" (year 0 and year -0 are different years; negative years like BCE) and "Now" (year 1700, Earth's 1750 in technology), a "Key events" list from Ruby's comics (`WORLD.timeline`), two new Still unwritten items (the moon's size, distance and orbit; the key events after year 0).
+- The HUD counts years from 1700 (`YEAR0 = WORLD.years.now`).
+- The Canon face card describes the generated face and shows its chart; its note quotes Ruby's instruction.
+- `WORLD.moon`, `WORLD.years` and `WORLD.timeline` are in the world JSON export.
+
+Reference: Ruby's two comic pages in `reference/ruby/comics/`.

@@ -3,7 +3,7 @@ import numpy as np, cv2
 from PIL import Image, ImageDraw
 from edges import face_edges, S
 
-TEX = {'canon': 'tex_canon.jpg', 'west': 'map_west.jpg', 'south': 'map_south.jpg', 'far': 'map_far.jpg'}
+TEX = {'canon': 'map_canon.jpg', 'west': 'map_west.jpg', 'south': 'map_south.jpg', 'far': 'map_far.jpg'}
 APEX, BL, BR = (512.0, 75.52), (8.0, 948.48), (1016.0, 948.48)
 cx, cy = (APEX[0] + BL[0] + BR[0]) / 3, (APEX[1] + BL[1] + BR[1]) / 3
 N = 300

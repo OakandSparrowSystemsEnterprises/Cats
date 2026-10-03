@@ -82,7 +82,7 @@ regions = [
     ('llamaland', 'Llamaland', 'canon', (1050, 522)),
     ('footia', 'Footia', 'canon', (985, 604)),
     ('spikia-canon', 'Spikia \u00b7 the spike', 'canon', (735, 150)),
-    ('unoooland', 'Unoooland', 'canon', (540, 730)),
+    ('unoooland', 'Uncooland', 'canon', (540, 730)),
     ('hotland', "It's Hot", 'canon', (790, 665)),
     ('rainia', 'Rainia', 'canon', (860, 745)),
     ('uohia', 'Ughia', 'canon', (970, 700)),

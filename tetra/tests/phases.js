@@ -8,14 +8,14 @@ const PAGE = require('./_page');
   const page = await ctx.newPage(); const errors = []; page.on('pageerror', e => errors.push(String(e)));
   await page.goto(PAGE.URL); await page.waitForTimeout(900);
   const phases = await page.evaluate(() => {
-    const ids = ['warmia', 'ehia', 'treeland', 'celestial', 'delta-far', 'mountains-far', 'hotland', 'spike', 'whiteland', 'delta', 'beria', 'tropicia'];
+    const ids = ['warmia', 'ehia', 'treeland', 'celestial', 'delta-far', 'hotland', 'spike', 'whiteland', 'delta', 'beria', 'tropicia'];
     const out = {}; for (const id of ids) out[id] = {};
     for (let d = 0; d < 365; d += 7) for (let h = 0; h < 24; h += 0.5) { tetra.setDay(d + h / 24); for (const id of ids) { const t = tetra.phase(id).t; out[id][t] = (out[id][t] || 0) + 1; } }
     return out;
   });
   for (const k in phases) console.log(k.padEnd(14), JSON.stringify(phases[k]));
   console.log('errors', JSON.stringify(errors));
-  const far = ['warmia', 'ehia', 'treeland', 'delta-far', 'mountains-far'];
+  const far = ['warmia', 'ehia', 'treeland', 'delta-far'];
   const banned = ['High sun', 'Deep night', 'Morning', 'Afternoon', 'Evening', 'Before dawn'];
   const fails = [];
   for (const id of far) for (const b of banned) if (phases[id][b]) fails.push(`${id} reached ${b}`);

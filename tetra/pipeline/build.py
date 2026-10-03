@@ -7,7 +7,7 @@ geo = json.load(open(os.path.join(here, 'geometry.json')))
 from nations import ISLAND_NATIONS, CONTINENT_NATIONS
 names = {'spike': 'Spikia \u00b7 the spike', 'delta': 'Wetia', 'tropicia': 'Tropicia',
          'spike-south': 'Spikia \u00b7 the spike', 'delta-south': 'Wetia',
-         'mountains-far': 'Extreme Mountains', 'celestial': 'Mount Celestial', 'delta-far': 'Wetia', 'warmia': 'Warmia', 'ehia': 'Ehia', 'treeland': 'Tree Land'}
+         'celestial': 'Mount Celestial', 'delta-far': 'Wetia', 'warmia': 'Warmia', 'ehia': 'Ehia', 'treeland': 'Tree Land'}
 APEX, BL, BR = (512.0, 75.52), (8.0, 948.48), (1016.0, 948.48)
 def bary_of(px):
     (x, y), (x1, y1), (x2, y2), (x3, y3) = px, APEX, BL, BR

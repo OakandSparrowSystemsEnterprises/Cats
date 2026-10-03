@@ -142,11 +142,12 @@ def design_south(seed=202):
 CENTRE = (512.0, (APEX[1] + BL[1] + BR[1]) / 3)
 NECK_ROT = math.atan2(915 - 693, 600 - 786)      # the neck points from Ehia toward Tree Land
 def design_far(seed=303):
-    P = {'mountains-far': (470, 430), 'celestial': CENTRE, 'delta-far': (118, 872), 'warmia': (666, 518), 'ehia': (736, 685), 'treeland': (600, 868)}
+    # Ruby (2026-10-03): "remove extreem mountains and render mount celestial as a moon at least half the length of the moon high":
+    # the ridge from the apex to the centre is gone (the land at the apex stays, the shared edges with the Canon and West faces are
+    # land there); Mount Celestial is an island at the exact centre, and the page raises a 3D peak on it (template.html, drawBodies)
+    P = {'celestial': CENTRE, 'delta-far': (118, 872), 'warmia': (666, 518), 'ehia': (736, 685), 'treeland': (600, 868)}
     rid = ridged(seed + 2); rid2 = ridged(seed + 5)
     top = wedge(235)
-    # the Extreme Mountains: a massif from the apex down the middle of the face to its exact centre, Mount Celestial
-    ridge = supergauss(506, 405, 60, 178, rot=0.1, p=3.0)      # (rx 66 until v11: a little slimmer to pay for the neck to Tree Land)
     celestial = supergauss(CENTRE[0], CENTRE[1], 74, 66, p=3.0)
     # the Canon-side coast, with Warmia and Ehia on broad lobes of land
     right = band(D_RIGHT, 50) * (YS > 240)
@@ -159,11 +160,11 @@ def design_far(seed=303):
     # bottom edge (the shared edge with the South face keeps its open water there)
     neck = supergauss(700, 790, 112, 46, rot=NECK_ROT, p=3.0)
     delta = supergauss(P['delta-far'][0] + 10, P['delta-far'][1] - 5, 102, 78, p=3.0)
-    land = wobble(np.clip(np.maximum.reduce([top, ridge, celestial, right, warmia, ehia, neck, treeland, delta]), 0, 1), seed, 26)
+    land = wobble(np.clip(np.maximum.reduce([top, celestial, right, warmia, ehia, neck, treeland, delta]), 0, 1), seed, 26)
     land = soft(land, 4)
     land = np.clip(conform(land, 'far', seed), 0, 1) * TRI
     h, d_in = heights(land, seed)
-    mass = np.maximum.reduce([gauss(APEX[0], APEX[1] + 110, 160, 150), gauss(506, 410, 95, 185, rot=0.1), gauss(CENTRE[0], CENTRE[1], 70, 62)])
+    mass = gauss(CENTRE[0], CENTRE[1], 70, 62)          # only Mount Celestial's own foot rises now
     h += mass * (0.30 + 0.5 * rid2) * np.clip(d_in / 25, 0, 1)
     h += gauss(CENTRE[0], CENTRE[1], 34, 34) * 0.45 * np.clip(d_in / 25, 0, 1)      # Mount Celestial itself
     dl = soft(delta * (land > 0.5), 3)
@@ -182,7 +183,7 @@ def design_far(seed=303):
         'plains': np.clip(0.7 * dl + 0.2, 0, 1),
     }
     tints = {'hot': wb * 0.8}
-    sources = [(500 + dx, 430 + dy) for dx, dy in [(-90, 60), (110, 90), (-40, -120), (150, -40)]] + [(int(CENTRE[0] + dx), int(CENTRE[1] + dy)) for dx, dy in [(-50, 40), (60, 30)]]
+    sources = [(int(CENTRE[0] + dx), int(CENTRE[1] + dy)) for dx, dy in [(-50, 40), (60, 30)]]
     peak = smooth(mass, 0.45, 0.8) * (h > 0.7)
     d = dict(height=h, temp=temp, moist=moist, sea_level=0.5, zones=zones, tints=tints, peak=peak, river_sources=sources)
     anchors = {k: list(v) for k, v in P.items()}
@@ -409,7 +410,7 @@ LABELS = {
     'west': [('spike', 'Spikia', 34, False, (0, 60)), ('delta', 'Wetia', 26, True, (30, -30)),
              ('island', 'The Central Island', 24, False, (0, 0)), ('tropicia', 'Tropicia', 20, True, (0, 40))],
     'south': [('spike-south', 'Spikia', 34, False, (0, 60)), ('continent-south', 'The Southern Continent', 22, False, (0, 0)), ('delta-south', 'Wetia', 26, True, (-40, -30))],
-    'far': [('mountains-far', 'Extreme Mountains', 30, False, (0, -70)), ('celestial', 'Mount Celestial', 22, False, (0, 34)), ('warmia', 'Warmia', 28, True, (-20, -30)), ('ehia', 'Ehia', 28, True, (-30, 0)),
+    'far': [('celestial', 'Mount Celestial', 22, False, (0, 34)), ('warmia', 'Warmia', 28, True, (-20, -30)), ('ehia', 'Ehia', 28, True, (-30, 0)),
             ('treeland', 'Tree Land', 28, True, (0, -40)), ('delta-far', 'Wetia', 26, True, (30, -40))],
 }
 

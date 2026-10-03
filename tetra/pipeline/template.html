@@ -283,7 +283,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The moon</p>
-          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind. One crater on its one side, two craters on its two side, three craters on its three side. It is a third of the size of Tetra and circles a little farther out than the magical field. Every ordinary day it sits on the opposite side from the star, full. Every month, on the new moon, it swings round in front of the star: a solar eclipse.</span><span class="q">Which day of the month is the new moon: not yet written (the first day of each month for now).</span></div></div>
+          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind: one crater on its one side, two craters on its two side, three craters on its three side. It is a third of the size of Tetra, circles a little farther out than the magical field, and rolls slowly so every side comes round. Every ordinary day it sits on the opposite side from the star, drifting gently about that spot. Every month, in the middle of the month, is the new moon: the die swings round in front of the star and the world goes dark, a solar eclipse. Its light waxes and wanes through the month like our own moon’s, full when the month turns, and the Restart Day is never a new moon.</span></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">The four faces</p>
@@ -297,7 +297,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Life of Tetra</p>
-          <div class="flora"><img id="zinniaImg" alt="Line drawing of the Umbrella Tree Zinnia: a tall stem with a wide crown of petals and small blossoms hanging from its rim" src="{{ZINNIA}}"><div><b>The Umbrella Tree Zinnia</b><p>A single tall stem that is not wood, crowned with a wide umbrella of broad petals. Small blossoms hang on threads from the rim of the crown.</p><p class="q">Where it grows: not yet written.</p></div></div>
+          <div class="flora"><img id="zinniaImg" alt="Line drawing of the Umbrella Tree Zinnia: a tall stem with a wide crown of petals and small blossoms hanging from its rim" src="{{ZINNIA}}"><div><b>The Umbrella Tree Zinnia</b><p>A single tall stem that is not wood, crowned with a wide umbrella of broad petals. Small blossoms hang on threads from the rim of the crown.</p><p class="q">It grows in magical places with a lot of water, most of all in Wetia and on the West Face.</p></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">Nations</p>
@@ -310,12 +310,12 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Key events</p>
-          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 0. The words are hers, in her spelling, as read from the photos; (?) marks a word that was hard to read. The small line under each is what the panel shows.</p>
+          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 1. The words are hers, in her spelling, as read from the photos; (?) marks a word that was hard to read. The small line under each is what the panel shows.</p>
           <ul class="timeline" id="timeline"></ul>
         </div>
         <div class="sect">
           <p class="eyebrow">Still unwritten</p>
-          <ul class="unwritten-list"><li>Day names</li><li>Hours in a day</li><li>Size of the world</li><li>Where the Umbrella Tree Zinnia grows</li><li>Which day of the month is the new moon (the first, for now)</li><li>The key events after year 0 (Ruby’s comics continue)</li><li>More of every face</li></ul>
+          <ul class="unwritten-list"><li>Names for the days, like Monday has</li><li>How many hours a day has</li><li>How big Tetra is, from one corner to another</li><li>The key events after year 1 (Ruby’s comics continue)</li><li>What the land at the top of the Far Face is called, now that the mountains there are gone</li><li>More places and names on every face</li></ul>
           <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
         </div>
       </section>
@@ -339,6 +339,8 @@
       <button id="btnPlay" type="button" class="primary">Pause</button>
       <button id="btnDay" type="button" title="Advance one day">+1 day</button>
       <button id="btnMonth" type="button" title="Advance one month">+1 month</button>
+      <button id="btnYearBack" type="button" title="Back one year">−1 year</button>
+      <button id="btnYear" type="button" title="Forward one year">+1 year</button>
       <button id="btnReset" type="button" title="Reset the view and the calendar">Reset</button>
     </div>
     <div class="faces" aria-label="Turn to a face">
@@ -377,7 +379,7 @@ const WORLD = {
     rainia:{name:'Rainia', kind:'Nation', nation:'Rainia', biome:'rain', note:'On the far side of the Canon Face.'},
     uohia:{name:'Ughia', kind:'Nation', nation:'Ughia', biome:'forest', note:'On the far side of the Canon Face, at the eastern end.'},
     spike:{name:'Spikia \u00b7 the spike', kind:'Nation', nation:'Spikia', note:'The top of the West Face, connected to the top area of the Canon Face. All the top corner lands are one country.'},
-    delta:{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation. Wetia is all the deltas, and the three of them meet at this corner of the world, where the West, South and Far faces touch.'},
+    delta:{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation. Wetia is all the deltas, and the three of them meet at this corner of the world, where the West, South and Far faces touch. The Umbrella Tree Zinnia grows here more than anywhere.'},
     swampland:{name:'Swampland', kind:'Nation', nation:'Swampland', tight:true, note:'On the central island of the West Face, the one Sapphire marked with a blue X.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
     greenia:{name:'Greenia', kind:'Nation', nation:'Greenia', tight:true, note:'On the central island of the West Face.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
     marshia:{name:'Marshia', kind:'Nation', nation:'Marshia', tight:true, note:'On the central island of the West Face.', chart:'@island', chartCaption:'The central island and its five nations, from Opal\u2019s map'},
@@ -388,10 +390,9 @@ const WORLD = {
     snowia:{name:'Snowia', kind:'Nation', nation:'Snowia', tight:true, note:'On the southern continent, in the middle of the South Face, up on its snowy spine.', chart:'@continent', chartCaption:'The southern continent and its three nations, from Opal\u2019s map'},
     coldland:{name:'Coldland', kind:'Nation', nation:'Coldland', tight:true, note:'On the southern continent, in the middle of the South Face.', chart:'@continent', chartCaption:'The southern continent and its three nations, from Opal\u2019s map'},
     beria:{name:'Beria', kind:'Nation', nation:'Beria', tight:true, note:'On the southern continent, in the middle of the South Face.', chart:'@continent', chartCaption:'The southern continent and its three nations, from Opal\u2019s map'},
-    'delta-south':{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation, in the South Face\u2019s right-hand corner, the same corner as the West and Far deltas.'},
-    'mountains-far':{name:'Extreme Mountains', kind:'Biome', biome:'extreme mountains', note:'The \u201cfar\u201d extreme mountains run from the top of the face down its middle to the exact centre, where Mount Celestial stands.'},
-    celestial:{name:'Mount Celestial', kind:'Peak', biome:'extreme mountains', note:'At the exact centre of the Far Face, on the axis the world turns on. The sun never rises or sets here: it is always twilight on Mount Celestial.'},
-    'delta-far':{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation. It shares its corner with the West and South deltas.'},
+    'delta-south':{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation, in the South Face\u2019s right-hand corner, the same corner as the West and Far deltas. The Umbrella Tree Zinnia grows here more than anywhere.'},
+        celestial:{name:'Mount Celestial', kind:'Peak', biome:'mountain', note:'A lone peak at the exact centre of the Far Face, on the axis the world turns on, at least half as tall as the moon is long. The sun never rises or sets here: it is always twilight on Mount Celestial.'},
+    'delta-far':{name:'Wetia', kind:'Nation', nation:'Wetia', biome:'delta', note:'The delta nation. It shares its corner with the West and South deltas. The Umbrella Tree Zinnia grows here more than anywhere.'},
     warmia:{name:'Warmia', kind:'Nation', nation:'Warmia', note:'By the Canon side.'},
     ehia:{name:'Ehia', kind:'Nation', nation:'Ehia', note:'By the Canon side, on the land south of Warmia.'},
     treeland:{name:'Tree Land', kind:'Nation', nation:'Tree Land', note:'Along the South side. Its coast crosses the edge onto the South Face and joins the southern continent.'}
@@ -411,25 +412,25 @@ const WORLD = {
   ],
   explorers:[{name:'Sapphire the explorer', desc:'Charted the West Face: the spike, Wetia, the central island and its five nations, and the island of Tropicia.'},
              {name:'Amethyst the explorer', desc:'Charted the South Face: tropical at the top, the southern continent with Snowia, Coldland and Beria, and Wetia.'},
-             {name:'Obsidian the explorer', desc:'Charted the Far Face: the \u201cfar\u201d extreme mountains, Wetia, and the nations Warmia, Ehia and Tree Land.'},
+             {name:'Obsidian the explorer', desc:'Charted the Far Face: Mount Celestial, Wetia, and the nations Warmia, Ehia and Tree Land.'},
              {name:'Opal the explorer', desc:'Went back over the West, South and Far faces and drew the complete maps from the other explorers\u2019 charts. Opal\u2019s maps are the ones on the world now.'}],
-  worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},
-          {id:'inverted',name:'The Inverted Planet',desc:'A 16 \u00d7 16 \u00d7 16 cube, lived in from the inside: an overworld cave biome.'}],
+  worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
-  moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day', eclipse:'a solar eclipse every month on the new moon', note:'Which day of the month is the new moon: not yet written (drawn on the first day of each month for now).'},
+  moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
   years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
   timeline:[      /* Ruby's comics of the key events (2026-10-03), two pages so far; said = her words as read from the photos */
     {year:'-2000', said:'estar una tetragon', shows:'green hills and a figure'},
     {year:'-1000', said:'Dote', shows:'a figure on a green hill'},
     {year:'-500', said:'runder tetragon?', shows:'a figure, and a die with dots'},
-    {year:'-100', said:'ohiy (?) \u00b7 boing (?)', shows:'two goodbye words, each a mix of adios and bye, as someone sets out from the land that would later be named Uncooland to find other landmasses (as Ruby explained)'},
+    {year:'-100', said:'adiy \u00b7 beios', shows:'two goodbyes, mixes of adios and bye, as someone sets out from the land that would later be named Uncooland to find other landmasses (as Ruby explained)'},
     {year:'-90', said:'', shows:'a great hand; no words in this panel'},
     {year:'-50', said:'d3?!', shows:'a figure on the ground looks up at a d3'},
     {year:'-10', said:'we split up!!', shows:'Whiteland and Yolkia, the egg-shaped land in the sea'},
     {year:'-5', said:'we unco\u2026 (?)', shows:'a green hill; the rest of the words run off the page'},
     {year:'-1', said:'its hot! \u00b7 Ughia \u00b7 rainyia?', shows:'four name bubbles over a green hill, with question marks all around; the fourth name is not important right now, Ruby says'},
-    {year:'-0', said:'0-0?!', shows:'a bird on a hill, inside a triangle'},
-    {year:'0', said:'posibly central island located \u00b7 yay! \u00b7 ISLANDIA!', shows:'people cheering, and the name Islandia in big letters'}
+    {year:'-0', said:'0-0?!', shows:'they set off to find a rumoured central island (as Ruby explained)'},
+    {year:'0', said:'posibly central island located \u00b7 yay!', shows:'people cheering: the central island is found'},
+    {year:'1', said:'ISLANDIA!', shows:'they name it Islandia (as Ruby explained)'}
   ],
   fields:[{id:'magical',name:'Magical field',effect:'slows light; turns the star\u2019s purple light to sunlight',extent:'all the way around',quote:'Here, the morning moves slower. And light flows like gold.'},
           {id:'magnetic',name:'Magnetic field',effect:'guides worlds',extent:'all the way around'}],
@@ -437,7 +438,7 @@ const WORLD = {
     canon:{name:'The Canon Face', short:'Canon', tagline:'A single world · A thousand stories', blurb:'The first face, now drawn like the others: Whiteland and Yolkia to the west, Islandia in the middle sea, the Headlands, Neckia, the Feathers, Llamaland and Footia to the east, and along the far edge the four nations Uncooland, It\u2019s Hot, Rainia and Ughia. Open sea along both sides below Spikia, no clouds, at least half water.', note:'Ruby: the Canon face should not have land on the west and east sides, needs no clouds, must be at least half water, and should look like the other sides.', color:'#f5b64f', chart:'{{MAP_CANON}}', chartCaption:'The Canon Face, drawn from the outline of Ruby\u2019s painting'},
     west: {name:'The Western Face', short:'West', tagline:'Uncharted shores · New histories', blurb:'Charted by Sapphire the explorer: the spike at the top, the central island with its five nations, the little island of Tropicia, and Wetia at the corner.', note:'The area at the top of the West Face is connected to the top area of the Canon Face.', color:'#f0a05a', exploring:true, explorer:'Sapphire the explorer', explorerShort:'Sapphire', chart:'{{MAP_WEST}}', chartCaption:'Opal\u2019s complete map of the West, drawn from Sapphire\u2019s chart'},
     south:{name:'The Southern Face', short:'South', tagline:'Further lands · New histories', blurb:'Charted by Amethyst the explorer: tropical at the top, the southern continent in the middle sea with its three nations, and Wetia in the right-hand corner. The continent is joined to Tree Land across the Far edge; it does not touch the West side.', note:'The top connects again: the top of the South Face is part of Spikia with the other spikes.', color:'#86bbff', exploring:true, explorer:'Amethyst the explorer', explorerShort:'Amethyst', chart:'{{MAP_SOUTH}}', chartCaption:'Opal\u2019s complete map of the South, drawn from Amethyst\u2019s chart'},
-    far:  {name:'The Far Face', short:'Far', tagline:'\u201cFar\u201d extreme mountains', blurb:'The base the world turns on, charted by Obsidian the explorer. The extreme mountains run from the top of the face to its exact centre, Mount Celestial. Warmia and Ehia lie by the Canon side, Tree Land along the South side, Wetia at the corner. The Far Face has no high sun and no deep night.', note:'Mount Celestial is on the axis the world spins on, so the sun never rises or sets there: twilight that never ends.', color:'#9aa0ad', exploring:true, explorer:'Obsidian the explorer', explorerShort:'Obsidian', chart:'{{MAP_FAR}}', chartCaption:'Opal\u2019s complete map of the Far Face, drawn from Obsidian\u2019s chart'}
+    far:  {name:'The Far Face', short:'Far', tagline:'Mount Celestial \u00b7 Twilight, always', blurb:'The base the world turns on, charted by Obsidian the explorer. Mount Celestial stands alone at its exact centre, a peak at least half as tall as the moon is long. Warmia and Ehia lie by the Canon side, Tree Land along the South side, Wetia at the corner. The Far Face has no high sun and no deep night.', note:'Mount Celestial is on the axis the world spins on, so the sun never rises or sets there: twilight that never ends.', color:'#9aa0ad', exploring:true, explorer:'Obsidian the explorer', explorerShort:'Obsidian', chart:'{{MAP_FAR}}', chartCaption:'Opal\u2019s complete map of the Far Face, drawn from Obsidian\u2019s chart'}
   },
   lore:{
     whiteland:'Chalk downs and snowfields, the shell-white half of the great egg-shaped land. Villages sit low against the wind, roofs whitewashed to match the ground, and a single river marks the border with Yolkia.',
@@ -454,7 +455,7 @@ const CHARTS={island:'{{MAP_ISLAND}}',continent:'{{MAP_CONTINENT}}'};
 Object.values(WORLD.places).forEach(pl=>{if(pl.chart&&pl.chart[0]==='@')pl.chart=CHARTS[pl.chart.slice(1)]});
 const REGIONS = GEO.regions.map(r=>({...r, ...(WORLD.places[r.id]||{}), lore:WORLD.lore[r.id]}));
 const FACE_ORDER = ['canon','west','south','far'];
-const LABEL_SIDE = {whiteland:'left', yolkia:'below', feathers:'left', delta:'below', tropicia:'below', uohia:'left', hotland:'below', 'delta-south':'below', 'delta-far':'below', 'mountains-far':'left', celestial:'below', ehia:'left', treeland:'below', swampland:'left', greenia:'left', marshia:'left', greeneria:'below', snowia:'left', coldland:'left', beria:'below'};
+const LABEL_SIDE = {whiteland:'left', yolkia:'below', feathers:'left', delta:'below', tropicia:'below', uohia:'left', hotland:'below', 'delta-south':'below', 'delta-far':'below', celestial:'below', ehia:'left', treeland:'below', swampland:'left', greenia:'left', marshia:'left', greeneria:'below', snowia:'left', coldland:'left', beria:'below'};
 
 /* ============================== MATH ============================== */
 const TAU = Math.PI*2;
@@ -602,44 +603,86 @@ function drawStars(t,sun){sc.setTransform(DPR,0,0,DPR,0,0);sc.clearRect(0,0,W,H)
   let mp=project(cam.vp,mulS(sun,-60));
   if(!mp){const dx=-dot(sun,cam.s),dy=dot(sun,cam.u),l=Math.hypot(dx,dy);if(l>0.05)mp={x:W/2+dx/l*0.95*Math.max(W,H),y:H/2+dy/l*0.95*Math.max(W,H)}}
   if(mp){const g=sc.createRadialGradient(mp.x,mp.y,0,mp.x,mp.y,size*1.1);g.addColorStop(0,'rgba(90,150,255,.22)');g.addColorStop(.5,'rgba(70,120,255,.06)');g.addColorStop(1,'rgba(70,120,255,0)');sc.fillStyle=g;sc.fillRect(mp.x-size*1.1,mp.y-size*1.1,size*2.2,size*2.2)}
-  drawMoon(sc,false)}
+}
 // Ruby (2026-10-03): "the moon of tetra is a d3 (with one crater on the one side, two craters on the two side, and three craters on
-// the three side)(perferably NOT the cubic d3)", "where is the moon???", and then: "it shuld be a 1/3 of the size of tetra and solar
-// eclipse every month on the new moon, but every other day it is just on oposite side of sun, and is a little bit farther than the
-// magical field." So: a three-sided rolling die a third of Tetra's width, orbiting just outside the outermost gold ring; on every
-// ordinary day it sits opposite the star (full from Tetra); on the new moon it swings once round the orbit, through the line to the
-// star at midday, and the world darkens (a solar eclipse). Readings: the new moon is the first day of each month (she has not said
-// which day); the swing takes the whole day.
-const EDGE=len(sub(V[1],V[2])),MOON_LEN=EDGE/3,MOON_HALF=MOON_LEN/2,MOON_W=MOON_HALF/2.2,MOON_ORBIT=2.18+0.3,MOON_TILT=-0.42;
+// the three side)(perferably NOT the cubic d3)"; "where is the moon???"; "it shuld be a 1/3 of the size of tetra and solar eclipse
+// every month on the new moon, but every other day it is just on oposite side of sun, and is a little bit farther than the magical
+// field."; "the moon needs to be 3d, not just a 2d static image that rotates to face the camara"; "make shure the 3 side is visable";
+// "the middle of the month is the new moon"; "make shure the earth moon cycle still hapens (the fazes only)"; "make shure the reset
+// day is not a new moon"; "it feels wierd that the moon just stops in place".
+// So: a real three-sided rolling die in the scene, a third of Tetra's edge long, orbiting just outside the outermost gold ring.
+// On ordinary days it sits opposite the star, drifting a little about that spot and rolling slowly so all three sides come round; on
+// the new moon (day 14 of each month) it swings once round the orbit, through the line to the star at midday, and the world darkens.
+// Its light waxes and wanes on a 28-day cycle, new at mid-month and full when the month turns; the Restart Day counts as full.
+// Readings: "the size of Tetra" = the length of an edge; "a little bit farther than the magical field" = 0.3 beyond the last gold ring;
+// "the middle of the month" = day 14; one roll per day; the drift is a small daily loop.
+const EDGE=len(sub(V[1],V[2])),MOON_LEN=EDGE/3,MOON_HALF=MOON_LEN/2,MOON_SIDE=MOON_LEN/2.1,MOON_ORBIT=2.18+0.3,NEW_MOON_DOM=14,ROLLS_PER_DAY=1,MOON_BOB=0.14;
+let MOON_ROLL0=-2.777;      // measured so the three-crater side faces the viewer in the starting view (Ruby: "make shure the 3 side is visable")
+// Ruby: "remove extreem mountains and render mount celestial as a moon at least half the length of the moon high": a peak at the exact
+// centre of the Far Face, 0.6 of the moon's length tall, turning with the world
+const PEAK_H=0.6*MOON_LEN,PEAK_R=PEAK_H*0.42;
 const rotAxis=(v,a,th)=>{const c=Math.cos(th),sn=Math.sin(th),x=cross(a,v);return add(add(mulS(v,c),mulS(x,sn)),mulS(a,dot(a,v)*(1-c)))};
-let MOON={dir:[0,0,1],pos:[0,0,MOON_ORBIT],theta:0,eclipse:0,newMoon:false};
-function moonState(day,sun){const {mi,dom}=dateParts(day);const newMoon=mi>=0&&dom===1;const theta=newMoon?TAU*(day-Math.floor(day)):0;
-  const axis=norm(cross(sun,Math.abs(sun[1])<.9?[0,1,0]:[1,0,0]));const dir=norm(rotAxis(mulS(sun,-1),axis,theta));
-  const ang=Math.acos(Math.max(-1,Math.min(1,dot(dir,sun))));const half=Math.atan(MOON_HALF/MOON_ORBIT);   // the die's half-length seen from Tetra
+let MOON={dir:[0,0,1],pos:[0,0,MOON_ORBIT],theta:0,eclipse:0,newMoon:false,phase:0.5,light:[0,0,1],roll:0,axis:[0,1,0]};
+function moonState(day,sun){const {mi,dom}=dateParts(day);const newMoon=mi>=0&&dom===NEW_MOON_DOM;const frac=day-Math.floor(day);const theta=newMoon?TAU*frac:0;
+  const axis=norm(cross(sun,Math.abs(sun[1])<.9?[0,1,0]:[1,0,0]));const base=mulS(sun,-1);const axis2=norm(cross(axis,base));
+  let dir=rotAxis(base,axis,theta+MOON_BOB*Math.cos(TAU*frac));dir=norm(rotAxis(dir,axis2,MOON_BOB*Math.sin(TAU*frac)));
+  const ang=Math.acos(Math.max(-1,Math.min(1,dot(dir,sun))));const half=Math.atan(MOON_HALF/MOON_ORBIT);
   const eclipse=Math.max(0,Math.min(1,(half*1.3-ang)/(half*0.9)));
-  return{dir,pos:mulS(dir,MOON_ORBIT),theta,eclipse,newMoon}}
+  const phase=mi<0?0.5:((((dom-NEW_MOON_DOM)%DPM)+DPM)%DPM)/DPM;        // 0 = new (mid-month), 0.5 = full (the month's turn)
+  const light=norm(rotAxis(dir,axis,TAU*phase));                           // lit from behind when new, from Tetra's side when full
+  return{dir,pos:mulS(dir,MOON_ORBIT),theta,eclipse,newMoon,phase,light,roll:MOON_ROLL0+TAU*day*ROLLS_PER_DAY,axis}}
 function moonScreen(){const mp=project(cam.vp,MOON.pos);if(!mp)return null;const up=project(cam.vp,add(MOON.pos,mulS(cam.u,MOON_HALF)));
   const half=up?Math.hypot(up.x-mp.x,up.y-mp.y):0;const front=len(sub(MOON.pos,cam.eye))<len(sub(TARGET,cam.eye));return{x:mp.x,y:mp.y,half,front}}
-function roundedRect(c,x,y,w,h,r){c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arcTo(x+w,y,x+w,y+r,r);c.lineTo(x+w,y+h-r);c.arcTo(x+w,y+h,x+w-r,y+h,r);c.lineTo(x+r,y+h);c.arcTo(x,y+h,x,y+h-r,r);c.lineTo(x,y+r);c.arcTo(x,y,x+r,y,r);c.closePath()}
-function drawMoon(c,wantFront){const m=moonScreen();if(!m||m.front!==wantFront||m.half<2)return;
-  if(m.x<-m.half*2||m.x>W+m.half*2||m.y<-m.half*2||m.y>H+m.half*2)return;
-  const L=m.half,r=L/2.2,sun=sunDir(state.day);
-  let sp=project(cam.vp,mulS(sun,60));if(!sp){const dx=dot(sun,cam.s),dy=-dot(sun,cam.u),l=Math.hypot(dx,dy)||1;sp={x:W/2+dx/l*W,y:H/2+dy/l*H}}
-  const lit=Math.atan2(sp.y-m.y,sp.x-m.x)-MOON_TILT;
-  c.save();c.translate(m.x,m.y);c.globalAlpha=1;c.shadowBlur=0;
-  const halo=c.createRadialGradient(0,0,r*0.5,0,0,r*3.4);halo.addColorStop(0,'rgba(216,208,238,.22)');halo.addColorStop(1,'rgba(216,208,238,0)');c.fillStyle=halo;c.fillRect(-r*3.4,-r*3.4,r*6.8,r*6.8);
-  c.rotate(MOON_TILT);
-  c.beginPath();roundedRect(c,-L,-r,2*L,2*r,r*0.92);c.save();c.clip();
-  c.fillStyle='#d8d2e6';c.fillRect(-L,-r,2*L,r);
-  c.fillStyle='#a19ab8';c.fillRect(-L,0,2*L,r);
-  c.fillStyle='#6f6888';c.fillRect(-L,r*0.74,2*L,r*0.26);
-  const crater=(x,y,cr)=>{c.fillStyle='rgba(58,50,88,.55)';c.beginPath();c.arc(x,y,cr,0,TAU);c.fill();c.strokeStyle='rgba(255,250,255,.4)';c.lineWidth=Math.max(1,r*0.05);c.beginPath();c.arc(x,y,cr,Math.PI*1.05,Math.PI*1.95);c.stroke()};
-  crater(0,-r*0.5,r*0.26);crater(-L*0.42,r*0.36,r*0.2);crater(L*0.42,r*0.36,r*0.2);
-  const sh=c.createLinearGradient(Math.cos(lit)*L,Math.sin(lit)*L,-Math.cos(lit)*L,-Math.sin(lit)*L);sh.addColorStop(0,'rgba(18,14,36,0)');sh.addColorStop(0.55,'rgba(18,14,36,.15)');sh.addColorStop(1,'rgba(18,14,36,.72)');c.fillStyle=sh;c.fillRect(-L,-r,2*L,2*r);
-  c.restore();
-  c.strokeStyle='rgba(44,38,70,.55)';c.lineWidth=Math.max(1,r*0.05);c.beginPath();c.moveTo(-L+r*0.3,0);c.lineTo(L-r*0.3,0);c.stroke();
-  c.strokeStyle='rgba(242,238,252,.55)';c.lineWidth=Math.max(1.2,r*0.06);c.beginPath();roundedRect(c,-L,-r,2*L,2*r,r*0.92);c.stroke();
-  c.restore()}
+// the die: a rounded triangular prism along X, three flat faces (0, 1, 2) and rounded corners and ends (3)
+function buildMoon(){const L=MOON_HALF,sd=MOON_SIDE,Rc=sd/Math.sqrt(3),rc=0.22*Rc,d=rc/Math.tan(Math.PI/6);const pts=[];
+  const corners=[0,1,2].map(k=>{const a=Math.PI/2+k*TAU/3;return[Rc*Math.cos(a),Rc*Math.sin(a)]});
+  for(let k=0;k<3;k++){const A=corners[k],B=corners[(k+1)%3],Bn=corners[(k+2)%3];const ex=B[0]-A[0],ey=B[1]-A[1],el=Math.hypot(ex,ey);const ux=ex/el,uy=ey/el;const n=[uy,-ux];
+    const P0=[A[0]+ux*d,A[1]+uy*d],P1=[B[0]-ux*d,B[1]-uy*d],flat=el-2*d;
+    for(let i=0;i<=6;i++){const t=i/6;pts.push({y:P0[0]+(P1[0]-P0[0])*t,z:P0[1]+(P1[1]-P0[1])*t,ny:n[0],nz:n[1],f:k,v:(t-0.5)*flat/(sd/2)})}
+    const C=[B[0]*(1-2*rc/Rc),B[1]*(1-2*rc/Rc)];const fx=Bn[0]-B[0],fy=Bn[1]-B[1],fl=Math.hypot(fx,fy);const n2=[fy/fl,-fx/fl];
+    let a0=Math.atan2(n[1],n[0]),a1=Math.atan2(n2[1],n2[0]);while(a1<a0)a1+=TAU;
+    for(let i=1;i<5;i++){const a=a0+(a1-a0)*i/5;pts.push({y:C[0]+rc*Math.cos(a),z:C[1]+rc*Math.sin(a),ny:Math.cos(a),nz:Math.sin(a),f:3,v:0})}}
+  const P=[],N=[],F=[];const push=(x,y,z,nx,ny,nz,f,u,v)=>{P.push(x,y,z);N.push(nx,ny,nz);F.push(f,u,v)};const uu=L/(sd/2);
+  for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];
+    push(-L,a.y,a.z,0,a.ny,a.nz,a.f,-uu,a.v);push(L,a.y,a.z,0,a.ny,a.nz,a.f,uu,a.v);push(L,b.y,b.z,0,b.ny,b.nz,b.f,uu,b.v);
+    push(-L,a.y,a.z,0,a.ny,a.nz,a.f,-uu,a.v);push(L,b.y,b.z,0,b.ny,b.nz,b.f,uu,b.v);push(-L,b.y,b.z,0,b.ny,b.nz,b.f,-uu,b.v);
+    for(const sgn of[-1,1]){push(sgn*L,0,0,sgn,0,0,3,0,0);push(sgn*L,a.y,a.z,sgn,0,0,3,0,0);push(sgn*L,b.y,b.z,sgn,0,0,3,0,0)}}
+  return{pb:buf(P),nb:buf(N),fb:buf(F),count:P.length/3}}
+// Mount Celestial: a faceted peak on the Far Face's centre, in the world's own (unspun) frame
+function buildPeak(){const f=faceById.far,c=f.center,nrm=norm(f.normal);const t1=norm(cross(nrm,Math.abs(nrm[1])<.9?[0,1,0]:[1,0,0])),t2=cross(nrm,t1);
+  const ring=(h,r,jit)=>Array.from({length:18},(_,i)=>{const a=TAU*i/18,rr=r*(1+jit*Math.sin(i*2.7+1.3));return add(add(c,mulS(nrm,h)),add(mulS(t1,rr*Math.cos(a)),mulS(t2,rr*Math.sin(a))))});
+  const r0=ring(0,PEAK_R,0.22),r1=ring(PEAK_H*0.38,PEAK_R*0.52,0.3),apex=add(c,mulS(nrm,PEAK_H));
+  const P=[],N=[],F=[];const tri=(a,b,d,ha,hb,hd)=>{const n=norm(cross(sub(b,a),sub(d,a)));for(const [p,h] of [[a,ha],[b,hb],[d,hd]]){P.push(...p);N.push(...n);F.push(4,h,0)}};
+  for(let i=0;i<18;i++){const j=(i+1)%18;tri(r0[i],r0[j],r1[i],0,0,0.38);tri(r0[j],r1[j],r1[i],0,0.38,0.38);tri(r1[i],r1[j],apex,0.38,0.38,1)}
+  return{pb:buf(P),nb:buf(N),fb:buf(F),count:P.length/3}}
+const VS2=`attribute vec3 aPos;attribute vec3 aNormal;attribute vec3 aF;uniform mat4 uMVP;uniform mat4 uModel;varying vec3 vN;varying vec3 vF;
+void main(){vN=mat3(uModel)*aNormal;vF=aF;gl_Position=uMVP*vec4(aPos,1.0);}`;
+const FS2=`precision mediump float;uniform vec3 uLight;uniform float uAmb;uniform vec3 uCol;uniform vec3 uCol2;uniform float uKind;varying vec3 vN;varying vec3 vF;
+float crater(vec2 p,vec2 c,float r){return 1.0-smoothstep(r*0.7,r,length(p-c));}
+float rim(vec2 p,vec2 c,float r){float d=length(p-c);return smoothstep(r*0.85,r,d)*(1.0-smoothstep(r,r*1.3,d));}
+void main(){vec3 n=normalize(vN);float nl=dot(n,normalize(uLight));vec3 col;
+  if(uKind<0.5){float fid=vF.x;vec2 p=vec2(vF.y,vF.z);float f=floor(fid+0.5);float onFace=step(abs(fid-f),0.02);float dark=0.0,ring=0.0;
+    if(f<0.5){dark+=crater(p,vec2(0.0,0.0),0.42);ring+=rim(p,vec2(0.0,0.0),0.42);}
+    else if(f<1.5){dark+=crater(p,vec2(-0.95,0.0),0.36)+crater(p,vec2(0.95,0.0),0.36);ring+=rim(p,vec2(-0.95,0.0),0.36)+rim(p,vec2(0.95,0.0),0.36);}
+    else if(f<2.5){dark+=crater(p,vec2(-1.3,0.0),0.32)+crater(p,vec2(0.0,0.0),0.32)+crater(p,vec2(1.3,0.0),0.32);ring+=rim(p,vec2(-1.3,0.0),0.32)+rim(p,vec2(0.0,0.0),0.32)+rim(p,vec2(1.3,0.0),0.32);}
+    dark*=onFace;ring*=onFace;float lit=uAmb+(1.0-uAmb)*smoothstep(-0.2,0.45,nl);
+    col=uCol*lit*(1.0-0.5*clamp(dark,0.0,1.0))*(1.0+0.2*clamp(ring,0.0,1.0))+vec3(0.07,0.04,0.11)*(1.0-lit);}
+  else{float h=vF.y;vec3 rock=mix(uCol,uCol2,smoothstep(0.55,0.85,h));float lit=uAmb+(1.0-uAmb)*clamp(nl*0.5+0.5,0.0,1.0);col=rock*lit;}
+  gl_FragColor=vec4(col,1.0);}`;
+let prog2=null,loc2=null,moonMesh=null,peakMesh=null;
+try{prog2=ctx.createProgram();ctx.attachShader(prog2,shader(ctx.VERTEX_SHADER,VS2));ctx.attachShader(prog2,shader(ctx.FRAGMENT_SHADER,FS2));ctx.linkProgram(prog2);if(!ctx.getProgramParameter(prog2,ctx.LINK_STATUS))throw new Error(ctx.getProgramInfoLog(prog2));
+  loc2={p:ctx.getAttribLocation(prog2,'aPos'),n:ctx.getAttribLocation(prog2,'aNormal'),f:ctx.getAttribLocation(prog2,'aF'),mvp:ctx.getUniformLocation(prog2,'uMVP'),model:ctx.getUniformLocation(prog2,'uModel'),light:ctx.getUniformLocation(prog2,'uLight'),amb:ctx.getUniformLocation(prog2,'uAmb'),col:ctx.getUniformLocation(prog2,'uCol'),col2:ctx.getUniformLocation(prog2,'uCol2'),kind:ctx.getUniformLocation(prog2,'uKind')};
+  moonMesh=buildMoon();peakMesh=buildPeak()}catch(e){console.error('moon and peak: '+e.message);prog2=null}
+function drawBodies(sun){if(!prog2)return;ctx.useProgram(prog2);
+  ctx.uniformMatrix4fv(loc2.mvp,false,new Float32Array(cam.mvp));ctx.uniformMatrix4fv(loc2.model,false,new Float32Array(cam.model));
+  ctx.uniform3fv(loc2.light,new Float32Array(sun));ctx.uniform1f(loc2.amb,0.5);ctx.uniform3fv(loc2.col,new Float32Array([0.40,0.38,0.45]));ctx.uniform3fv(loc2.col2,new Float32Array([0.93,0.92,0.98]));ctx.uniform1f(loc2.kind,1);
+  attrib(peakMesh.pb,loc2.p,3);attrib(peakMesh.nb,loc2.n,3);attrib(peakMesh.fb,loc2.f,3);ctx.drawArrays(ctx.TRIANGLES,0,peakMesh.count);
+  const a=norm(cross(MOON.axis,MOON.dir)),cr=Math.cos(MOON.roll),sr=Math.sin(MOON.roll);
+  const b=add(mulS(MOON.axis,cr),mulS(MOON.dir,sr)),c=add(mulS(MOON.axis,-sr),mulS(MOON.dir,cr));
+  const M=[a[0],a[1],a[2],0,b[0],b[1],b[2],0,c[0],c[1],c[2],0,MOON.pos[0],MOON.pos[1],MOON.pos[2],1];
+  ctx.uniformMatrix4fv(loc2.mvp,false,new Float32Array(mul(cam.vp,M)));ctx.uniformMatrix4fv(loc2.model,false,new Float32Array(M));
+  ctx.uniform3fv(loc2.light,new Float32Array(MOON.light));ctx.uniform1f(loc2.amb,0.16);ctx.uniform3fv(loc2.col,new Float32Array([0.86,0.83,0.93]));ctx.uniform1f(loc2.kind,0);
+  attrib(moonMesh.pb,loc2.p,3);attrib(moonMesh.nb,loc2.n,3);attrib(moonMesh.fb,loc2.f,3);ctx.drawArrays(ctx.TRIANGLES,0,moonMesh.count)}
 function ringPoints(sun,side,k,count){
   // both fields go all the way around the world: full rings. Gold rings swing through the sun line (the light they slow and
   // recolour comes in along it); blue rings are tipped around the world's axis, the way a magnetic field wraps a planet.
@@ -656,7 +699,7 @@ function drawOverlay(t,sun){fc.setTransform(DPR,0,0,DPR,0,0);fc.clearRect(0,0,W,
   const glow=W<820?0:10;for(let k=0;k<3;k++){strokeArc(arcPoints(sun,1,k,3),gold,0.26+0.06*Math.sin(t*.0007+k),1.1,glow);strokeArc(arcPoints(sun,-1,k,3),blue,0.22+0.06*Math.sin(t*.0009+k),1.0,glow)}
   // particles riding the arcs: gold slow (light slowed), blue quicker
   if(!reduceMotion)for(let k=0;k<3;k++){for(const side of[1,-1]){const pts=arcPoints(sun,side,k,3);const speed=side>0?0.045:0.16;for(let j=0;j<3;j++){const u=((t*.001*speed+j/3+k*.17)%1);const i=u*(pts.length-1),i0=Math.floor(i),f=i-i0;const p=add(mulS(pts[i0],1-f),mulS(pts[Math.min(i0+1,pts.length-1)],f));const s=project(cam.vp,p);if(!s)continue;const occ=occluded(p);fc.globalAlpha=occ?0.15:0.9;fc.fillStyle=side>0?'rgba(255,224,150,1)':'rgba(170,210,255,1)';fc.shadowBlur=occ?0:12;fc.shadowColor=side>0?gold:blue;fc.beginPath();fc.arc(s.x,s.y,side>0?2.4:1.8,0,TAU);fc.fill()}}}
-  fc.globalAlpha=1;fc.shadowBlur=0;drawMoon(fc,true);
+  fc.globalAlpha=1;fc.shadowBlur=0;
   // edges: colour by sun exposure, dim when hidden behind the world
   const list=EDGES.map(e=>{const a=worldV[e.a],b=worldV[e.b],mid=mulS(add(a,b),.5);const vis=e.faces.some(f=>facing(worldFaces[FACES.indexOf(f)])>0);const s=dot(norm(mid),sun);return{a:project(cam.vp,a),b:project(cam.vp,b),vis,s,e}}).filter(x=>x.a&&x.b).sort((x,y)=>(x.vis?1:0)-(y.vis?1:0));
   for(const x of list){const g=smooth(-0.35,0.35,x.s);const col=`rgba(${Math.round(mix(110,255,g))},${Math.round(mix(170,200,g))},${Math.round(mix(255,110,g))},1)`;const hl=state.selectedFace&&x.e.faces.some(f=>f.id===state.selectedFace);
@@ -776,8 +819,11 @@ let scrubbing=false;rngDay.addEventListener('pointerdown',()=>scrubbing=true);ad
 rngDay.addEventListener('input',()=>{const y=Math.floor(state.day/YEAR);state.day=y*YEAR+(Number(rngDay.value)-1)+(state.day%1)});
 $('btnDay').addEventListener('click',()=>{state.day+=1});
 $('btnMonth').addEventListener('click',()=>{state.day+=DPM});
+// Ruby (2026-10-03): "there is no way to go backwards in years!!!": step the years either way; the count runs below zero her way (0, then -0, then -1)
+$('btnYearBack').addEventListener('click',()=>{state.day-=YEAR});$('btnYear').addEventListener('click',()=>{state.day+=YEAR});
+const yearLabel=y=>y>=0?String(y):'-'+String(-(y+1));
 $('btnReset').addEventListener('click',()=>{state.day=0;state.baseYaw=0;state.pitch=0.36;state.dist=4.5;state.fly=null;setFollow(false);state.selected=null;state.selectedFace=null;renderPlace();toast('Back to the first morning')});
-function updateDate(){const {y,doy,mi,dom,season}=dateParts(state.day);const txt=mi<0?'Restart Day · 1¼ days':`${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`Year ${y} · ${season.name} · day ${doy+1} of 365¼`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay){rngDay.value=String(doy+1)}dayOut.textContent=String(doy+1)}
+function updateDate(){const {y,doy,mi,dom,season}=dateParts(state.day);const txt=mi<0?'Restart Day · 1¼ days':`${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`Year ${yearLabel(y)} · ${season.name} · day ${doy+1} of 365¼`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay){rngDay.value=String(doy+1)}dayOut.textContent=String(doy+1)}
 
 /* ============================== LOOP ============================== */
 let last=performance.now(),uiTick=0;
@@ -788,7 +834,7 @@ function frame(t){const dt=Math.min(0.05,(t-last)/1000);last=t;
   drawStars(t,sun);
   ctx.viewport(0,0,gl.width,gl.height);ctx.clearColor(0,0,0,0);ctx.clear(ctx.COLOR_BUFFER_BIT|ctx.DEPTH_BUFFER_BIT);ctx.enable(ctx.DEPTH_TEST);ctx.disable(ctx.CULL_FACE);
   if(texReady){ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));ctx.uniformMatrix4fv(loc.model,false,new Float32Array(cam.model));ctx.uniform3fv(loc.sun,new Float32Array(sun));ctx.uniform1f(loc.time,t*0.001);ctx.uniform1f(loc.spin,-1);ctx.uniform1f(loc.amb,0.32*(1-0.45*MOON.eclipse));ctx.uniform3fv(loc.sunc,new Float32Array(seasonLight(state.day).map(v=>v*(1-0.85*MOON.eclipse))));ctx.activeTexture(ctx.TEXTURE0);ctx.uniform1i(loc.tex,0);
-    FACES.forEach((f,i)=>{ctx.bindTexture(ctx.TEXTURE_2D,f.texture);ctx.uniform1f(loc.hi,state.selectedFace===f.id&&!state.selected?1:0);ctx.uniform1f(loc.far,f.id==='far'?1:0);ctx.drawArrays(ctx.TRIANGLES,i*3,3)})}
+    FACES.forEach((f,i)=>{ctx.bindTexture(ctx.TEXTURE_2D,f.texture);ctx.uniform1f(loc.hi,state.selectedFace===f.id&&!state.selected?1:0);ctx.uniform1f(loc.far,f.id==='far'?1:0);ctx.drawArrays(ctx.TRIANGLES,i*3,3)});drawBodies(sun)}
   drawOverlay(t,sun);drawRain(dt,rainAmount(state.day));updateMarkers();updateDate();
   if((uiTick++%12)===0){const af=activeFace();facingEl.textContent='Facing · '+WORLD.faces[af.id].name;document.querySelectorAll('[data-face]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.face===(state.selectedFace||af.id))));if(state.tab==='tabWorld')updateYear();if(state.tab==='tabRegions')updateRegionPhases(sun);if(state.tab==='tabPlace')updatePlacePhase(sun);if(uiTick%120===0)refreshJson()}
   requestAnimationFrame(frame)}
@@ -799,7 +845,7 @@ function start(saved){try{if(saved&&typeof saved==='object'){if(typeof saved.day
   btnPlay.textContent=state.playing?'Pause':'Play';buildMarkers();renderFaceList();renderRegionGroups();renderWorlds();renderNations();renderExplorers();renderYear();updateYear();renderPlace();refreshJson();
   if(W>=820)openCodex(true);
   try{window.claude?.hot?.snapshot?.(()=>({day:state.day,baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,speed:state.speed,playing:state.playing,selected:state.selected,follow:state.follow}))}catch(e){}
-  window.tetra={moon:()=>({...(moonScreen()||{}),theta:MOON.theta,eclipse:MOON.eclipse,newMoon:MOON.newMoon}),get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>phaseFor(REGIONS.find(x=>x.id===id),sunDir(state.day))};
+  window.tetra={moon:()=>({...(moonScreen()||{}),theta:MOON.theta,eclipse:MOON.eclipse,newMoon:MOON.newMoon,phase:MOON.phase,roll:MOON.roll,axis:MOON.axis,dir:MOON.dir,eye:cam.eye}),setRoll0:r=>{MOON_ROLL0=r},get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>phaseFor(REGIONS.find(x=>x.id===id),sunDir(state.day))};
   requestAnimationFrame(frame)}
 try{if(window.claude?.hot?.ready)window.claude.hot.ready(start);else start(window.claude?.hot?.data??{})}catch(e){start({})}
 })();

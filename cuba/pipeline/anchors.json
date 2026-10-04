@@ -1,0 +1,23 @@
+{
+ "anchors": {
+  "canon": {
+   "island": [
+    512,
+    307
+   ],
+   "hole": [
+    512,
+    512
+   ]
+  },
+  "far": {
+   "hole-far": [
+    512,
+    512
+   ]
+  }
+ },
+ "water_canon": 0.5963,
+ "hole_radius_px": 22.528,
+ "size": 1024
+}

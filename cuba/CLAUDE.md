@@ -8,7 +8,7 @@ Cuba is a second world inside Tetra's page (Ruby: "it neends to be in the same f
 
 A WebGL cube with six square sides, turning leftward once a day like Tetra, with Tetra's star and two field rings (gold magical, blue magnetic, a little stronger than Tetra's). Only the Canon side is drawn: the Plus Continent (Ruby's name for her central island, a broad cross with rounded bends at the corners) whose four arms reach the sides and connect onto the East, West, North and South sides (her words), with the Canyon in its middle, the small hole that takes you through the world to the Far side. On those four sides the land continues a short way (`TONGUE`, a reading) and the rest is uncharted slate; the Far side carries the hole's other end and nothing else. A Codex panel holds the World tab (her words and the readings), the six sides and a card per side or place. No calendar or moon yet: the year is "probably one month longer" than Tetra's and the moon "a d5 probably", both recorded on the World tab and awaiting her detail (HANDOFF open questions 9 and 10).
 
-The island is drawn from a written description of Ruby's photo, not from the photo itself (it had not reached the repository); the shape is to be checked against the photo when it arrives (`reference/ruby/README.md`).
+The Plus Continent is drawn from a written description of Ruby's photo, not from the photo itself (it had not reached the repository): Ruby's original photographed drawing, visually transcribed by ChatGPT, with the arm connections subsequently confirmed by Ruby. The shape is to be checked against the photo when it arrives (`reference/ruby/README.md`). How far the arms run onto the four neighbouring sides is provisional (`TONGUE`).
 
 ## Layout
 

@@ -2,7 +2,8 @@ const { chromium } = require('playwright');
 const PAGE = require('./_page');
 // Sweeps a whole year, every half hour, through the debug hook and tallies the light phase each place reports.
 // Canon checks: the Far Face never reaches High sun or Deep night; Mount Celestial is always twilight; the Canon Face still gets both;
-// at the deepest moment of a new-moon day every place reads Eclipse, day side and night side alike, and the day after none does.
+// at the deepest moment of a new-moon day (the 14th of January, day 13) every place reads Eclipse, day side and night side alike, and the day after none does;
+// the swing eases in and out over that day instead of stopping dead.
 (async () => {
   const browser = await chromium.launch(PAGE.LAUNCH);
   const ctx = await browser.newContext({ viewport: { width: 1366, height: 820 } });
@@ -18,6 +19,9 @@ const PAGE = require('./_page');
     for (let f = 0; f < 1; f += 1 / 240) { tetra.setDay(13 + f); tetra.phase('spike'); const e = tetra.moon().eclipse; if (e > ecl.peakAmount) { ecl.peakAmount = e; ecl.at = 13 + f; } }
     tetra.setDay(ecl.at); for (const id of ids) ecl.peak[id] = tetra.phase(id).t;
     tetra.setDay(ecl.at + 1); for (const id of ids) ecl.noon[id] = tetra.phase(id).t; ecl.noonAmount = tetra.moon().eclipse;
+    // Ruby (2026-10-04): the swing must not stop dead: theta eases in and out over the new-moon day (steps near the ends small, the midday step under 1.5 times steady)
+    const th = f => { tetra.setDay(13 + f); tetra.phase('spike'); return tetra.moon().theta; };
+    ecl.swing = { start: th(0.01) - th(0), end: th(0.99) - th(0.98), mid: th(0.505) - th(0.495), steady: 2 * Math.PI / 100, last: th(0.999) };
     return { phases: out, eclipse: ecl };
   });
   for (const k in phases) console.log(k.padEnd(14), JSON.stringify(phases[k]));
@@ -31,7 +35,11 @@ const PAGE = require('./_page');
   const celestialKinds = Object.keys(phases.celestial).filter(t => t !== 'Eclipse');
   if (celestialKinds.join() !== 'Twilight, always') fails.push('Mount Celestial is not always twilight: ' + JSON.stringify(phases.celestial));
   if (!phases.whiteland['High sun'] || !phases.whiteland['Deep night']) fails.push('the Canon Face lost its high sun or deep night');
-  if (eclipse.peakAmount < 0.5) fails.push('no eclipse on the 14th of March');
+  if (eclipse.peakAmount < 0.5) fails.push('no eclipse on the 14th of January');
+  const sw = eclipse.swing; console.log('swing steps', JSON.stringify(sw));
+  if (sw.start > 0.3 * sw.steady || sw.end > 0.3 * sw.steady) fails.push('the swing does not ease in and out');
+  if (sw.mid > 1.5 * sw.steady || sw.mid < 1.1 * sw.steady) fails.push('the swing is not steady through midday');
+  if (sw.last < 2 * Math.PI - 0.01) fails.push('the swing does not come back round by the end of the day');
   // Ruby (2026-10-04): "every place shuld have the eclipse light discription when it hapens"
   const notEclipse = Object.entries(eclipse.peak).filter(([, t]) => t !== 'Eclipse').map(([id]) => id);
   if (notEclipse.length) fails.push('places not reading Eclipse at the eclipse peak: ' + notEclipse.join(', '));

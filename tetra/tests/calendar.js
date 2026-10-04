@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const PAGE = require('./_page');
-// The calendar as Ruby set it (2026-10-03 and 2026-10-04): the year begins on Starday the 1st of January, the Restart Day closes it and
-// stands outside the week, the strip runs in her order from March, and the strip in the World tab follows the day without any click
+// The calendar from Ruby's lines of 2026-10-03 and 2026-10-04 (the year begins on 1 January, the Restart Day closes it, the strip runs in her order
+// from March) with the build's readings (1 January a Starday, the Restart Day outside the week), and the strip in the World tab follows the day without any click
 // (it did not until 2026-10-04: "in march it says its july on the seosons calender untill you reload it").
 (async () => {
   const browser = await chromium.launch(PAGE.LAUNCH);
@@ -53,7 +53,7 @@ const PAGE = require('./_page');
   const labels = cells.map(c => c.split('=')[0]).join(' ');
   if (labels !== 'Mar Apr May Jun Jul Aug Sep Oct Nov Dec R Jan Feb Tre') fails.push('strip order is ' + labels);
   if (!/September · the 7th month/.test(cells[6]) || !/Tredesember · the 13th month/.test(cells[13]) || !/December · the 10th month/.test(cells[9])) fails.push('strip numbering: ' + cells.join(', '));
-  // the day slider lands on the start of the chosen day, a quarter day later after the Restart Day
+  // the day slider lands on the start of the chosen day (doyStart; its quarter-day shift applies only to a month after the Restart Day, and there is none today)
   for (const [v, want] of [[1, 0], [200, 199], [364, 363], [365, 364]]) {
     const got = await page.evaluate(v => { tetra.setDay(0); const r = document.getElementById('rngDay'); r.value = String(v); r.dispatchEvent(new Event('input', { bubbles: true })); return tetra.state.day; }, v);
     if (Math.abs(got - want) > 1e-6) fails.push(`slider ${v} set day ${got} (wanted ${want})`);

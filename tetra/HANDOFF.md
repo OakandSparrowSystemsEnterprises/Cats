@@ -200,6 +200,8 @@ Page (`template.html`, `build.py`):
 
 ## 7. Suggested next steps
 
+- 2026-10-04: Ruby has started the second Dice System world, Cuba, the cube planet. Its ledger is `../cuba/HANDOFF.md`; when it exists, list it in `WORLD.worlds` here.
+
 - Put Joshua's answers to section 5 into the ledger, then into `WORLD`.
 - When Ruby sends the next round: follow "How a round from Ruby is processed" in `CLAUDE.md`.
 - Nice to have, not asked for: a visual diff of `map_*.jpg` against the previous version so map rounds show what moved. (`make audit` already covers em dashes, retired names and placeholders.)

@@ -5,7 +5,7 @@
   "scripts": {
     "build": "python3 pipeline/build.py",
     "maps": "cd pipeline && python3 mapgen2.py && python3 check_edges.py",
-    "test": "node tests/smoke.js && node tests/walkthrough.js && node tests/phases.js && node tests/tap.js",
+    "test": "node tests/smoke.js && node tests/walkthrough.js && node tests/phases.js && node tests/calendar.js && node tests/tap.js",
     "seams": "node tests/seams.js"
   },
   "dependencies": {

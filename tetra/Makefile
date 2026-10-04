@@ -8,7 +8,7 @@ check:
 build:
 	python3 pipeline/build.py
 test: build
-	node tests/smoke.js && node tests/walkthrough.js && node tests/phases.js && node tests/tap.js
+	node tests/smoke.js && node tests/walkthrough.js && node tests/phases.js && node tests/calendar.js && node tests/tap.js
 seams: build
 	node tests/seams.js
 audit:

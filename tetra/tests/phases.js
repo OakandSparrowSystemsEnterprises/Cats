@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const PAGE = require('./_page');
 // Sweeps a whole year, every half hour, through the debug hook and tallies the light phase each place reports.
 // Canon checks: the Far Face never reaches High sun or Deep night; Mount Celestial is always twilight; the Canon Face still gets both;
-// at the middle of a new-moon day every place that can see the star reads Eclipse, and the day after none does.
+// at the deepest moment of a new-moon day every place reads Eclipse, day side and night side alike, and the day after none does.
 (async () => {
   const browser = await chromium.launch(PAGE.LAUNCH);
   const ctx = await browser.newContext({ viewport: { width: 1366, height: 820 } });
@@ -32,9 +32,9 @@ const PAGE = require('./_page');
   if (celestialKinds.join() !== 'Twilight, always') fails.push('Mount Celestial is not always twilight: ' + JSON.stringify(phases.celestial));
   if (!phases.whiteland['High sun'] || !phases.whiteland['Deep night']) fails.push('the Canon Face lost its high sun or deep night');
   if (eclipse.peakAmount < 0.5) fails.push('no eclipse on the 14th of March');
-  const lit = Object.values(eclipse.peak).filter(t => t === 'Eclipse').length;
-  if (lit < 3) fails.push('too few places read Eclipse at the eclipse peak: ' + JSON.stringify(eclipse.peak));
-  if (eclipse.peak.celestial !== 'Eclipse') fails.push('Mount Celestial does not read Eclipse at the eclipse peak');
+  // Ruby (2026-10-04): "every place shuld have the eclipse light discription when it hapens"
+  const notEclipse = Object.entries(eclipse.peak).filter(([, t]) => t !== 'Eclipse').map(([id]) => id);
+  if (notEclipse.length) fails.push('places not reading Eclipse at the eclipse peak: ' + notEclipse.join(', '));
   if (Object.values(eclipse.noon).includes('Eclipse') || eclipse.noonAmount > 0) fails.push('Eclipse still showing the day after the new moon');
   if (errors.length) fails.push('page errors');
   console.log(fails.length ? 'FAIL ' + fails.join('; ') : 'OK: far face clamped, Mount Celestial always twilight (Eclipse aside), Canon face unchanged, Eclipse read at the new moon');

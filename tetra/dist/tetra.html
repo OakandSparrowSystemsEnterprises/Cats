@@ -92,7 +92,7 @@
   .legend .g{color:var(--gold-soft)} .legend .g i{background:linear-gradient(90deg,transparent,var(--gold));box-shadow:0 0 8px var(--gold)}
   .legend .b{color:var(--blue-soft)} .legend .b i{background:linear-gradient(90deg,transparent,var(--blue));box-shadow:0 0 8px var(--blue)}
   .legend .p{color:#d9b8ff} .legend .p i{background:linear-gradient(90deg,transparent,#9b5cff);box-shadow:0 0 8px #9b5cff}
-  .field.p i{background:#9b5cff;box-shadow:0 0 10px #9b5cff} .field.p b{color:#d9b8ff}.field.m i{background:#d8d4c8;box-shadow:0 0 10px #d8d4c8}.field.m b{color:#e9e6dc}
+  .field.p i{background:#9b5cff;box-shadow:0 0 10px #9b5cff} .field.p b{color:#d9b8ff}.field.m i{background:#d8d4c8;box-shadow:0 0 10px #d8d4c8} .field.w i{background:var(--gold-soft);box-shadow:0 0 10px var(--gold)}.field.m b{color:#e9e6dc}
   .facing{position:absolute;z-index:5;left:50%;top:calc(18px + env(safe-area-inset-top,0px));translate:-50% 0;pointer-events:none;
     font:400 10px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);text-shadow:0 2px 10px #000;white-space:nowrap}
   .hint{position:absolute;z-index:4;left:50%;bottom:calc(126px + env(safe-area-inset-bottom,0px));translate:-50% 0;pointer-events:none;
@@ -266,8 +266,9 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The calendar</p>
-          <dl class="kv"><dt>Months</dt><dd>13 · 28 days each. March is the first month and Tredesember the thirteenth; September, October, November and December are the seventh to tenth.</dd><dt>Year</dt><dd>364 days + the Restart Day, which is one and a quarter days long: 365¼ days, so there are no leap years. The Restart Day falls between December and January, and the rain comes with it.</dd><dt>Week</dt><dd>7 days. The names are still unwritten. A month is exactly four weeks if the Restart Day stands outside the week (a reading, not yet Ruby’s word).</dd><dt>One day</dt><dd>One full turn · 25 hours</dd><dt>Spin</dt><dd>Leftward</dd><dt>Years</dt><dd>Counted from year 0. There is a year -0 as well, and it is not the same year as 0. The years before run backwards, the way BCE does on Earth.</dd><dt>Now</dt><dd>Year 1700. In technology, about Earth’s 1750.</dd></dl>
+          <dl class="kv"><dt>Months</dt><dd>13 · 28 days each. Counted Ruby’s way, from March, September, October, November and December are the 7th, 8th, 9th and 10th months and Tredesember the 13th; the strip below runs that way, with January, February and Tredesember at its end, after the Restart Day.</dd><dt>Year</dt><dd>364 days + the Restart Day, which is one and a quarter days long: 365¼ days, so there are no leap years. The year begins on 1 January. The Restart Day closes it, between December and the next January, and the rain comes with it.</dd><dt>Week</dt><dd>7 days: Starday, Moonday, Goldday, Blueday, Spikeday, Wetday, Twilightday. A month is exactly four weeks, so every month begins on a Starday and ends on a Twilightday. The Restart Day stands outside the week (a reading, not yet Ruby’s word).</dd><dt>One day</dt><dd>One full turn · 25 hours</dd><dt>Spin</dt><dd>Leftward</dd><dt>Years</dt><dd>Counted from year 0. There is a year -0 as well, and it is not the same year as 0. The years before run backwards, the way BCE does on Earth.</dd><dt>Now</dt><dd>Year 1700. In technology, about Earth’s 1750.</dd></dl>
           <div class="year" id="yearStrip" aria-label="The year, month by month"></div>
+          <div class="field w"><i></i><div><b>The week</b><span>Starday for the star, Moonday for the d3 moon, Goldday for the magical field whose light flows like gold, Blueday for the magnetic field, Spikeday for Spikia, Wetday for Wetia, Twilightday for Mount Celestial. The year begins on a Starday, the first of January.</span></div></div>
           <p class="eyebrow" style="margin-top:16px">Seasons on the Canon Face · on average</p>
           <ul class="seasons" id="seasonList"></ul>
           <p class="tagline">A slower turn, a richer world.</p>
@@ -279,11 +280,11 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The star</p>
-          <div class="field p"><i></i><div><b>A dark purple star</b><span>Tetra’s sun is a dark purple star. Its light reaches the ground the colour of our own sun’s light, because the magical field turns it on the way in.</span></div></div>
+          <div class="field p"><i></i><div><b>A dark purple star</b><span>Tetra’s sun is a dark purple star. Its light reaches the ground the colour of our own sun’s light, because the magical field turns it on the way in. It stays level with the middle of the world, never higher and never lower, so every place has as much bright as dark, and on Mount Celestial it sits on the horizon all year.</span></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">The moon</p>
-          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind: one crater on its one side, two craters on its two side, three craters on its three side. It is a third of the size of Tetra, circles a little farther out than the magical field, and rolls slowly so every side comes round. Every ordinary day it sits on the opposite side from the star, drifting gently about that spot. Every month, in the middle of the month, is the new moon: the die swings round in front of the star and the world goes dark, a solar eclipse. Its light waxes and wanes through the month like our own moon’s, full when the month turns, and the Restart Day is never a new moon. While the die covers the star, every place that can see the star reads “Eclipse”.</span></div></div>
+          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind: one crater on its one side, two craters on its two side, three craters on its three side. It is a third of the size of Tetra, circles a little farther out than the magical field, and rolls slowly so every side comes round. Every ordinary day it sits on the opposite side from the star, drifting gently about that spot. Every month, in the middle of the month, is the new moon: the die swings round in front of the star and the world goes dark, a solar eclipse. Its light waxes and wanes through the month like our own moon’s, full when the month turns, and the Restart Day is never a new moon. While the die covers the star, every place on Tetra reads “Eclipse”, day side and night side alike.</span></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">The four faces</p>
@@ -315,7 +316,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Still unwritten</p>
-          <ul class="unwritten-list"><li>Names for the seven days of the week, like Monday has</li><li>The key events after year 1 (Ruby’s comics continue)</li><li>More places and names on every face</li></ul>
+          <ul class="unwritten-list"><li>The key events after year 1 (Ruby’s comics continue)</li><li>More places and names on every face</li></ul>
           <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
         </div>
       </section>
@@ -329,7 +330,7 @@
   </aside>
 
   <div class="dock" id="dock">
-    <div class="date"><strong id="dateOut">1 January</strong><span id="dateSub">Year 1700 · Rain season · day 1 of 365¼</span></div>
+    <div class="date"><strong id="dateOut">Starday · 1 January</strong><span id="dateSub">Year 1700 · Rain season · day 1 of 365¼</span></div>
     <button id="btnCodex" type="button" aria-pressed="false" aria-controls="codex">Codex</button>
     <div class="time">
       <label><span class="k">Spin</span><input id="rngSpin" type="range" min="0" max="8" step="0.1" value="1" aria-label="Spin speed"><span class="v" id="spinOut">1.0×</span></label>
@@ -364,12 +365,12 @@ const GEO = {"layout":{"canon":{"size":1024,"apex":[0.5,0.07375312157484665],"bl
 const WORLD = {
   name:'Tetra', tagline:'A single world · A thousand stories',
   system:{name:'The Dice System', tagline:'Worlds beyond chance', quote:'Different worlds. Same imagination.'},
-  calendar:{months:['March','April','May','June','July','August','September','October','November','December','January','February','Tredesember'], daysPerMonth:28, restartBefore:'January', restartDays:1.25, yearDays:365.25, weekDays:7, dayNames:null, hoursPerDay:25, spin:'leftward', quote:'A slower turn, a richer world.',
-    seasons:[{id:'rain',name:'Rain season',months:[10],restart:true,color:'#7f9fc4',light:[0.80,0.87,0.98]},
-             {id:'spring',name:'Spring',months:[11,12,0],color:'#8cc98a',light:[0.94,1.0,0.9]},
-             {id:'summer',name:'Summer',months:[1,2,3],color:'#f5b64f',light:[1.0,0.95,0.84]},
-             {id:'fall',name:'Fall',months:[4,5,6],color:'#e0884a',light:[1.0,0.88,0.72]},
-             {id:'winter',name:'Winter',months:[7,8,9],color:'#b7d3f0',light:[0.86,0.9,1.0]}]},
+  calendar:{months:['January','February','Tredesember','March','April','May','June','July','August','September','October','November','December'], daysPerMonth:28, restartAfter:'December', restartDays:1.25, yearDays:365.25, stripFirst:'March', weekDays:7, dayNames:['Starday','Moonday','Goldday','Blueday','Spikeday','Wetday','Twilightday'], hoursPerDay:25, spin:'leftward', quote:'A slower turn, a richer world.',
+    seasons:[{id:'rain',name:'Rain season',months:[0],restart:true,color:'#7f9fc4',light:[0.80,0.87,0.98]},
+             {id:'spring',name:'Spring',months:[1,2,3],color:'#8cc98a',light:[0.94,1.0,0.9]},
+             {id:'summer',name:'Summer',months:[4,5,6],color:'#f5b64f',light:[1.0,0.95,0.84]},
+             {id:'fall',name:'Fall',months:[7,8,9],color:'#e0884a',light:[1.0,0.88,0.72]},
+             {id:'winter',name:'Winter',months:[10,11,12],color:'#b7d3f0',light:[0.86,0.9,1.0]}]},
   places:{
     'spikia-canon':{name:'Spikia \u00b7 the spike', kind:'Nation', nation:'Spikia', note:'The top corner land of the Canon Face. All the top corner lands are one country.'},
     unoooland:{name:'Uncooland', kind:'Nation', nation:'Uncooland', biome:'jungle', note:'On the far side of the Canon Face, between Islandia and the far edge.'},
@@ -497,28 +498,34 @@ REGIONS.forEach(r=>{const f=faceById[r.face],[a,b,c]=f.idx.map(i=>V[i]);r.pos=ad
 const EDGES=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]].map(([a,b])=>({a,b,faces:FACES.filter(f=>f.idx.includes(a)&&f.idx.includes(b))}));
 
 /* ============================== STATE ============================== */
-const DAY_SECONDS=30, YEAR=WORLD.calendar.yearDays, DPM=WORLD.calendar.daysPerMonth, MONTHS=WORLD.calendar.months, SEASONS=WORLD.calendar.seasons, TILT=23.4*Math.PI/180;
-// Ruby (2026-10-03): March is the 1st month and Tredesember the 13th; the Restart Day stays right before January, so it falls between the 10th and 11th months.
-const RESTART=WORLD.calendar.restartDays, RESTART_MI=MONTHS.indexOf(WORLD.calendar.restartBefore), RESTART_AT=RESTART_MI*DPM; // the Restart Day begins at day-of-year 280 (0-based) and lasts 1.25 days
-const monthStart=mi=>mi*DPM+(mi>=RESTART_MI?RESTART:0);           // months after the Restart Day start a quarter day later
+const DAY_SECONDS=30, YEAR=WORLD.calendar.yearDays, DPM=WORLD.calendar.daysPerMonth, MONTHS=WORLD.calendar.months, SEASONS=WORLD.calendar.seasons;
+// Ruby (2026-10-04): "make it so the sun isnt higher or lower than it needs to be to have equal porportions of bright and dark". Reading: the star stays level with the
+// world's middle all year (no lift, no seasonal tilt), so every place has as much day as night and Mount Celestial keeps the star on its horizon. Until then it was 0.12 + 23.4 degrees of tilt.
+const SUN_LIFT=0, SUN_TILT=0;
+// Ruby (2026-10-03, 2026-10-04): the year begins on 1 January, right after the Restart Day, which closes it. On the strip the months run from March (`stripFirst`),
+// so that September, October, November and December are the 7th to 10th months and Tredesember the 13th, her numbering; the ring of months is the same either way.
+const RESTART=WORLD.calendar.restartDays, RESTART_MI=MONTHS.indexOf(WORLD.calendar.restartAfter)+1, RESTART_AT=RESTART_MI*DPM; // the Restart Day begins at day-of-year 364 (0-based) and lasts 1.25 days; no month follows it in the year
+const monthStart=mi=>mi*DPM+(mi>=RESTART_MI?RESTART:0);           // a month after the Restart Day (none today) would start a quarter day later
 const doyStart=doy=>doy>RESTART_AT?doy+RESTART-1:doy;              // where the n-th day of the year (0-based, the Restart Day counted once) begins, in fractional days
+const DAY_NAMES=WORLD.calendar.dayNames;                              // Ruby (2026-10-04): "the names are good". Reading: 1 January is a Starday and the Restart Day stands outside the week, so every month runs Starday to Twilightday
+const weekdayOf=dp=>dp.mi<0?null:DAY_NAMES[(dp.doy>RESTART_AT?dp.doy-1:dp.doy)%DAY_NAMES.length];
 const SUMMER_MID=(()=>{const m=SEASONS.find(sn=>sn.id==='summer').months;return(monthStart(m[0])+monthStart(m[m.length-1])+DPM)/2})();
 const YEAR0=WORLD.years.now;      // Ruby (2026-10-03): "in tetra years they are in 1700"
 // Ruby (2026-10-03): "reset dayes are one and a quarter days so there arent leap years": the year is 365.25 days, the Restart Day being 1.25 days long
 function dateParts(day){const y=YEAR0+Math.floor(day/YEAR),df=((day%YEAR)+YEAR)%YEAR;let doy,mi,dom;
-  if(df<RESTART_AT){doy=Math.floor(df);mi=Math.floor(doy/DPM);dom=doy%DPM+1}                                   // March to December
-  else if(df<RESTART_AT+RESTART){doy=RESTART_AT;mi=-1;dom=0}                                                       // the Restart Day, 1.25 days
-  else{const d=Math.floor(df-RESTART_AT-RESTART);doy=RESTART_AT+1+d;mi=RESTART_MI+Math.floor(d/DPM);dom=d%DPM+1}   // January to Tredesember
-  const season=SEASONS.find(sn=>mi<0?sn.restart:sn.months.includes(mi));return{y,doy,mi,dom,season,df}}
+  if(df<RESTART_AT){doy=Math.floor(df);mi=Math.floor(doy/DPM);dom=doy%DPM+1}                                   // January to December
+  else if(df<RESTART_AT+RESTART){doy=RESTART_AT;mi=-1;dom=0}                                                       // the Restart Day, 1.25 days, the last of the year
+  else{const d=Math.floor(df-RESTART_AT-RESTART);doy=RESTART_AT+1+d;mi=RESTART_MI+Math.floor(d/DPM);dom=d%DPM+1}   // months after the Restart Day, if the calendar ever has any again
+  const season=SEASONS.find(sn=>mi<0?sn.restart:sn.months.includes(mi));const dp={y,doy,mi,dom,season,df};dp.wd=weekdayOf(dp);return dp}
 const seasonCenters=SEASONS.map(sn=>{const sp=sn.months.map(mi=>[monthStart(mi),monthStart(mi)+DPM]);if(sn.restart)sp.push([RESTART_AT,RESTART_AT+RESTART]);sp.sort((a,b)=>a[0]-b[0]);
-  let cut=0;for(let i=1;i<sp.length;i++)if(sp[i][0]-sp[i-1][1]>DPM)cut=i;                                        // a season that wraps the year end (spring: February, Tredesember, then March)
+  let cut=0;for(let i=1;i<sp.length;i++)if(sp[i][0]-sp[i-1][1]>DPM)cut=i;                                        // a season that wraps the year end (the rain season: the Restart Day, then January)
   const un=sp.map((x,i)=>i<cut?[x[0]+YEAR,x[1]+YEAR]:x),lo=Math.min(...un.map(x=>x[0])),hi=Math.max(...un.map(x=>x[1]));return{sn,c:((lo+hi)/2)%YEAR}}).sort((a,b)=>a.c-b.c);
 function seasonLight(day){const doy=((day%YEAR)+YEAR)%YEAR;const n=seasonCenters.length;for(let i=0;i<n;i++){const a=seasonCenters[i],b=seasonCenters[(i+1)%n];let c0=a.c,c1=b.c;if(c1<=c0)c1+=YEAR;let x=doy;if(x<c0)x+=YEAR;if(x>=c0&&x<=c1){const t=(x-c0)/(c1-c0);return a.sn.light.map((v,k)=>v+(b.sn.light[k]-v)*t)}}return[1,1,1]}
-function rainAmount(day){const x=((day%YEAR)+YEAR)%YEAR;const a=RESTART_AT,b=RESTART_AT+RESTART+DPM;if(x<a-1||x>b)return 0;return clamp(Math.min(x-(a-1),b-x),0,1)}   // the Restart Day and January, with a day's ramp either side
+function rainAmount(day){let x=((day%YEAR)+YEAR)%YEAR;const a=RESTART_AT,b=RESTART_AT+RESTART+DPM;if(x<a-1)x+=YEAR;if(x>b)return 0;return clamp(Math.min(x-(a-1),b-x),0,1)}   // the Restart Day and the January after it, with a day's ramp either side
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const state={day:0, playing:!reduceMotion, speed:1, baseYaw:0, pitch:0.36, dist:4.5, follow:false, selected:null, selectedFace:null, fly:null, tab:'World'};
+const state={day:0, playing:!reduceMotion, speed:1, baseYaw:0, pitch:0.36, dist:4.5, follow:false, selected:null, selectedFace:null, fly:null, tab:'tabWorld'};
 const SUN0=norm([-0.75,0,0.66]);
-function sunDir(day){const e=0.12+TILT*Math.cos(TAU*(day-SUMMER_MID)/YEAR);return norm([SUN0[0]*Math.cos(e),Math.sin(e),SUN0[2]*Math.cos(e)])}
+function sunDir(day){const e=SUN_LIFT+SUN_TILT*Math.cos(TAU*(day-SUMMER_MID)/YEAR);return norm([SUN0[0]*Math.cos(e),Math.sin(e),SUN0[2]*Math.cos(e)])}
 const spinAngle=()=>-TAU*state.day;
 const camYaw=()=>state.baseYaw+(state.follow?spinAngle():0);
 
@@ -591,8 +598,8 @@ function activeFace(){let best=null,bv=-9;for(const wf of worldFaces){const v=fa
 /* ============================== SUN / PHASES ============================== */
 function regionLight(r,sun){const a=spinAngle(),pw=rotYv(a,r.pos),n=norm(add(mulS(rotYv(a,faceById[r.face].normal),0.18),mulS(norm(pw),0.82)));const nl=dot(n,sun);const vel=mulS(norm([pw[2],0,-pw[0]]),-1);return{nl,toward:dot(vel,sun)}}
 function phaseFor(r,sun){const {nl,toward}=regionLight(r,sun);
-  if(MOON.eclipse>=0.5&&(r.id==='celestial'||nl>-0.22))return{k:'eclipse',t:'Eclipse',d:'The moon has swung in front of the star. Wherever the star is up, the light goes out of the day for a while, then comes back.'};
-  if(r.id==='celestial')return{k:'dawn',t:'Twilight, always',d:'Mount Celestial sits on the axis the world turns on. The sun never rises or sets here; the light only shifts a little with the seasons.'};
+  if(MOON.eclipse>=0.5)return{k:'eclipse',t:'Eclipse',d:'The moon has swung in front of the star. The whole world goes dark for a while, day side and night side alike, then the light comes back.'};   // Ruby (2026-10-04): every place reads it
+  if(r.id==='celestial')return{k:'dawn',t:'Twilight, always',d:'Mount Celestial sits on the axis the world turns on. The star stays on its horizon, never rising, never setting.'};
   if(r.face==='far')return phaseOf(clamp(nl,-0.21,0.34),toward);   // the Far Face has no high sun and no deep night
   return phaseOf(nl,toward)}
 function phaseOf(nl,toward){const m=toward>0;
@@ -746,9 +753,12 @@ function renderRegionGroups(){reggroups.innerHTML='';FACE_ORDER.forEach(id=>{con
 function renderWorlds(){const ul=$('worlds');ul.innerHTML='';WORLD.worlds.forEach(w=>{const li=document.createElement('li');li.innerHTML=`<i class="${w.id}"></i><div><b></b><span></span></div>`;li.querySelector('b').textContent=w.name;li.querySelector('span').textContent=w.desc;ul.appendChild(li)})}
 function renderNations(){const ul=$('nations');ul.innerHTML='';WORLD.nations.forEach(gr=>{const hd=document.createElement('li');hd.className='hd';hd.textContent=gr.group;ul.appendChild(hd);gr.items.forEach(n=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';const first=REGIONS.find(r=>r.id===n.places[0]);const col=first?WORLD.faces[first.face].color:'#f5b64f';b.innerHTML='<i></i><div><b></b><span></span></div>';b.querySelector('i').style.setProperty('--c',col);b.querySelector('b').textContent=n.name;if(n.unsure){const u=document.createElement('i');u.className='unsure';u.textContent='spelling?';b.querySelector('b').appendChild(u)}b.querySelector('span').textContent=[n.where,n.note].filter(Boolean).join(' \u00b7 ');b.addEventListener('click',()=>selectRegion(n.places[0]));li.appendChild(b);ul.appendChild(li)})})}
 function renderExplorers(){const ul=$('explorers');ul.innerHTML='';WORLD.explorers.forEach(e=>{const li=document.createElement('li');li.innerHTML='<i class="sapphire"></i><div><b></b><span></span></div>';li.querySelector('b').textContent=e.name;li.querySelector('span').textContent=e.desc;ul.appendChild(li)})}
-function renderYear(){const strip=$('yearStrip');strip.innerHTML='';const cells=MONTHS.map((m,i)=>({label:m.slice(0,3),mi:i,sn:SEASONS.find(sn=>sn.months.includes(i))}));cells.splice(RESTART_MI,0,{label:'R',mi:-1,sn:SEASONS.find(sn=>sn.restart),r:true});
-  cells.forEach(c=>{const d=document.createElement('div');d.className='m'+(c.r?' r':'');d.dataset.mi=String(c.mi);d.style.setProperty('--c',c.sn.color);d.textContent=c.label;d.title=c.r?'The Restart Day':MONTHS[c.mi];strip.appendChild(d)});
-  const ul=$('seasonList');ul.innerHTML='';SEASONS.forEach(sn=>{const li=document.createElement('li');li.dataset.id=sn.id;li.style.setProperty('--c',sn.color);const names=sn.months.map(i=>MONTHS[i]);if(sn.restart)names.unshift('the Restart Day');li.innerHTML='<i></i><div><b></b> <span></span></div>';li.querySelector('b').textContent=sn.name;li.querySelector('span').textContent='· '+names.join(', ');ul.appendChild(li)})}
+const ordinal=n=>n+(n%10===1&&n!==11?'st':n%10===2&&n!==12?'nd':n%10===3&&n!==13?'rd':'th');
+function renderYear(){const strip=$('yearStrip');strip.innerHTML='';const first=Math.max(0,MONTHS.indexOf(WORLD.calendar.stripFirst));
+  const cells=MONTHS.map((_,k)=>{const mi=(first+k)%MONTHS.length;return{label:MONTHS[mi].slice(0,3),mi,n:k+1,sn:SEASONS.find(sn=>sn.months.includes(mi))}});   // Ruby's order: from March, so September is the 7th and Tredesember the 13th
+  const rAt=cells.findIndex(c=>c.mi===RESTART_MI%MONTHS.length);cells.splice(rAt<0?cells.length:rAt,0,{label:'R',mi:-1,sn:SEASONS.find(sn=>sn.restart),r:true});          // the Restart Day sits before the January that follows it
+  cells.forEach(c=>{const d=document.createElement('div');d.className='m'+(c.r?' r':'');d.dataset.mi=String(c.mi);d.style.setProperty('--c',c.sn.color);d.textContent=c.label;d.title=c.r?'The Restart Day, which closes the year':`${MONTHS[c.mi]} · the ${ordinal(c.n)} month`;strip.appendChild(d)});
+  const ul=$('seasonList');ul.innerHTML='';SEASONS.forEach(sn=>{const li=document.createElement('li');li.dataset.id=sn.id;li.style.setProperty('--c',sn.color);const parts=sn.months.map(i=>({at:monthStart(i),name:MONTHS[i]}));if(sn.restart)parts.push({at:RESTART_AT,name:'the Restart Day'});const names=parts.sort((a,b)=>a.at-b.at).map(x=>x.name);li.innerHTML='<i></i><div><b></b> <span></span></div>';li.querySelector('b').textContent=sn.name;li.querySelector('span').textContent='· '+names.join(', ');ul.appendChild(li)})}
 let yearKey='';
 function updateYear(){const dp=dateParts(state.day);const key=dp.mi+':'+dp.dom;if(key===yearKey)return;yearKey=key;$('yearStrip').querySelectorAll('.m').forEach(el=>{const on=Number(el.dataset.mi)===dp.mi;el.classList.toggle('now',on);if(on)el.style.setProperty('--x',dp.mi<0?'50%':((dp.dom-0.5)/DPM*100).toFixed(1)+'%')});$('seasonList').querySelectorAll('li').forEach(li=>li.classList.toggle('now',li.dataset.id===dp.season.id))}
 function updateRegionPhases(sun){const els=reggroups.querySelectorAll('button[data-id]');els.forEach(b=>{const r=REGIONS.find(x=>x.id===b.dataset.id);const ph=phaseFor(r,sun);const key=ph.t;if(phaseCache.get(r.id)!==key){phaseCache.set(r.id,key);b.querySelector('em').textContent=ph.t;b.querySelector('small i').className=ph.k}b.classList.toggle('active',state.selected===r.id)})}
@@ -831,7 +841,7 @@ rngDay.addEventListener('input',()=>{const y=Math.floor(state.day/YEAR);state.da
 $('btnYearBack').addEventListener('click',()=>{state.day-=YEAR});$('btnYear').addEventListener('click',()=>{state.day+=YEAR});
 const yearLabel=y=>y>=0?String(y):'-'+String(-(y+1));
 $('btnReset').addEventListener('click',()=>{state.day=0;state.baseYaw=0;state.pitch=0.36;state.dist=4.5;state.fly=null;setFollow(false);state.selected=null;state.selectedFace=null;renderPlace();toast('Back to the first morning')});
-function updateDate(){const {y,doy,mi,dom,season}=dateParts(state.day);const txt=mi<0?'Restart Day · 1¼ days':`${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`Year ${yearLabel(y)} · ${season.name} · day ${doy+1} of 365¼`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay){rngDay.value=String(doy+1)}dayOut.textContent=String(doy+1)}
+function updateDate(){const {y,doy,mi,dom,season,wd}=dateParts(state.day);const txt=mi<0?'Restart Day · 1¼ days':`${wd} · ${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`Year ${yearLabel(y)} · ${season.name} · day ${doy+1} of 365¼`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay){rngDay.value=String(doy+1)}dayOut.textContent=String(doy+1)}
 
 /* ============================== LOOP ============================== */
 let last=performance.now(),uiTick=0;

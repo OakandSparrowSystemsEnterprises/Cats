@@ -13,7 +13,7 @@
 #capp .system{position:absolute;right:20px;top:14px;z-index:3;text-align:right;pointer-events:none}
 #capp .system b{display:block;font:600 16px/1.2 var(--display);letter-spacing:.2em}#capp .system span{display:block;font:400 10px/1.3 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}#capp .system i{display:block;margin-top:10px;font:italic 400 15px/1.3 var(--serif);color:var(--muted)}
 #capp .facing{position:absolute;left:50%;top:16px;translate:-50% 0;z-index:3;font:400 11px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);pointer-events:none;white-space:nowrap}
-#capp #ccodex{position:absolute;top:84px;right:14px;bottom:170px;width:372px;z-index:4;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(14px);transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s}
+#capp #ccodex{position:absolute;top:calc(118px + env(safe-area-inset-top,0px));right:14px;bottom:170px;width:372px;z-index:4;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(14px);transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s}
 #capp #ccodex.closed{transform:translateX(420px);opacity:0;pointer-events:none}
 #capp .tabs{display:flex;border-bottom:1px solid var(--line)}#capp .tabs button{flex:1;background:none;border:0;color:var(--muted);font:400 11px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;padding:16px 0 12px;cursor:pointer;border-bottom:2px solid transparent}
 #capp .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
@@ -32,10 +32,10 @@
 #capp .card .kind{font:400 10px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}#capp .card h2{margin-top:6px}
 #capp .phase{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px}#capp .phase b{display:block;font:600 13px/1.3 var(--ui)}#capp .phase span{display:block;font:400 12px/1.4 var(--ui);color:var(--muted)}
 #capp .dot,#capp .phase i,#capp .side em i{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:0 0 auto;margin-top:5px}
-#capp .side em i{margin-top:0;width:6px;height:6px}
+#capp .side em i{margin-top:0;width:6px;height:6px}#capp .side.region{padding-left:22px;border-top:0}#capp .side.region i.sw{border-radius:50%;width:8px;height:8px;margin-top:6px;background:var(--gold-soft)}#capp .side.region b{font-weight:500}
 #capp i.sun{background:var(--gold-soft);box-shadow:0 0 8px var(--gold)}#capp i.dawn{background:var(--amber);box-shadow:0 0 8px var(--amber)}#capp i.dusk{background:#c67b4a;box-shadow:0 0 8px #c67b4a}#capp i.night{background:#3f4a6e;box-shadow:0 0 8px #2b3a6a}#capp i.eclipse{background:#7a5bd6;box-shadow:0 0 10px #b48cff}
 #capp .pill{display:inline-block;margin-top:12px;border:1px solid var(--line-2);border-radius:999px;padding:5px 10px;font:600 10px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-#capp .actions{display:flex;gap:8px;margin-top:14px}#capp .actions button{background:rgba(242,232,211,.05);border:1px solid var(--line-2);border-radius:10px;color:var(--ink);font:600 12px/1 var(--ui);padding:10px 12px;cursor:pointer}
+#capp .actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}#capp .actions button{background:rgba(242,232,211,.05);border:1px solid var(--line-2);border-radius:10px;color:var(--ink);font:600 12px/1 var(--ui);padding:10px 12px;cursor:pointer}
 #capp .year{display:flex;gap:2px;margin-top:12px}#capp .year .m{flex:1;min-width:0;height:34px;border-radius:5px;background:var(--c,#555);opacity:.55;position:relative;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font:600 8px/1 var(--ui);letter-spacing:.04em;color:#0a0d16;text-transform:uppercase}
 #capp .year .m.r{flex:.45}#capp .year .m.two{background:linear-gradient(90deg,var(--c) 0 50%,var(--c2) 50% 100%)}#capp .year .m.now{opacity:1;box-shadow:0 0 0 1px var(--ink),0 0 12px var(--c)}
 #capp .year .m.now::after{content:'';position:absolute;left:var(--x,50%);top:-5px;width:2px;height:calc(100% + 10px);background:var(--ink);translate:-50% 0;border-radius:2px}
@@ -43,7 +43,7 @@
 #capp .seasons li i{width:10px;height:10px;border-radius:3px;background:var(--c);display:inline-block;translate:0 1px}#capp .seasons li b{font-weight:600;color:var(--ink)}#capp .seasons li span{color:var(--muted)}#capp .seasons li.now b{color:var(--gold-soft)}
 #capp .dock{position:absolute;left:50%;bottom:16px;translate:-50% 0;z-index:5;width:min(900px,calc(100% - 28px));background:var(--panel-2);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;gap:10px}
 #capp .time{display:grid;grid-template-columns:auto 1fr auto;gap:8px 14px;align-items:center}
-#capp .date{display:grid;gap:3px;min-width:170px}#capp .date strong{font:600 15px/1.2 var(--ui);color:var(--gold-soft);letter-spacing:.04em}#capp .date span{font:italic 400 13px/1.3 var(--serif);color:var(--muted)}
+#capp .date{display:grid;gap:3px;width:272px;min-width:0;overflow:hidden}#capp .date strong{font:600 14px/1.2 var(--ui);color:var(--gold-soft);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#capp .date span{font:italic 400 13px/1.3 var(--serif);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#capp #cdayOut{visibility:hidden}
 #capp .sliders{display:grid;gap:6px}#capp .sliders label{display:grid;grid-template-columns:38px 1fr 44px;gap:8px;align-items:center;font:600 10px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 #capp .sliders input[type=range]{width:100%;accent-color:var(--gold);margin:0}#capp .sliders output{font:600 12px/1 var(--ui);color:var(--ink);text-align:right}
 #capp .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
@@ -57,9 +57,10 @@
   #capp .brand h1{font-size:30px}#capp .system{display:none}#capp .facing{top:92px;left:auto;right:14px;translate:0;font-size:10px}
   #capp #ccodex{top:auto;left:0;right:0;bottom:0;width:auto;height:58%;border-radius:18px 18px 0 0;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
   #capp #ccodex.closed{transform:translateY(110%);opacity:1}#capp .tabs .close{display:block}
-  #capp .dock{bottom:10px;padding:10px;gap:8px}#capp .time{grid-template-columns:1fr auto}#capp .sliders{grid-column:1/-1}#capp .date{min-width:0}
+  #capp .dock{bottom:10px;padding:10px;gap:8px}#capp .time{grid-template-columns:1fr auto}#capp .sliders{grid-column:1/-1}#capp .date{min-width:0;width:auto}
   #capp .faces{grid-template-columns:repeat(3,1fr)}#capp .dock button{padding:10px 8px;font-size:11px}#capp .dock .hint{display:none}#capp .dock .hint-short{display:inline;font-size:12px}
   #capp #ccodex.open ~ .dock{opacity:0;pointer-events:none}
+    #capp .marker:not(.active) b{display:none}
 }
 </style>
 <div id="capp" class="away">
@@ -69,7 +70,7 @@
   <div class="system"><b>THE DICE SYSTEM</b><span>Worlds beyond chance</span><i>Different worlds.<br>Same imagination.</i></div>
   <div class="facing" id="cfacing">Facing · The Canon Side</div>
   <aside id="ccodex" class="open" aria-label="Codex of Cuba">
-    <div class="tabs" role="tablist"><button role="tab" id="ctabWorld" aria-selected="true" aria-controls="cpaneWorld">World</button><button role="tab" id="ctabSides" aria-selected="false" aria-controls="cpaneSides">Sides</button><button role="tab" id="ctabPlace" aria-selected="false" aria-controls="cpanePlace">Place</button><button class="close" id="cbtnClose" type="button">Close</button></div>
+    <div class="tabs" role="tablist"><button role="tab" id="ctabWorld" aria-selected="true" aria-controls="cpaneWorld">World</button><button role="tab" id="ctabSides" aria-selected="false" aria-controls="cpaneSides">Regions</button><button role="tab" id="ctabPlace" aria-selected="false" aria-controls="cpanePlace">Place</button><button class="close" id="cbtnClose" type="button">Close</button></div>
     <div class="body">
       <section class="pane" id="cpaneWorld" role="tabpanel">
         <div class="sect"><p class="eyebrow">The world</p><h2>CUBA<small>The cube planet · The Dice System</small></h2>
@@ -79,17 +80,23 @@
             <dt>Size</dt><dd>About 20,000 miles from one end of the Canyon to the other, probably: as long as Tetra is from the corner of Spikia through to Mount Celestial (Ruby). The Canyon runs straight through, so that is the length of every edge (a reading).</dd>
             <dt>Turn</dt><dd>The same way as Tetra, leftward, and a day the same length as Tetra’s: one full turn, 25 hours.</dd>
             <dt>The star</dt><dd>Tetra’s dark purple star, seen from farther out. It stays where it is: turn the world to find it, as Ruby asked.</dd>
-            <dt>Fields</dt><dd>One magical and one magnetic, both a little stronger than Tetra’s (Ruby): the gold and blue rings around the world.</dd>
+            <dt>Tetra</dt><dd>Visible in Cuba’s sky as a small four-sided world toward the star (Ruby: “you shuld be able to see tetra from cuba and vice versa”); where exactly it stands is a reading.</dd>
+            <dt>Fields</dt><dd>One magical and one magnetic, both a little stronger than Tetra’s (Ruby): the gold and blue rings around the world, hidden only where the world itself is in front of them.</dd>
             <dt>Place</dt><dd>Farther from the star than Tetra. Ruby: “if there were 5 magical fields, and tetra was in the first one, cuba would be in the last one (going away from the star would be the direction they were stacked in)”.</dd></dl></div>
         <div class="sect"><p class="eyebrow">The calendar</p>
-          <dl class="kv"><dt>Months</dt><dd>14 · 28 days each: Tetra’s thirteen and Amberary, the fourteenth, which comes before March (Ruby). Counted Ruby’s way, from March, the strip below runs that way, with January, February, Tredesember and Amberary at its end, after the Restart Day.</dd>
-            <dt>Year</dt><dd>392 days + the Restart Day, one and a quarter days long: 393¼ days, “same as tetra but probably one month longer”. The year begins on 1 January, after the Restart Day, as on Tetra. What year it is on Cuba is unwritten.</dd>
+          <dl class="kv"><dt>Months</dt><dd>14 · 28 days each: Tetra’s thirteen and Amberary, the fourteenth, placed between January and February (Ruby). Counted Ruby’s way, from March, the strip below runs that way, with January, Amberary, February and Tredesember at its end, after the Restart Day.</dd>
+            <dt>Year</dt><dd>392 days + the Restart Day, which on Cuba is one and a half days long: 393½ days, “same as tetra but probably one month longer”. The year begins on 1 January, after the Restart Day, as on Tetra.</dd>
+            <dt>Years</dt><dd>Counted from Amber’s landing: “when amber reached cuba, she clled it year one of cuba (so rigt now it is year 50)”. It is year 50 of Cuba while it is 1700 on Tetra.</dd>
+            <dt>Week</dt><dd>Seven days with Tetra’s names: Starday, Moonday, Goldday, Blueday, Spikeday, Wetday, Twilightday (Ruby: “same names for days on cuba also”). 392 month days are 56 weeks, so with the Restart Day outside the week every month runs from a Starday to a Twilightday (a reading, as on Tetra).</dd>
+            <dt>One clock</dt><dd>Tetra and Cuba share their days: a day here is a day there, and pausing, spinning or stepping time on one does it on both. Their years and months are their own, so when Tetra steps from Tredesember into March, Cuba is just starting Tredesember.</dd>
             <dt>Amberary</dt><dd>“half in rain seoson half in transition between rain and spring” (Ruby): the first fourteen days are rain season, the last fourteen the time between rain and spring.</dd>
-            <dt>Seasons</dt><dd>For the other months, as on Tetra until Ruby says otherwise: a reading.</dd></dl>
+            <dt>Seasons</dt><dd>The rain season runs through the Restart Day, January and the first half of Amberary; then the time between rain and spring; then spring from February. The months from February on keep Tetra’s seasons until Ruby says otherwise: a reading. In the rain season it rains on every side (Ruby), though never on the moon or the star.</dd></dl>
           <div class="year" id="cyearStrip" aria-label="The year of Cuba, month by month"></div>
           <ul class="seasons" id="cseasonList"></ul></div>
         <div class="sect"><p class="eyebrow">The moon</p>
-          <p class="note">“the moon of tetra is similar to cuba” and “a d5 probably” (Ruby). So Cuba’s moon is Tetra’s in every way but the die: a five-sided die, a third of Cuba’s size, circling a little farther out than the magical field, opposite the star on ordinary days, swinging round in front of the star on the 14th of every month for a solar eclipse, rolling once a day, waxing and waning through the month. The d5 is drawn as a three-sided prism with its two ends, one to five craters a side; that shape is a reading until Ruby says what her d5 looks like.</p></div>
+          <p class="note">“the moon of tetra is similar to cuba” and “a d5 probably” (Ruby). So Cuba’s moon is Tetra’s in every way but the die: a five-sided die, a third of Cuba’s size, circling a little farther out than the magical field, opposite the star on ordinary days, swinging round in front of the star on the 14th of every month for a solar eclipse, rolling once a day, waxing and waning through the month. Ruby: “the d5 is ither the round shape used for equal oucomes in the real world, or is just a square piramid”; the square pyramid was taken, four sides with one to four craters and a base with five.</p></div>
+        <div class="sect"><p class="eyebrow">Life of Cuba</p>
+          <p class="note">Ruby: “add most of the recognizable plants from the real world to bouth and add more umbrela tree zinias on cuba than on tetra (cince there is more majic)”. So most of the plants you would know from Earth grow here too, for example <span id="cplants"></span>. The Umbrella Tree Zinnia, whose stem is not wood and whose top is petals, grows here more than on Tetra, since there is more magic. Which plants grow where is unwritten.</p></div>
         <div class="sect"><p class="eyebrow">The Plus Continent and the Canyon</p>
           <p class="note">From Ruby’s picture of the Canon side (2026-10-04): a broad island shaped like a cross, with an arm toward the middle of each side and rounded bends at the corners. In the middle she wrote “to far side”: the small hole that takes you to the opposite side of the world. Ruby: “the arms connect to the north south east and west faces”, so the land crosses those four edges; how far it goes on each of those sides is unwritten, and it is drawn stopping a short way in. The island’s shape is drawn from the description of her picture. Ruby named them: “the hole is called the canyon, the island is called ‘the plus continent’”. And “you can come thugh the hole ither way, so the far side will probably get explored next”.</p></div>
         <div class="sect"><p class="eyebrow">How Cuba was reached</p>
@@ -97,19 +104,19 @@
           <p class="note">Ruby, 2026-10-04, in her words. Amber the explorer, in a chamber made from a tree, launched by magic from Tetra, flung on by the moving moon at an eclipse and then by the star, and landed on the Canon side of Cuba in the year 1650. She launched from Tetra’s Far side (Ruby: “8: far side”).</p></div>
         <div class="sect"><p class="eyebrow">The explorers</p><p class="note">Ruby: “5 people also came with amber, they are all explorers: Ammolite, Aquamarine, Axinite, Benitoite, and Chrysoberyl (they are for exploring the other sides when we get there)”.</p><ul class="plain" id="cexplorers"></ul></div>
         <div class="sect"><p class="eyebrow">Still unwritten</p>
-          <ul class="plain"><li>How far the Plus Continent’s arms go on the East, West, North and South sides (drawn a short way in)</li><li>What the other five sides hold (the Far side has the other end of the Canyon, nothing else yet; Ruby says it will probably be explored next)</li><li>Colours, and what grows there</li><li>What year it is on Cuba, and the seasons of the months other than Amberary</li><li>What Ruby’s d5 looks like</li><li>Which sides the five explorers will chart, when we get there</li></ul>
+          <ul class="plain"><li>How far the Plus Continent’s arms go on the East, West, North and South sides (drawn a short way in)</li><li>What the other five sides hold (the Far side has the other end of the Canyon, nothing else yet; Ruby says it will probably be explored next)</li><li>Colours, and what grows there</li><li>The seasons of the months from February on (kept as Tetra’s)</li><li>Which plants grow where</li><li>Which sides the five explorers will chart, when we get there</li></ul>
           <p class="note">Everything above comes from Ruby’s words and from the description of her picture. The photo itself has not been checked against this drawing yet. Cuba shares this page with Tetra, as Ruby asked; the buttons under the title switch between the two worlds.</p></div>
       </section>
-      <section class="pane" id="cpaneSides" role="tabpanel" hidden><div class="sect"><p class="eyebrow">The six sides</p><div id="csideList"></div></div></section>
+      <section class="pane" id="cpaneSides" role="tabpanel" hidden><div class="sect"><p class="eyebrow">Regions, side by side</p><div id="csideList"></div></div></section>
       <section class="pane" id="cpanePlace" role="tabpanel" hidden><div class="sect card" id="cplaceBody"></div></section>
     </div>
   </aside>
   <div class="dock" id="cdock">
     <div class="time">
-      <div class="date"><strong id="cdateOut">1 January</strong><span id="cdateSub">Rain season · day 1 of 393¼</span></div>
+      <div class="date"><strong id="cdateOut">Starday · 1 January</strong><span id="cdateSub">Year 50 of Cuba · Rain season · day 1 of 393½</span></div>
       <div class="sliders"><label><span>Spin</span><input id="crngSpin" type="range" min="0" max="8" step="0.1" value="1" aria-label="How fast time runs"><output id="cspinOut">1.0×</output></label>
         <label><span>Day</span><input id="crngDay" type="range" min="1" max="393" step="1" value="1" aria-label="Day of the year"><output id="cdayOut">1</output></label></div>
-      <div class="btns"><button id="cbtnSpin" type="button" aria-pressed="true">Pause</button><button id="cbtnReset" type="button">Reset</button></div>
+      <div class="btns"><button id="cbtnSpin" type="button" aria-pressed="true">Pause</button><button id="cbtnYearBack" type="button">−1 year</button><button id="cbtnYear" type="button">+1 year</button><button id="cbtnReset" type="button">Reset</button></div>
     </div>
     <div class="row"><div class="faces" id="cfaceButtons"></div><button id="cbtnCodex" type="button" aria-pressed="true" aria-controls="ccodex">Codex</button></div>
     <div class="row"><span class="hint">Drag to turn the world · scroll to come closer</span><span class="hint hint-short">Drag to turn the world</span></div>
@@ -130,20 +137,23 @@ const WORLD={
     {id:'south',name:'The South Side',short:'South',color:'#86bbff',state:'The bottom · the Plus Continent’s arm, then uncharted',blurb:'The bottom of the world, below Canon. The Plus Continent’s south arm crosses onto this side; how far it goes is unwritten, so it is drawn a short way in. Nothing else is drawn here yet.'}],
   places:{
     island:{name:'The Plus Continent',kind:'Continent · Canon Side',side:'canon',note:'Ruby’s central island on the Canon side, named by her “the plus continent”: a broad cross with rounded bends at the corners, its four arms reaching the sides and connecting onto the East, West, North and South sides, in her words. Drawn from the description of her picture. Nothing has been said yet about what grows on it.'},
-    hole:{name:'The Canyon',kind:'Passage · Canon Side',side:'canon',note:'The small hole in the middle of the Plus Continent, named by Ruby “the canyon”. She wrote “to far side” beside it in her picture: it takes you through the world to the Far side. From one end of it to the other is about 20,000 miles, probably, as long as Tetra from Spikia through to Mount Celestial. You can come through it either way (Ruby), so the Far side will probably be explored next.'},
+    hole:{name:'The Canyon',kind:'Passage · Canon Side',side:'canon',note:'The small hole in the middle of the Plus Continent, named by Ruby “the canyon”. She wrote “to far side” beside it in her picture: it takes you through the world to the Far side. From one end of it to the other is about 20,000 miles, probably, as long as Tetra from Spikia through to Mount Celestial. You can come through it either way (Ruby), so the Far side will probably be explored next; Ammolite the explorer has decided to go down it.'},
     'hole-far':{name:'The other end of the Canyon',kind:'Passage · Far Side',side:'far',note:'Where the Canyon from the Canon side comes out, and where you go in from this side: you can come through the hole either way, Ruby says, so the Far side will probably be explored next. Nothing else on this side is charted yet.'}},
-  // Ruby (2026-10-04): "same as tetra but probably one month longer"; "the fourteenth month is called amberary and is before march"; "amberary is half in rain seoson half in transition between rain and spring"
-  calendar:{months:['January','February','Tredesember','Amberary','March','April','May','June','July','August','September','October','November','December'],daysPerMonth:28,restartAfter:'December',restartDays:1.25,yearDays:393.25,stripFirst:'March',hoursPerDay:25,
+  // Ruby (2026-10-04): "same as tetra but probably one month longer"; "the fourteenth month is called amberary"; "place amberary in between january and febuary"; "amberary is half in rain seoson half in transition between rain and spring";
+  // "the restart day on cuba is 1 and a half days"; "when amber reached cuba, she clled it year one of cuba (so rigt now it is year 50)"
+  calendar:{months:['January','Amberary','February','Tredesember','March','April','May','June','July','August','September','October','November','December'],daysPerMonth:28,restartAfter:'December',restartDays:1.5,yearDays:393.5,stripFirst:'March',hoursPerDay:25,yearNow:50,weekDays:7,dayNames:['Starday','Moonday','Goldday','Blueday','Spikeday','Wetday','Twilightday'],
     seasons:[{id:'rain',name:'Rain season',months:[0],restart:true,color:'#7f9fc4',light:[0.80,0.87,0.98]},
-             {id:'spring',name:'Spring',months:[1,2,4],color:'#8cc98a',light:[0.94,1.0,0.9]},
-             {id:'amb-rain',name:'Rain season',months:[],halfOf:3,half:0,color:'#7f9fc4',light:[0.80,0.87,0.98]},
-             {id:'amb-mid',name:'Between rain and spring',months:[],halfOf:3,half:1,color:'#9fc0a8',light:[0.88,0.95,0.94]},
+             {id:'amb-rain',name:'Rain season',months:[],halfOf:1,half:0,color:'#7f9fc4',light:[0.80,0.87,0.98]},
+             {id:'amb-mid',name:'Between rain and spring',months:[],halfOf:1,half:1,color:'#9fc0a8',light:[0.88,0.95,0.94]},
+             {id:'spring',name:'Spring',months:[2,3,4],color:'#8cc98a',light:[0.94,1.0,0.9]},
              {id:'summer',name:'Summer',months:[5,6,7],color:'#f5b64f',light:[1.0,0.95,0.84]},
              {id:'fall',name:'Fall',months:[8,9,10],color:'#e0884a',light:[1.0,0.88,0.72]},
              {id:'winter',name:'Winter',months:[11,12,13],color:'#b7d3f0',light:[0.86,0.9,1.0]}]},
-  moon:{said:['the moon of tetra is similar to cuba','a d5 probably'],die:'d5',craters:[1,2,3,4,5]},
+  moon:{said:['the moon of tetra is similar to cuba','a d5 probably','the d5 is ither the round shape used for equal oucomes in the real world, or is just a square piramid'],die:'d5',shape:'square pyramid',craters:[1,2,3,4,5]},
+  // Ruby (2026-10-04): "add most of the recognizable plants from the real world to bouth and add more umbrela tree zinias on cuba than on tetra (cince there is more majic)"
+  plants:{said:'add most of the recognizable plants from the real world to bouth and add more umbrela tree zinias on cuba than on tetra (cince there is more majic)',examples:['oaks','pines','birches','maples','willows','palms','bamboo','cactuses','ferns','mosses','grasses','clover','dandelions','daisies','roses','sunflowers','lilies','lotuses','wheat','corn','rice','apple trees','cherry trees','orange trees','strawberries'],zinnia:'The Umbrella Tree Zinnia grows here more than on Tetra, since there is more magic.'},
   // Ruby (2026-10-04): "5 people also came with amber, they are all explorers:Ammolite, Aquamarine, Axinite, Benitoite, and Chrysoberyl (they are for exploring the other sides when we get there)"
-  explorers:[{name:'Amber',desc:'Landed on the Canon side in the year 1650, launched by magic from Tetra’s Far side.'},{name:'Ammolite',desc:'Came with Amber. For exploring the other sides, when we get there.'},{name:'Aquamarine',desc:'Came with Amber. For exploring the other sides, when we get there.'},{name:'Axinite',desc:'Came with Amber. For exploring the other sides, when we get there.'},{name:'Benitoite',desc:'Came with Amber. For exploring the other sides, when we get there.'},{name:'Chrysoberyl',desc:'Came with Amber. For exploring the other sides, when we get there.'}],
+  explorers:[{name:'Amber',desc:'Landed on the Canon side in the year 1650, launched by magic from Tetra’s Far side.'},{name:'Ammolite',desc:'Came with Amber. Has decided to go down the Canyon (Ruby), toward the Far side.'},{name:'Aquamarine',desc:'Came with Amber. For exploring the other sides, when we get there.'},{name:'Axinite',desc:'Came with Amber. For exploring the other sides, when we get there.'},{name:'Benitoite',desc:'Came with Amber. For exploring the other sides, when we get there.'},{name:'Chrysoberyl',desc:'Came with Amber. For exploring the other sides, when we get there.'}],
   lore:{names:{island:'the plus continent',hole:'the canyon'},answers:'1: the hole is called the canyon, the island is called "the plus continent" 2: i dont know yet 3:i dont know yet 4: i dont know probably as long as tetra is recorded o be from spikia thrugh to mount celecti from one end of the hole to the other 5: 5.1: same as tetra 5.2: same as tetra but probably one month longer 5.3: a d5 probably 6: one magical one magnetic bouth a little stronger than tetra. yes. 7:  dont know yet 8:far side',amber:{who:'Amber the explorer',year:1650,from:'the far side',said:'lets imagine that amber the explorer makes a chamber out of a tree and (calculated corectly) launches of ither spikia or the far side using majic, gets flung by the moving moon (going in or out of solar eclipse) gets flung by the star and lands on the cannon face of cuba (year 1650)'},
         fields:'if there were 5 magical fields, and tetra was in the first one, cuba would be in the last one (going away from the star would be the direction they were stacked in)'}
 };
@@ -173,18 +183,19 @@ const sideById=Object.fromEntries(WORLD.sides.map(s=>[s.id,s]));
 /* ---- time and the calendar (Tetra's mechanics, Ruby: "transfer core mecanics from tetra to cuba") ---- */
 const DAY_SECONDS=30;                                  // one turn, one day, 30 s at 1x: the same as Tetra
 const CAL=WORLD.calendar,MONTHS=CAL.months,DPM=CAL.daysPerMonth,YEAR=CAL.yearDays,SEASONS=CAL.seasons,RESTART=CAL.restartDays;
-const RESTART_MI=MONTHS.indexOf(CAL.restartAfter)+1,RESTART_AT=RESTART_MI*DPM;   // the Restart Day begins at day-of-year 392 (0-based) and closes the year
+const RESTART_MI=MONTHS.indexOf(CAL.restartAfter)+1,RESTART_AT=RESTART_MI*DPM,YEAR0=CAL.yearNow;   // the Restart Day begins at day-of-year 392 (0-based), lasts a day and a half and closes the year; the page's first day is in year 50
 const AMB=MONTHS.indexOf('Amberary');
+const DAY_NAMES=CAL.dayNames;const weekdayOf=dp=>dp.mi<0?null:DAY_NAMES[dp.doy%DAY_NAMES.length];   // Ruby: the same names as Tetra's; 1 January a Starday, the Restart Day outside the week (readings, as on Tetra)
 const monthStart=mi=>mi*DPM+(mi>=RESTART_MI?RESTART:0);
 function seasonFor(mi,dom){if(mi<0)return SEASONS.find(s=>s.restart);if(mi===AMB)return SEASONS.find(s=>s.halfOf===AMB&&s.half===(dom<=DPM/2?0:1));return SEASONS.find(s=>s.months.includes(mi))}
-function dateParts(day){const df=((day%YEAR)+YEAR)%YEAR;let doy,mi,dom;
+function dateParts(day){const y=YEAR0+Math.floor(day/YEAR),df=((day%YEAR)+YEAR)%YEAR;let doy,mi,dom;
   if(df<RESTART_AT){doy=Math.floor(df);mi=Math.floor(doy/DPM);dom=doy%DPM+1}else{doy=RESTART_AT;mi=-1;dom=0}
-  return{doy,mi,dom,season:seasonFor(mi,dom),df}}
-function rainAmount(day){const {mi,dom,df}=dateParts(day);if(mi===AMB)return dom<=DPM/2?clamp(Math.min(dom,DPM/2+1-dom),0,1):0;   // Amberary: rain through its first half (Ruby)
-  let x=df;const a=RESTART_AT,b=RESTART_AT+RESTART+DPM;if(x<a-1)x+=YEAR;if(x>b)return 0;return clamp(Math.min(x-(a-1),b-x),0,1)}   // the Restart Day and January, as on Tetra
+  const dp={y,doy,mi,dom,season:seasonFor(mi,dom),df};dp.wd=weekdayOf(dp);return dp}
+function rainAmount(day){let x=dateParts(day).df;const a=RESTART_AT,b=RESTART_AT+RESTART+DPM*1.5;if(x<a-1)x+=YEAR;if(x>b)return 0;return clamp(Math.min(x-(a-1),b-x),0,1)}   // the Restart Day, January and the first half of Amberary (Ruby), with a day's ramp either side
 const spinAngle=()=>-TAU*state.day;                    // leftward, once a day: Tetra's convention
 /* ---- state ---- */
 const state={day:0,playing:true,speed:1,baseYaw:0.42,pitch:0.30,dist:4.6,follow:false,fly:null,selected:null,selectedSide:null,tab:'ctabWorld'};
+if(window.dice&&window.dice.time){const T=window.dice.time;for(const k of['day','playing','speed'])Object.defineProperty(state,k,{get:()=>T[k],set:v=>{T[k]=v},enumerable:true})}   // one clock for both worlds (Ruby: "it shuld hapen to bouth planets")
 const camYaw=()=>state.baseYaw+(state.follow?spinAngle():0);
 let W=1,H=1,DPR=1;
 const app=$('capp'),gl=$('cgl'),stars=$('cstars'),fx=$('cfx'),markersEl=$('cmarkers'),codex=$('ccodex');
@@ -199,7 +210,7 @@ void main(){vUV=aUV;vN=normalize((uModel*vec4(aN,0.)).xyz);vP=(uModel*vec4(aPos,
 const FS=`precision mediump float;uniform sampler2D uTex;uniform vec3 uLight,uEye,uSunColor;uniform float uHi,uAmb,uSun;varying vec2 vUV;varying vec3 vN,vP;
 void main(){vec3 c=texture2D(uTex,vUV).rgb;float d=max(dot(vN,uLight),0.);vec3 a=vec3(uAmb)+uSun*d*uSunColor;vec3 v=normalize(uEye-vP);float r=pow(1.-max(dot(vN,v),0.),3.);
 c=c*a+vec3(0.08,0.10,0.16)*r;c+=uHi*vec3(0.18,0.13,0.04)*(0.6+0.4*r);gl_FragColor=vec4(c,1.);}`;
-// the moon: a d5 read as a three-sided prism with its two ends; the three long sides carry 1, 2 and 3 craters, the ends 4 and 5
+// the moon: a d5 as a square pyramid (Ruby: "ither the round shape used for equal oucomes in the real world, or is just a square piramid"; the pyramid taken): the four sides carry 1 to 4 craters, the base 5
 const VS2=`attribute vec3 aPos;attribute vec3 aN;attribute vec2 aUV;attribute float aF;uniform mat4 uMVP,uModel;varying vec3 vN;varying vec2 vUV;varying float vF;
 void main(){vN=normalize((uModel*vec4(aN,0.)).xyz);vUV=aUV;vF=aF;gl_Position=uMVP*vec4(aPos,1.);}`;
 const FS2=`precision mediump float;uniform vec3 uLight;uniform float uAmb,uLen;varying vec3 vN;varying vec2 vUV;varying float vF;
@@ -223,14 +234,13 @@ for(const f of FACES){const c=f.n,r=f.right,u=f.up;const v=(sr,su,tu,tv)=>{const
 function buf(arr){const b=ctx.createBuffer();ctx.bindBuffer(ctx.ARRAY_BUFFER,b);ctx.bufferData(ctx.ARRAY_BUFFER,new Float32Array(arr),ctx.STATIC_DRAW);return b}
 const pb=buf(P),ub=buf(UV),nb=buf(N);
 function attrib(b,l,n){ctx.bindBuffer(ctx.ARRAY_BUFFER,b);ctx.enableVertexAttribArray(l);ctx.vertexAttribPointer(l,n,ctx.FLOAT,false,0,0)}
-/* ---- the moon mesh: a prism along X, length MOON_LEN (a third of an edge, as Tetra's), with a triangle of side 0.6 of that ---- */
+/* ---- the moon mesh: a square pyramid, base side MOON_LEN (a third of an edge, as Tetra's moon is a third of Tetra), apex along local Y; it tumbles about local X once a day ---- */
 const MOON_LEN=2/3,MOON_HALF=MOON_LEN/2,MOON_ORBIT=2.95,MOON_BOB=0.14,NEW_MOON_DOM=14,ROLLS_PER_DAY=1,SWING_RAMP=0.25;
-const moonMesh=(()=>{const L=MOON_HALF,s=0.6*MOON_LEN,Rc=s/Math.sqrt(3);const C=[0,1,2].map(i=>{const t=Math.PI/2+i*TAU/3;return[Rc*Math.cos(t),Rc*Math.sin(t)]});
+const moonMesh=(()=>{const h=MOON_HALF,ht=0.62*MOON_LEN,y0=-ht*0.35,apex=[0,y0+ht,0];const B=[[-h,y0,-h],[h,y0,-h],[h,y0,h],[-h,y0,h]];
   const pos=[],nrm=[],uv=[],fi=[];const tri=(a,b,c,n,ua,ub,uc,f)=>{for(const [p,u] of [[a,ua],[b,ub],[c,uc]]){pos.push(...p);nrm.push(...n);uv.push(...u);fi.push(f)}};
-  for(let k=0;k<3;k++){const c0=C[k],c1=C[(k+1)%3];const n=norm([0,(c0[0]+c1[0])/2,(c0[1]+c1[1])/2]);const w=Math.hypot(c1[0]-c0[0],c1[1]-c0[1]);
-    const a=[-L,c0[0],c0[1]],b=[L,c0[0],c0[1]],c=[L,c1[0],c1[1]],d=[-L,c1[0],c1[1]];tri(a,b,c,n,[-L,-w/2],[L,-w/2],[L,w/2],k);tri(a,c,d,n,[-L,-w/2],[L,w/2],[-L,w/2],k)}
-  const e=(x,n,f)=>{const a=[x,C[0][0],C[0][1]],b=[x,C[1][0],C[1][1]],c=[x,C[2][0],C[2][1]];tri(a,b,c,n,[C[0][0],C[0][1]],[C[1][0],C[1][1]],[C[2][0],C[2][1]],f)};
-  e(L,[1,0,0],3);e(-L,[-1,0,0],4);
+  for(let k=0;k<4;k++){const a=B[k],b=B[(k+1)%4];const n=norm(cross(sub(b,a),sub(apex,a)));const mid=mulS(add(a,b),0.5);const along=norm(sub(b,a));const up=norm(sub(apex,mid));const sl=len(sub(apex,mid));
+    tri(a,b,apex,n,[-h,-sl/3],[h,-sl/3],[0,2*sl/3],k)}   // each side: 1 to 4 craters, uv in world units about the face's middle
+  tri(B[0],B[3],B[2],[0,-1,0],[-h,-h],[-h,h],[h,h],4);tri(B[0],B[2],B[1],[0,-1,0],[-h,-h],[h,h],[h,-h],4);   // the base: 5 craters
   return{pb:buf(pos),nb:buf(nrm),ub:buf(uv),fb:buf(fi),count:pos.length/3}})();
 /* ---- textures ---- */
 const textures={};
@@ -276,20 +286,34 @@ function ringPoints(side,k,count){let n;if(side>0){const u=norm(cross(SUN0,[0,1,
   else{const a=(k/count)*TAU+0.6,tilt=0.52;n=norm([Math.sin(tilt)*Math.cos(a),Math.cos(tilt),Math.sin(tilt)*Math.sin(a)])}
   const ax2=Math.abs(n[1])<.9?[0,1,0]:[1,0,0];const p=norm(cross(n,ax2)),q=cross(n,p);const R=(side>0?2.15:2.27)+0.22*k;const pts=[];
   for(let i=0;i<=96;i++){const t=i/96*TAU;pts.push(add(mulS(p,R*Math.cos(t)),mulS(q,R*Math.sin(t))))}return pts}
-function occluded(p){const e=cam.eye,toC=mulS(e,-1),dC=len(toC),toP=sub(p,e),dP=len(toP);if(dP<dC)return false;const cosA=dot(toC,toP)/(dC*dP);return cosA>Math.cos(Math.asin(Math.min(1,1.62/dC)))}   // behind the world, roughly: the cube as a ball of radius 1.62
+let CUBE_QUADS=[];
+function cubeQuads(){CUBE_QUADS=[];for(const f of FACES){const n=worldNormal(f);if(dot(n,sub(cam.eye,n))<=0)continue;const q=[[-1,1],[1,1],[1,-1],[-1,-1]].map(([a,b])=>project(cam.mvp,add(add(f.n,mulS(f.right,a)),mulS(f.up,b))));if(q.every(Boolean))CUBE_QUADS.push(q)}}   // the faces turned toward the eye, on screen
+function inQuad(s,q){let sign=0;for(let i=0;i<4;i++){const a=q[i],b=q[(i+1)%4];const c=(b.x-a.x)*(s.y-a.y)-(b.y-a.y)*(s.x-a.x);if(c!==0){if(sign===0)sign=Math.sign(c);else if(Math.sign(c)!==sign)return false}}return true}
+function occluded(p,s){if(len(sub(p,cam.eye))<len(cam.eye))return false;for(const q of CUBE_QUADS)if(inQuad(s,q))return true;return false}   // hidden only behind the cube and inside its outline (Ruby: the fields must not vanish where Cuba does not cover them)
 function strokeRing(pts,color,alpha,width){fc.lineWidth=width;fc.strokeStyle=color;let run=[];const flush=()=>{if(run.length>1){fc.globalAlpha=alpha;fc.beginPath();run.forEach((s,i)=>i?fc.lineTo(s.x,s.y):fc.moveTo(s.x,s.y));fc.stroke()}run=[]};
-  for(const p of pts){const s=project(cam.vp,p);if(!s||occluded(p)){flush();continue}run.push(s)}flush();fc.globalAlpha=1}
+  for(const p of pts){const s=project(cam.vp,p);if(!s||occluded(p,s)){flush();continue}run.push(s)}flush();fc.globalAlpha=1}
 const RINGS={gold:[0,1,2].map(k=>ringPoints(1,k,3)),blue:[0,1,2].map(k=>ringPoints(-1,k,3))};
-function drawFields(){fc.lineCap='round';fc.shadowBlur=10;for(let k=0;k<3;k++){fc.shadowColor='rgba(245,182,79,.9)';strokeRing(RINGS.gold[k],'#f5b64f',0.62,1.8);fc.shadowColor='rgba(90,165,255,.9)';strokeRing(RINGS.blue[k],'#5aa5ff',0.56,1.8)}fc.shadowBlur=0}
+function drawFields(){cubeQuads();fc.lineCap='round';fc.shadowBlur=10;for(let k=0;k<3;k++){fc.shadowColor='rgba(245,182,79,.9)';strokeRing(RINGS.gold[k],'#f5b64f',0.62,1.8);fc.shadowColor='rgba(90,165,255,.9)';strokeRing(RINGS.blue[k],'#5aa5ff',0.56,1.8)}fc.shadowBlur=0}
 /* ---- rain over the Canon side in the rain season, as on Tetra ---- */
-const drops=Array.from({length:110},(_,i)=>({u:(i*0.618)%1,v:(i*0.381)%1,s:0.6+(i%7)/10}));
-function drawRain(dt,amount){if(amount<=0.01)return;const f=faceById.canon;if(dot(worldNormal(f),norm(cam.eye))<0.25)return;
-  const corners=[[-1,1],[1,1],[1,-1],[-1,-1]].map(([a,b])=>project(cam.mvp,add(add(f.n,mulS(f.right,a)),mulS(f.up,b))));if(corners.some(c=>!c))return;
-  fc.strokeStyle='rgba(200,220,255,.55)';fc.lineWidth=1;fc.globalAlpha=amount;fc.beginPath();
-  const n=Math.round(drops.length*amount);for(let i=0;i<n;i++){const d=drops[i];d.v+=dt*0.9*d.s;if(d.v>1){d.v-=1;d.u=(d.u+0.37)%1}
-    const top=[corners[0][0]+(corners[1][0]-corners[0][0])*d.u,corners[0][1]+(corners[1][1]-corners[0][1])*d.u],bot=[corners[3][0]+(corners[2][0]-corners[3][0])*d.u,corners[3][1]+(corners[2][1]-corners[3][1])*d.u];
-    const x=top[0]+(bot[0]-top[0])*d.v,y=top[1]+(bot[1]-top[1])*d.v;fc.moveTo(x,y);fc.lineTo(x-2,y+12*d.s)}
+const drops=FACES.map(()=>Array.from({length:70},(_,i)=>({u:(i*0.618)%1,v:(i*0.381)%1,s:0.6+(i%7)/10})));
+function drawRain(dt,amount){if(amount<=0.01)return;fc.strokeStyle='rgba(200,220,255,.55)';fc.lineWidth=1;fc.globalAlpha=amount;fc.beginPath();
+  FACES.forEach((f,k)=>{if(dot(worldNormal(f),norm(cam.eye))<0.25)return;                 // only the sides turned toward the viewer; never the moon or the star
+    const corners=[[-1,1],[1,1],[1,-1],[-1,-1]].map(([a,b])=>project(cam.mvp,add(add(f.n,mulS(f.right,a)),mulS(f.up,b))));if(corners.some(c=>!c))return;
+    const n=Math.round(drops[k].length*amount);for(let i=0;i<n;i++){const d=drops[k][i];d.v+=dt*0.9*d.s;if(d.v>1){d.v-=1;d.u=(d.u+0.37)%1}
+      const top=[corners[0].x+(corners[1].x-corners[0].x)*d.u,corners[0].y+(corners[1].y-corners[0].y)*d.u],bot=[corners[3].x+(corners[2].x-corners[3].x)*d.u,corners[3].y+(corners[2].y-corners[3].y)*d.u];
+      const x=top[0]+(bot[0]-top[0])*d.v,y=top[1]+(bot[1]-top[1])*d.v;const dx=(bot[0]-top[0]),dy=(bot[1]-top[1]),l=Math.hypot(dx,dy)||1;fc.moveTo(x,y);fc.lineTo(x+dx/l*12*d.s,y+dy/l*12*d.s)}});   // the streaks run down the side, in the side's own down direction
   fc.stroke();fc.globalAlpha=1}
+/* ---- Tetra in Cuba's sky (Ruby: "you shuld be able to see tetra from cuba and vice versa"): a small four-sided world, nearer the star than Cuba, turning as its own clock turns.
+   Its place in the sky is a reading: toward the star, a little to one side and above it, so it is not lost in the glow. ---- */
+const OTHER_DIR=norm(add(rotAxis(SUN0,[0,1,0],0.42),[0,0.06,0])),OTHER_DIST=38,OTHER_SIZE=0.9;let lastOther=null;
+const TETRA_V=[[0,1,0],[Math.sqrt(8/9),-1/3,0],[-Math.sqrt(2/9),-1/3,Math.sqrt(2/3)],[-Math.sqrt(2/9),-1/3,-Math.sqrt(2/3)]];
+function drawOtherWorld(){const c=mulS(OTHER_DIR,OTHER_DIST);const sp=project(cam.vp,c);if(!sp){lastOther=null;return}
+  cubeQuads();if(CUBE_QUADS.some(q=>inQuad(sp,q))){lastOther=null;return}   // hidden only where Cuba itself stands in front of it
+  lastOther=sp;if(sp.x<-40||sp.x>W+40||sp.y<-40||sp.y>H+40)return;
+  const a=spinAngle();const V=TETRA_V.map(v=>add(c,mulS(rotY(a,v),OTHER_SIZE)));const faces=[[0,1,2],[0,2,3],[0,3,1],[1,3,2]];
+  const toEye=norm(sub(cam.eye,c));const items=[];for(const [i,j,k] of faces){const n=norm(cross(sub(V[j],V[i]),sub(V[k],V[i])));if(dot(n,toEye)<=0)continue;const pts=[V[i],V[j],V[k]].map(p=>project(cam.vp,p));if(pts.some(p=>!p))continue;const lit=Math.max(0,dot(n,SUN0));items.push({pts,lit})}
+  for(const it of items){const g=Math.round(70+150*it.lit);fc.fillStyle=`rgb(${Math.round(g*0.78)},${Math.round(g*0.72)},${Math.round(g*0.58)})`;fc.beginPath();it.pts.forEach((p,i)=>i?fc.lineTo(p.x,p.y):fc.moveTo(p.x,p.y));fc.closePath();fc.fill()}
+  fc.fillStyle='rgba(185,173,150,.9)';fc.font='500 10px IBM Plex Sans, system-ui, sans-serif';fc.textAlign='center';fc.fillText('TETRA',sp.x,sp.y+OTHER_SIZE*0+26)}
 /* ---- phases, as Tetra's ---- */
 function placeLight(side,p){const a=spinAngle();const pw=rotY(a,p);const n=norm(add(mulS(worldNormal(faceById[side]),0.18),mulS(norm(pw),0.82)));const nl=dot(n,SUN0);const vel=[-pw[2],0,pw[0]];return{nl,toward:dot(norm(vel),SUN0)}}
 function phaseOf(nl,toward){const m=toward>0;
@@ -313,16 +337,22 @@ function showTab(id){tabs.forEach(([t,p])=>{const on=t===id;$(t).setAttribute('a
 tabs.forEach(([t])=>$(t).addEventListener('click',()=>{showTab(t);openCodex(true)}));
 function openCodex(on){codex.classList.toggle('closed',!on);codex.classList.toggle('open',on);$('cbtnCodex').setAttribute('aria-pressed',String(on))}
 $('cbtnCodex').addEventListener('click',()=>openCodex(codex.classList.contains('closed')));$('cbtnClose').addEventListener('click',()=>openCodex(false));
+function renderPlants(){$('cplants').textContent=WORLD.plants.examples.join(', ')}
 function renderExplorers(){const ul=$('cexplorers');ul.innerHTML='';for(const e of WORLD.explorers){const li=document.createElement('li');li.innerHTML='<b></b> <span></span>';li.querySelector('b').textContent=e.name+' the explorer';li.querySelector('span').textContent='· '+e.desc;ul.appendChild(li)}}
-function renderSides(){const el=$('csideList');el.innerHTML='';for(const s of WORLD.sides){const b=document.createElement('button');b.className='side';b.type='button';b.dataset.side=s.id;b.style.setProperty('--c',s.color);b.innerHTML='<i class="sw"></i><div><b></b><span></span></div><em><i></i><u></u></em>';b.querySelector('b').textContent=s.name;b.querySelector('span').textContent=s.state;b.querySelector('u').style.textDecoration='none';b.addEventListener('click',()=>selectSide(s.id,true));el.appendChild(b)}}
+function renderSides(){const el=$('csideList');el.innerHTML='';for(const s of WORLD.sides){const h=document.createElement('button');h.className='side group';h.type='button';h.dataset.side=s.id;h.style.setProperty('--c',s.color);h.innerHTML='<i class="sw"></i><div><b></b><span></span></div><em><i></i><u></u></em>';h.querySelector('b').textContent=s.name;h.querySelector('span').textContent=s.state;h.querySelector('u').style.textDecoration='none';h.addEventListener('click',()=>selectSide(s.id,true));el.appendChild(h);
+    const places=Object.entries(WORLD.places).filter(([,p])=>p.side===s.id);
+    for(const [id,p] of places){const b=document.createElement('button');b.className='side region';b.type='button';b.dataset.place=id;b.innerHTML='<i class="sw dot"></i><div><b></b><span></span></div><em><i></i><u></u></em>';b.querySelector('b').textContent=p.name;b.querySelector('span').textContent=p.kind;b.querySelector('u').style.textDecoration='none';b.addEventListener('click',()=>selectPlace(id));el.appendChild(b)}
+    if(!places.length){const n=document.createElement('p');n.className='note';n.style.margin='0 0 8px 24px';n.textContent='Nothing charted here yet.';el.appendChild(n)}}}
 const phaseCache=new Map();
-function updateSidePhases(){for(const b of $('csideList').querySelectorAll('button[data-side]')){const ph=phaseFor(b.dataset.side);if(phaseCache.get(b.dataset.side)!==ph.t){phaseCache.set(b.dataset.side,ph.t);b.querySelector('u').textContent=ph.t;b.querySelector('em i').className=ph.k}}}
+function updateSidePhases(){for(const b of $('csideList').querySelectorAll('button[data-side],button[data-place]')){const id=b.dataset.side||b.dataset.place;const ph=phaseFor(id);if(phaseCache.get(id)!==ph.t){phaseCache.set(id,ph.t);b.querySelector('u').textContent=ph.t;b.querySelector('em i').className=ph.k}}}
 function phaseHtml(id){const ph=phaseFor(id);return`<div class="phase" data-k="${ph.t}"><i class="${ph.k}"></i><div><b>${ph.t}</b><span>${ph.d}</span></div></div>`}
-function renderPlace(){const el=$('cplaceBody');const followBtn=`<div class="actions"><button type="button" class="btnFollow">${state.follow?'Release view':'Follow this side'}</button></div>`;
+function renderPlace(){const el=$('cplaceBody');const through=state.selected==='hole'?'<button type="button" class="btnThrough" data-to="hole-far">Through the Canyon to the Far side</button>':state.selected==='hole-far'?'<button type="button" class="btnThrough" data-to="hole">Through the Canyon to the Canon side</button>':'';
+  const followBtn=`<div class="actions">${through}<button type="button" class="btnFollow">${state.follow?'Release view':'Follow this side'}</button></div>`;
   if(state.selected){const pl=WORLD.places[state.selected],s=sideById[pl.side];el.innerHTML='<p class="kind"></p><h2></h2><p class="tagline"></p>'+phaseHtml(state.selected)+'<p class="note"></p><span class="pill"></span>'+followBtn;el.querySelector('.kind').textContent=pl.kind;el.querySelector('h2').textContent=pl.name;el.querySelector('.tagline').textContent=s.name+' · '+s.state;el.querySelector('.note').textContent=pl.note;el.querySelector('.pill').textContent=state.selected==='hole-far'?'A reading':state.selected==='hole'?'To the Far side':'Named by Ruby'}
   else if(state.selectedSide){const s=sideById[state.selectedSide];el.innerHTML='<p class="kind">Side</p><h2></h2><p class="tagline"></p>'+phaseHtml(state.selectedSide)+'<p class="note"></p>'+followBtn;el.querySelector('h2').textContent=s.name;el.querySelector('.tagline').textContent=s.state;el.querySelector('.note').textContent=s.blurb}
   else{el.innerHTML='<p class="kind">Place</p><h2>Nothing chosen</h2><p class="note">Tap a side or a marker on the world.</p>';return}
-  el.querySelector('.btnFollow').addEventListener('click',()=>{if(state.follow)release();else{setFollow(true);flyTo(state.selectedSide)}renderPlace()})}
+  el.querySelector('.btnFollow').addEventListener('click',()=>{if(state.follow)release();else{setFollow(true);flyTo(state.selectedSide)}renderPlace()});
+  const th=el.querySelector('.btnThrough');if(th)th.addEventListener('click',()=>selectPlace(th.dataset.to))}   // Ruby: a button from one end of the Canyon to the other
 function updatePlacePhase(){const id=state.selected||state.selectedSide;if(!id)return;const el=$('cplaceBody').querySelector('.phase');if(!el)return;const ph=phaseFor(id);if(el.dataset.k!==ph.t){el.dataset.k=ph.t;el.querySelector('i').className=ph.k;el.querySelector('b').textContent=ph.t;el.querySelector('span').textContent=ph.d}}
 function selectSide(id,fly){state.selected=null;state.selectedSide=id;if(fly!==false)flyTo(id);renderPlace();showTab('ctabPlace');openCodex(true);syncButtons()}
 function selectPlace(id){const pl=WORLD.places[id];state.selected=id;state.selectedSide=pl.side;flyTo(pl.side);renderPlace();showTab('ctabPlace');openCodex(true);syncButtons()}
@@ -333,19 +363,22 @@ function renderYear(){const strip=$('cyearStrip');strip.innerHTML='';const first
   const cells=MONTHS.map((_,k)=>{const mi=(first+k)%MONTHS.length;return{label:MONTHS[mi].slice(0,3),mi,n:k+1,sn:mi===AMB?SEASONS.find(s=>s.halfOf===AMB&&s.half===0):SEASONS.find(s=>s.months.includes(mi)),sn2:mi===AMB?SEASONS.find(s=>s.halfOf===AMB&&s.half===1):null}});
   const rAt=cells.findIndex(c=>c.mi===RESTART_MI%MONTHS.length);cells.splice(rAt<0?cells.length:rAt,0,{label:'R',mi:-1,sn:SEASONS.find(s=>s.restart),r:true});
   cells.forEach(c=>{const d=document.createElement('div');d.className='m'+(c.r?' r':'')+(c.sn2?' two':'');d.dataset.mi=String(c.mi);d.style.setProperty('--c',c.sn.color);if(c.sn2)d.style.setProperty('--c2',c.sn2.color);d.textContent=c.label;d.title=c.r?'The Restart Day, which closes the year':`${MONTHS[c.mi]} · the ${ordinal(c.n)} month`;strip.appendChild(d)});
-  const ul=$('cseasonList');ul.innerHTML='';const rows=[['rain','Rain season','January, the Restart Day'],['spring','Spring','February, Tredesember, March (as on Tetra, a reading)'],['amb-rain','Amberary, days 1 to 14','rain season (Ruby)'],['amb-mid','Amberary, days 15 to 28','between rain and spring (Ruby)'],['summer','Summer','April, May, June (as on Tetra, a reading)'],['fall','Fall','July, August, September (as on Tetra, a reading)'],['winter','Winter','October, November, December (as on Tetra, a reading)']];
+  const ul=$('cseasonList');ul.innerHTML='';const rows=[['rain','Rain season','January, the Restart Day'],['amb-rain','Amberary, days 1 to 14','rain season (Ruby)'],['amb-mid','Amberary, days 15 to 28','between rain and spring (Ruby)'],['spring','Spring','February, Tredesember, March (as on Tetra, a reading)'],['summer','Summer','April, May, June (as on Tetra, a reading)'],['fall','Fall','July, August, September (as on Tetra, a reading)'],['winter','Winter','October, November, December (as on Tetra, a reading)']];
   for(const [id,name,txt] of rows){const sn=SEASONS.find(s=>s.id===id);const li=document.createElement('li');li.dataset.id=id;li.style.setProperty('--c',sn.color);li.innerHTML='<i></i><div><b></b> <span></span></div>';li.querySelector('b').textContent=name;li.querySelector('span').textContent='· '+txt;ul.appendChild(li)}}
 let yearKey='';
 function updateYear(){const dp=dateParts(state.day);const key=dp.mi+':'+dp.dom;if(key===yearKey)return;yearKey=key;$('cyearStrip').querySelectorAll('.m').forEach(el=>{const on=Number(el.dataset.mi)===dp.mi;el.classList.toggle('now',on);if(on)el.style.setProperty('--x',dp.mi<0?'50%':((dp.dom-0.5)/DPM*100).toFixed(1)+'%')});$('cseasonList').querySelectorAll('li').forEach(li=>li.classList.toggle('now',li.dataset.id===dp.season.id))}
 /* ---- HUD ---- */
 const dateOut=$('cdateOut'),dateSub=$('cdateSub'),rngDay=$('crngDay'),dayOut=$('cdayOut'),rngSpin=$('crngSpin'),spinOut=$('cspinOut');let scrubbing=false;
-function updateDate(){const {doy,mi,dom,season}=dateParts(state.day);const txt=mi<0?'Restart Day · 1¼ days':`${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`${season.name} · day ${doy+1} of 393¼`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay)rngDay.value=String(doy+1);dayOut.textContent=String(doy+1)}
+function updateDate(){const {y,doy,mi,dom,season,wd}=dateParts(state.day);const txt=mi<0?'Restart Day · 1½ days':`${wd} · ${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;const sub=`Year ${y} of Cuba · ${season.name} · day ${doy+1} of 393½`;if(dateSub.textContent!==sub)dateSub.textContent=sub;if(!scrubbing&&document.activeElement!==rngDay)rngDay.value=String(doy+1);dayOut.textContent=String(doy+1)}
 rngDay.addEventListener('pointerdown',()=>scrubbing=true);addEventListener('pointerup',()=>scrubbing=false);
 rngDay.addEventListener('input',()=>{const y=Math.floor(state.day/YEAR);state.day=y*YEAR+(Number(rngDay.value)-1)+((state.day%1)+1)%1});
 rngSpin.addEventListener('input',()=>{state.speed=Number(rngSpin.value);spinOut.textContent=state.speed.toFixed(1)+'×'});
 /* ---- dock ---- */
 const fb=$('cfaceButtons');for(const s of WORLD.sides){const b=document.createElement('button');b.type='button';b.dataset.face=s.id;b.style.setProperty('--c',s.color);b.innerHTML='<i></i><span></span>';b.querySelector('span').textContent=s.short;b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>selectSide(s.id,true));fb.appendChild(b)}
 $('cbtnSpin').addEventListener('click',()=>{state.playing=!state.playing;$('cbtnSpin').textContent=state.playing?'Pause':'Play';$('cbtnSpin').setAttribute('aria-pressed',String(state.playing))});
+$('cbtnYearBack').addEventListener('click',()=>{state.day-=YEAR});$('cbtnYear').addEventListener('click',()=>{state.day+=YEAR});   // a Cuba year: 393½ days, Tetra's clock moves with it
+function syncTime(){$('cbtnSpin').textContent=state.playing?'Pause':'Play';$('cbtnSpin').setAttribute('aria-pressed',String(state.playing));rngSpin.value=String(state.speed);spinOut.textContent=state.speed.toFixed(1)+'×'}
+addEventListener('dice:show',syncTime);
 $('cbtnReset').addEventListener('click',()=>{state.day=0;state.baseYaw=0.42;state.pitch=0.30;state.dist=4.6;state.fly=null;setFollow(false);state.selected=null;state.selectedSide=null;renderPlace();syncButtons()});
 /* ---- pointer: drag to turn the view, wheel to zoom, tap the world to choose the facing side ---- */
 let drag=null;
@@ -361,7 +394,7 @@ function frame(t){if(app.classList.contains('away')){last=t;requestAnimationFram
   if(state.playing)state.day+=dt*state.speed/DAY_SECONDS;
   if(state.fly){const k=1-Math.pow(0.0008,dt);const want=state.fly.yaw-(state.follow?spinAngle():0);const dy=Math.atan2(Math.sin(want-state.baseYaw),Math.cos(want-state.baseYaw));state.baseYaw+=dy*k;state.pitch+=(state.fly.pitch-state.pitch)*k;if(Math.abs(dy)<0.003&&Math.abs(state.fly.pitch-state.pitch)<0.003)state.fly=null}
   updateCamera();MOON=moonState(state.day);drawStars(t);
-  fc.setTransform(DPR,0,0,DPR,0,0);fc.clearRect(0,0,W,H);drawFields();drawRain(dt,rainAmount(state.day));
+  fc.setTransform(DPR,0,0,DPR,0,0);fc.clearRect(0,0,W,H);drawOtherWorld();drawFields();drawRain(dt,rainAmount(state.day));
   ctx.clearColor(0,0,0,0);ctx.clear(ctx.COLOR_BUFFER_BIT|ctx.DEPTH_BUFFER_BIT);ctx.enable(ctx.DEPTH_TEST);ctx.enable(ctx.CULL_FACE);ctx.cullFace(ctx.BACK);
   const ecl=MOON.eclipse,sl=(dateParts(state.day).season.light||[1,1,1]).map(v=>v*(1-0.85*ecl));
   ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));ctx.uniformMatrix4fv(loc.model,false,new Float32Array(cam.model));
@@ -379,15 +412,15 @@ function neighbours(){updateCamera();const centre={};for(const f of FACES){const
   const up=[0,1,0];const cands=FACES.filter(f=>f.id!==front&&f.id!==behind);const pick=fn=>cands.reduce((a,f)=>fn(f)>fn(a)?f:a).id;
   return{front,behind,up:pick(f=>dot(worldNormal(f),up)),down:pick(f=>-dot(worldNormal(f),up)),left:pick(f=>centre[f.id].p?-centre[f.id].p.x:-1e9),right:pick(f=>centre[f.id].p?centre[f.id].p.x:-1e9)}}
 window.cuba={get state(){return state},face:(id,fly)=>{if(fly===false){state.fly=null;setFollow(false);const f=faceById[id];if(id==='north'){state.pitch=1.15}else if(id==='south'){state.pitch=-1.15}else{state.pitch=0.22;state.baseYaw=faceYaw(f)}updateCamera()}else selectSide(id,true)},
-  setDay:d=>{state.day=d;MOON=moonState(d)},setYaw:y=>{state.baseYaw=y;updateCamera()},setSpin:on=>{state.playing=on;$('cbtnSpin').textContent=on?'Pause':'Play'},select:selectPlace,follow:setFollow,release,
+  setDay:d=>{state.day=d;MOON=moonState(d)},syncTime,setYaw:y=>{state.baseYaw=y;updateCamera()},setSpin:on=>{state.playing=on;$('cbtnSpin').textContent=on?'Pause':'Play'},select:selectPlace,follow:setFollow,release,
   facing,neighbours,phase:id=>{MOON=moonState(state.day);return phaseFor(id)},date:()=>dateParts(state.day),moon:()=>({...MOON,screen:project(cam.vp,MOON.pos)}),
   sample:id=>{const m=markerEls.get(id);if(!m)return null;updateCamera();const sp=project(cam.mvp,m.p);if(!sp)return null;const px=new Uint8Array(4);ctx.readPixels(Math.round(sp.x*DPR),Math.round(gl.height-sp.y*DPR),1,1,ctx.RGBA,ctx.UNSIGNED_BYTE,px);return{x:sp.x,y:sp.y,rgb:[px[0],px[1],px[2]]}},
   sampleAt:(fx_,fy)=>{const px=new Uint8Array(4);ctx.readPixels(Math.round(fx_*gl.width),Math.round((1-fy)*gl.height),1,1,ctx.RGBA,ctx.UNSIGNED_BYTE,px);return[px[0],px[1],px[2]]},
-  starScreen:()=>lastStar,starPixel:()=>{if(!lastStar||lastStar.x<0||lastStar.x>=W||lastStar.y<0||lastStar.y>=H)return null;const d=sc.getImageData(Math.round(lastStar.x*DPR),Math.round(lastStar.y*DPR),1,1).data;return{x:lastStar.x,y:lastStar.y,rgb:[d[0],d[1],d[2]]}},
+  starScreen:()=>lastStar,otherWorld:()=>lastOther,otherDir:()=>OTHER_DIR,starPixel:()=>{if(!lastStar||lastStar.x<0||lastStar.x>=W||lastStar.y<0||lastStar.y>=H)return null;const d=sc.getImageData(Math.round(lastStar.x*DPR),Math.round(lastStar.y*DPR),1,1).data;return{x:lastStar.x,y:lastStar.y,rgb:[d[0],d[1],d[2]]}},
   markers:()=>{updateCamera();updateMarkers();return[...markerEls.values()].filter(m=>!m.el.hidden).map(m=>m.el.querySelector('b').textContent)},sunDir:()=>SUN0};
 /* ---- start (through the page's bridge, so a hot reload starts both worlds) ---- */
 function start(saved){try{if(saved&&typeof saved==='object'){for(const k of['day','baseYaw','pitch','dist','speed'])if(typeof saved[k]==='number')state[k]=saved[k];if(typeof saved.playing==='boolean')state.playing=saved.playing;if(typeof saved.follow==='boolean')state.follow=saved.follow}}catch(e){}
-  $('cbtnSpin').textContent=state.playing?'Pause':'Play';rngSpin.value=String(state.speed);spinOut.textContent=state.speed.toFixed(1)+'×';resize();buildMarkers();renderSides();renderExplorers();renderYear();updateYear();renderPlace();if(W<820)openCodex(false);
+  $('cbtnSpin').textContent=state.playing?'Pause':'Play';rngSpin.value=String(state.speed);spinOut.textContent=state.speed.toFixed(1)+'×';resize();buildMarkers();renderSides();renderExplorers();renderPlants();renderYear();updateYear();renderPlace();syncTime();if(W<820)openCodex(false);
   window.dice?.snapshot?.('cuba',()=>({day:state.day,baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,speed:state.speed,playing:state.playing,follow:state.follow}));
   requestAnimationFrame(frame)}
 if(window.dice?.ready)window.dice.ready('cuba',start);else start({});

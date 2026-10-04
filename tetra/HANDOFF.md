@@ -133,6 +133,11 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 
 - 2026-10-04, Ruby (about Cuba, the cube planet): "it neends to be in the same file as tetra, and i cant see the star. unwriten ansewrs coming after this one" and Joshua: "This lives in the same world as tetra." (v11: Cuba is a second world in this page, with Tetra and Cuba buttons under the title; Tetra's star shines over Cuba too. Cuba's own ledger is `../cuba/HANDOFF.md`.)
 - 2026-10-04, Ruby: "4: i cant see tetra when i go to the tetra page" (a real bug of the merge, fixed the same evening: see section 10 and the bridge note in `CLAUDE.md`.)
+- 2026-10-04, Ruby: "make shure to keep tetras year going while you are on cuba and vice versa" and "when you tamper wih time (pause, spin, going forward in days or years) it shuld hapen to bouth planets" (one clock for both worlds, `window.dice.time`, which `state.day`, `state.playing` and `state.speed` read and write; Tetra's controls resync when it is shown.)
+- 2026-10-04, Ruby: "also the menu glitches up and down on tetra when you slide around the days so that needs to stop (i think its from the number on the side, witch can be deleted)", "or the length of twilighday" (fixed: the date column has a fixed width, the day number is blank with its space kept; `tests/calendar.js` checks the dock stays put on every date.)
+- 2026-10-04, Ruby: "add most of the recognizable plants from the real world to bouth and add more umbrela tree zinias on cuba than on tetra (cince there is more majic)" (Life of Tetra says most of Earth's recognizable plants grow here, with examples, and that there are more Zinnias on Cuba.)
+- 2026-10-04, Ruby: "also put the rain seoson rain overlay on all sides of all planets", "not the moons or suns though" (rain on every face turned toward the viewer in the rain season, never on the moon or the star.)
+- 2026-10-04, Ruby: "also you shuld be able to see tetra from cuba and vice versa" (Cuba shows in Tetra's sky as a small turning cube away from the star, its place a reading.)
 
 ### Process rules Joshua gave
 - "dont use the exact pictures of the explorers (opal the explorer went back and made comlpete maps of them [generate maps based on the schetches please])"

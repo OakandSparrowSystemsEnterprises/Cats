@@ -7,12 +7,21 @@ sides and the land crosses onto the East, West, North and South sides. Readings 
 sides the land continues a short way (TONGUE) and stops, the rest of them being uncharted slate; the hole is small; the Far side gets
 the hole's other end and nothing else. Colours are placeholders, nothing about them has been said.
 
+Ruby (2026-10-04): "make cuba look sort of like tetra as far as how landmasses are desighnd": the land is painted with Tetra's own
+painter (../../tetra/pipeline: heights, render_painted, texsynth patches from Ruby's Canon painting), so the Plus Continent carries the
+same painted hills, forests, shores and rivers as Tetra's faces. Which plants and colours belong where is still unwritten; the zones
+here (green and forest, a little gold at the shore) are a reading.
+
 Writes map_canon.jpg, map_east/west/north/south.jpg (the tongue of land at the edge shared with Canon), map_far.jpg (the hole's other
 end), map_blank.jpg, map_canon_prev.png (markers drawn) and anchors.json. Deterministic (fixed seed).
 """
-import json, os, numpy as np, cv2
+import json, os, sys, numpy as np, cv2
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+TETRA = os.path.normpath(os.path.join(HERE, '..', '..', 'tetra', 'pipeline'))
+sys.path.insert(0, TETRA); os.chdir(TETRA)          # Tetra's painter reads art_latest.png from its own folder
+from mapgen2 import heights                          # noqa: E402
+from paintface import render_painted                 # noqa: E402
 S = 1024
 SEED = 7
 yy, xx = np.mgrid[0:S, 0:S].astype(np.float32)
@@ -75,29 +84,28 @@ def tongue():
     return d
 
 
-def paint_land(tex, d, land):
-    """placeholder land colours: sand at the shore, grass inland, a drawn coastline"""
-    inland = np.clip(-d / 120.0, 0, 1)
-    sand = np.array([206, 186, 140], np.float32); grass = np.array([128, 150, 92], np.float32)
-    ground = sand[None, None] * (1 - inland[..., None]) + grass[None, None] * inland[..., None]
-    ground *= 0.86 + 0.28 * fbm(SEED + 23)[..., None]
-    tex[land] = ground[land]
-    rim = (d > -3) & (d < 1)
-    tex[rim] *= 0.72
+TRI = np.ones((S, S), bool)                           # a square face: the whole texture is the face
+
+
+def painted(d, seed, rivers=()):
+    """Tetra's painter over a signed-distance land design: heights, zones (green and forest, gold along the shore: a reading), rivers."""
+    land_soft = np.clip(0.5 - d / 6.0, 0, 1)
+    h, d_in = heights(land_soft, seed, terrain_amp=0.06)
+    # relief is a reading: gentle hills over the land and one high hub around the middle, so the painter's mountains gather there and not everywhere
+    hub = np.clip(1 - np.hypot(xx - cx, yy - cy) / (0.21 * S), 0, 1) ** 1.5
+    h = np.where(land_soft > 0.5, h + 0.09 * hub, h).astype(np.float32)
+    n = fbm(seed + 41)
+    zones = {'green': np.clip(0.55 + 0.6 * (n - 0.5), 0, 1), 'forest': np.clip(0.45 + 0.8 * (0.5 - n), 0, 1),
+             'gold': np.clip(1 - d_in / 40.0, 0, 1) * 0.5}
+    img = render_painted({'height': h, 'sea_level': 0.5, 'zones': zones, 'river_sources': list(rivers)}, seed, TRI)
+    return img.astype(np.float32)
 
 
 def render_canon():
     d = island()
     land = d < 0
     hole = np.hypot(xx - cx, yy - cy) < HOLE_R
-    # colours are placeholders (nothing said yet): a sea blue, a sand and grass land, the hole dark
-    tex = np.zeros((S, S, 3), np.float32)
-    depth = np.clip(d / 90.0, 0, 1)                       # distance from the coast, 0 at the shore
-    sea_deep = np.array([34, 70, 112], np.float32); sea_shallow = np.array([70, 128, 170], np.float32)
-    sea = sea_shallow[None, None] * (1 - depth[..., None]) + sea_deep[None, None] * depth[..., None]
-    sea *= 0.92 + 0.16 * fbm(SEED + 11)[..., None]
-    tex[~land] = sea[~land]
-    paint_land(tex, d, land)
+    tex = painted(d, SEED, rivers=[(int(0.5 * S), int(0.22 * S)), (int(0.78 * S), int(0.5 * S)), (int(0.5 * S), int(0.8 * S))])
     hole_shade = np.clip(1 - (np.hypot(xx - cx, yy - cy) - HOLE_R) / (HOLE_R * 1.6), 0, 1)
     tex *= (1 - 0.45 * hole_shade)[..., None]
     tex[hole] = np.array([14, 12, 20], np.float32)
@@ -108,8 +116,10 @@ def render_blank(with_hole=False, with_tongue=False):
     tex = np.zeros((S, S, 3), np.float32)
     slate = np.array([64, 68, 80], np.float32)
     tex[:] = slate * (0.86 + 0.28 * fbm(SEED + 31)[..., None])
-    if with_tongue:
-        d = tongue(); paint_land(tex, d, d < 0)
+    if with_tongue:   # the arm's land painted like the Canon side, its sea fading into the uncharted slate away from the coast
+        d = tongue(); img = painted(d, SEED + 7)
+        keep = np.clip(1 - (d - 24.0) / 40.0, 0, 1)[..., None]
+        tex = img * keep + tex * (1 - keep)
     if with_hole:
         r = np.hypot(xx - cx, yy - cy)
         tex *= (1 - 0.45 * np.clip(1 - (r - HOLE_R) / (HOLE_R * 1.6), 0, 1))[..., None]
@@ -141,6 +151,7 @@ def main():
     water = 1 - land.mean()
     anchors = {'canon': {'island': [S // 2, int(0.30 * S)], 'hole': [S // 2, S // 2]}, 'far': {'hole-far': [S // 2, S // 2]}}
     ax, ay = anchors['canon']['island']; assert land[ay, ax] and not hole[ay, ax]
+    os.chdir(HERE)
     write_jpg('map_canon.jpg', canon)
     write_jpg('map_far.jpg', render_blank(with_hole=True))
     write_jpg('map_blank.jpg', render_blank())

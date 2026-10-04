@@ -8,7 +8,7 @@ const PAGE = require('./_page');
 (async () => {
   const browser = await chromium.launch(PAGE.LAUNCH);
   const fails = [];
-  const land = c => c && c[0] > 90 && c[1] > 90 && c[0] + c[1] > c[2] * 2.2, dark = c => c && c[0] + c[1] + c[2] < 150, purple = c => c && c[2] > 120 && c[2] >= c[1] && c[0] > 60;
+  const land = c => c && !(c[2] > c[1] && c[2] > c[0] + 25) && c[0] + c[1] + c[2] > 120, dark = c => c && c[0] + c[1] + c[2] < 150, purple = c => c && c[2] > 120 && c[2] >= c[1] && c[0] > 60;   // painted land is anything but sea blue and not the dark of the Canyon
   const settle = page => page.evaluate(() => new Promise(r => { let n = 0; const f = () => (++n >= 12 ? r() : requestAnimationFrame(f)); requestAnimationFrame(f); }));
   const run = async (width, height, phone) => {
     const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: phone ? 2 : 1, isMobile: phone, hasTouch: phone });
@@ -30,7 +30,7 @@ const PAGE = require('./_page');
     if (!info.markers.includes('The Canyon · to the Far side') || !info.markers.includes('The Plus Continent')) fails.push(`${width}: markers ${JSON.stringify(info.markers)}`);
     if (!land(info.island && info.island.rgb)) fails.push(`${width}: the Plus Continent marker is not over land (${info.island && info.island.rgb})`);
     if (!dark(info.hole && info.hole.rgb)) fails.push(`${width}: the Canyon is not dark (${info.hole && info.hole.rgb})`);
-    if (info.date !== '1 January | Rain season · day 1 of 393¼') fails.push(`${width}: first day reads "${info.date}"`);
+    if (info.date !== 'Starday · 1 January | Year 50 of Cuba · Rain season · day 1 of 393½') fails.push(`${width}: first day reads "${info.date}"`);
     // the star: facing the lit Canon side it is behind the viewer and off the frame (Ruby: it must not be held in the frame); turned toward it, the glow is there and purple
     if (info.starPx) fails.push(`${width}: the star glow is on screen while facing the lit side (${JSON.stringify(info.star)})`);
     const starYaw = await page.evaluate(() => { const s = cuba.sunDir(); return Math.atan2(s[0], s[2]) + Math.PI; });   // the eye opposite the star looks straight at it
@@ -40,21 +40,33 @@ const PAGE = require('./_page');
     // the star does not move while the world turns and the view is not following
     const drift = await page.evaluate(() => { const a = cuba.starScreen(); cuba.setDay(0.3); return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => { const b = cuba.starScreen(); r({ a, b }); }))); });
     if (!drift.a || !drift.b || Math.abs(drift.a.x - drift.b.x) > 0.5 || Math.abs(drift.a.y - drift.b.y) > 0.5) fails.push(`${width}: the star moved while the world turned (${JSON.stringify(drift)})`);
-    await page.evaluate(() => { cuba.setDay(0); cuba.face('canon', false); }); await settle(page);
+    // Tetra in Cuba's sky: turned toward it, the small world is on screen
+    const otherC = await page.evaluate(async (phone) => { const d = cuba.otherDir(), phi = Math.atan2(d[0], d[2]); cuba.state.pitch = phone ? -0.45 : 0.05; cuba.state.dist = phone ? 7 : 4.6; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+      for (const y of [0.6, -0.6, 0.3, -0.3, 0.18, -0.18, 0].flatMap(o => [phi + Math.PI + o, phi + o])) { cuba.setYaw(y); await frames(); const o = cuba.otherWorld(); if (o && o.x > (phone ? 0 : 40) && o.x < innerWidth - (phone ? 0 : 400) && o.y > (phone ? 0 : 40) && o.y < innerHeight * (phone ? 1 : 0.78)) return o; } return cuba.otherWorld(); }, phone);
+    if (!otherC || otherC.x < 0 || otherC.x > width || otherC.y < 0 || otherC.y > height) fails.push(`${width}: Tetra is not in Cuba's sky when turned toward it (${JSON.stringify(otherC)})`);
+    if (!phone) await page.screenshot({ path: PAGE.out('cuba_tetra_sky.png') });
+    await page.evaluate(() => { cuba.setDay(0); cuba.state.pitch = 0.22; cuba.state.dist = 4.6; cuba.face('canon', false); }); await settle(page);
     // the turn: leftward like Tetra. Facing Canon, a point on the Canon side moves toward the viewer's left as the day advances
     const turn = await page.evaluate(() => { const a = cuba.sample('hole').x; cuba.setDay(0.04); const b = cuba.sample('hole').x; cuba.setDay(0); return { a, b }; });
     if (!(turn.b < turn.a)) fails.push(`${width}: the world does not turn leftward (${JSON.stringify(turn)})`);
     // the calendar: Amberary is the 14th month, before March, half rain and half between rain and spring; the Restart Day closes the year
-    const cal = await page.evaluate(() => { const out = []; for (const d of [0, 27.5, 28, 56, 84, 98, 112, 391.5, 392.5, 393.3]) { cuba.setDay(d); const p = cuba.date(); out.push(`${d}:${p.mi < 0 ? 'Restart' : p.dom + ' ' + ['January','February','Tredesember','Amberary','March','April','May','June','July','August','September','October','November','December'][p.mi]}/${p.season.name}/${p.doy + 1}`); } cuba.setDay(0); return out.join(' '); });
+    const cal = await page.evaluate(() => { const out = []; for (const d of [0, 27.5, 28, 42, 56, 84, 112, 391.5, 392.5, 393.4, 393.6]) { cuba.setDay(d); const p = cuba.date(); out.push(`${d}:${p.mi < 0 ? 'Restart' : (p.wd + ' ' + p.dom + ' ' + ['January','Amberary','February','Tredesember','March','April','May','June','July','August','September','October','November','December'][p.mi])}/${p.season.name}/${p.doy + 1}/y${p.y}`); } cuba.setDay(0); return out.join(' '); });
     console.log(width, 'calendar', cal);
-    const wantCal = '0:1 January/Rain season/1 27.5:28 January/Rain season/28 28:1 February/Spring/29 56:1 Tredesember/Spring/57 84:1 Amberary/Rain season/85 98:15 Amberary/Between rain and spring/99 112:1 March/Spring/113 391.5:28 December/Winter/392 392.5:Restart/Rain season/393 393.3:1 January/Rain season/1';
+    const wantCal = '0:Starday 1 January/Rain season/1/y50 27.5:Twilightday 28 January/Rain season/28/y50 28:Starday 1 Amberary/Rain season/29/y50 42:Starday 15 Amberary/Between rain and spring/43/y50 56:Starday 1 February/Spring/57/y50 84:Starday 1 Tredesember/Spring/85/y50 112:Starday 1 March/Spring/113/y50 391.5:Twilightday 28 December/Winter/392/y50 392.5:Restart/Rain season/393/y50 393.4:Restart/Rain season/393/y50 393.6:Starday 1 January/Rain season/1/y51';
     if (cal !== wantCal) fails.push(`${width}: calendar reads wrong`);
+    // one clock: Ruby's example, when Tetra steps from Tredesember into March, Cuba is starting Tredesember; and pausing one pauses the other
+    const clock = await page.evaluate(() => { tetra.setDay(84); const c = cuba.date(); const t = document.getElementById('dateOut'); cuba.setDay(84); const tetraDay = tetra.state.day; cuba.state.playing = false; const tp = tetra.state.playing; cuba.state.playing = true; cuba.setDay(0); return { cuba: c.dom + ' ' + ['January','Amberary','February','Tredesember','March'][c.mi], tetraDay, tetraPaused: tp === false }; });
+    if (clock.cuba !== '1 Tredesember' || Math.abs(clock.tetraDay - 84) > 1e-9 || !clock.tetraPaused) fails.push(`${width}: the clock is not shared ${JSON.stringify(clock)}`);
     if (!phone) {
+      await page.click('#ctabSides'); await page.waitForTimeout(300);
+      const regions = await page.evaluate(() => document.getElementById('csideList').innerText.replace(/\n+/g, ' | '));
+      if (!/The Canon Side[\s\S]*The Plus Continent[\s\S]*The Canyon/.test(regions) || !/Nothing charted here yet/.test(regions)) fails.push('the Regions tab does not list the places under their sides: ' + regions.slice(0, 200));
+      await page.screenshot({ path: PAGE.out('cuba_regions.png') });
       await page.click('#ctabWorld'); await page.waitForTimeout(200);
       const strip = await page.evaluate(() => [...document.querySelectorAll('#cyearStrip .m')].map(e => e.textContent).join(' '));
-      if (strip !== 'Mar Apr May Jun Jul Aug Sep Oct Nov Dec R Jan Feb Tre Amb') fails.push('Cuba strip order is ' + strip);
+      if (strip !== 'Mar Apr May Jun Jul Aug Sep Oct Nov Dec R Jan Amb Feb Tre') fails.push('Cuba strip order is ' + strip);
       const world = (await page.evaluate(() => document.getElementById('cpaneWorld').innerText)).toLowerCase();
-      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
+      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
       await page.screenshot({ path: PAGE.out('cuba_world_tab.png') });
     }
     // the d5 moon: an eclipse at the deepest moment of the 14th of January, every place reading Eclipse, and none the day after
@@ -79,11 +91,23 @@ const PAGE = require('./_page');
       await page.evaluate(() => cuba.select('hole')); await page.waitForTimeout(600);
       const canyon = await page.evaluate(() => document.getElementById('cplaceBody').innerText.replace(/\n+/g, ' | ').slice(0, 120));
       if (!/The Canyon/.test(canyon)) fails.push('the Canyon card did not open: ' + canyon);
+      // through the Canyon and back (Ruby: a button from one end to the other)
+      await page.click('#cplaceBody .btnThrough'); await page.waitForTimeout(900);
+      const otherEnd = await page.evaluate(() => ({ sel: cuba.state.selected, facing: cuba.facing(), card: document.getElementById('cplaceBody').innerText.slice(0, 80) }));
+      if (otherEnd.sel !== 'hole-far' || !/other end of the Canyon/.test(otherEnd.card)) fails.push('the Canyon button did not go through: ' + JSON.stringify(otherEnd));
+      await page.click('#cplaceBody .btnThrough'); await page.waitForTimeout(900);
+      if ((await page.evaluate(() => cuba.state.selected)) !== 'hole') fails.push('the Canyon button did not come back');
+      await page.evaluate(() => cuba.select('hole')); await page.waitForTimeout(400);
       await page.screenshot({ path: PAGE.out('cuba_canyon_card.png') });
     }
     // and back to Tetra
     await page.click('#diceWorlds [data-world="tetra"]'); await page.waitForTimeout(500);
     const back = await page.evaluate(() => ({ world: dice.world, date: document.getElementById('dateOut').textContent, cubaHidden: getComputedStyle(document.getElementById('capp')).visibility }));
+    // Cuba in Tetra's sky: turned toward it, the small cube is on screen
+    const otherT = await page.evaluate(async (phone) => { const d = tetra.otherDir(), phi = Math.atan2(d[0], d[2]); tetra.state.follow = false; tetra.state.fly = null; tetra.state.pitch = phone ? -0.45 : 0.05; tetra.state.dist = phone ? 7 : 4.5; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+      for (const y of [0.6, -0.6, 0.3, -0.3, 0.18, -0.18, 0].flatMap(o => [phi + Math.PI + o, phi + o])) { tetra.state.baseYaw = y; await frames(); const o = tetra.otherWorld(); if (o && o.x > (phone ? 0 : 40) && o.x < innerWidth - (phone ? 0 : 400) && o.y > (phone ? 0 : 40) && o.y < innerHeight * (phone ? 1 : 0.78)) return o; } return tetra.otherWorld(); }, phone);
+    if (!otherT || otherT.x < 0 || otherT.x > width || otherT.y < 0 || otherT.y > height) fails.push(`${width}: Cuba is not in Tetra's sky when turned toward it (${JSON.stringify(otherT)})`);
+    if (!phone) { await page.evaluate(() => tetra.setDay(10.3)); await page.waitForTimeout(500); await page.screenshot({ path: PAGE.out('tetra_cuba_sky.png') }); }
     if (back.world !== 'tetra' || back.cubaHidden !== 'hidden' || !/January|February|Tredesember|March|April|May|June|July|August|September|October|November|December|Restart/.test(back.date)) fails.push(`${width}: switching back failed ${JSON.stringify(back)}`);
     console.log(width, 'errors', JSON.stringify(errors)); if (errors.length) fails.push(`${width}: page errors`);
     await ctx.close();
@@ -93,16 +117,16 @@ const PAGE = require('./_page');
   // the hot-reload bridge: one hook, both worlds started from one snapshot, the world shown restored
   {
     const ctx = await browser.newContext({ viewport: { width: 1366, height: 820 } });
-    await ctx.addInitScript(() => { window.claude = { hot: { data: null, ready(fn) { this._ready = fn; setTimeout(() => fn({ tetra: { day: 100, playing: false }, cuba: { day: 50, playing: false }, world: 'cuba' }), 60); }, snapshot(fn) { this._snap = fn; } } }; });
+    await ctx.addInitScript(() => { window.claude = { hot: { data: null, ready(fn) { this._ready = fn; setTimeout(() => fn({ tetra: { day: 3 }, cuba: { day: 7 }, time: { day: 100, playing: false, speed: 2 }, world: 'cuba' }), 60); }, snapshot(fn) { this._snap = fn; } } }; });
     const page = await ctx.newPage(); const errors = []; page.on('pageerror', e => errors.push(String(e)));
     await page.goto(PAGE.URL); await page.waitForTimeout(1200);
-    const hot = await page.evaluate(() => ({ world: dice.world, tetraDay: window.tetra && tetra.state.day, cubaDay: window.cuba && cuba.state.day, cubaDate: document.getElementById('cdateOut').textContent, snap: window.claude.hot._snap ? Object.keys(window.claude.hot._snap()).sort().join(',') : null }));
+    const hot = await page.evaluate(() => ({ world: dice.world, tetraDay: window.tetra && tetra.state.day, cubaDay: window.cuba && cuba.state.day, playing: dice.time.playing, speed: dice.time.speed, cubaDate: document.getElementById('cdateOut').textContent, cubaPlay: document.getElementById('cbtnSpin').textContent, snap: window.claude.hot._snap ? Object.keys(window.claude.hot._snap()).sort().join(',') : null }));
     console.log('hot reload', JSON.stringify(hot));
-    if (hot.world !== 'cuba' || Math.abs(hot.tetraDay - 100) > 0.5 || Math.abs(hot.cubaDay - 50) > 0.5 || !/February/.test(hot.cubaDate) || hot.snap !== 'cuba,tetra,world') fails.push('hot reload: ' + JSON.stringify(hot));
+    if (hot.world !== 'cuba' || Math.abs(hot.tetraDay - 100) > 0.5 || Math.abs(hot.cubaDay - 100) > 0.5 || hot.playing !== false || hot.speed !== 2 || !/Tredesember/.test(hot.cubaDate) || hot.cubaPlay !== 'Play' || hot.snap !== 'cuba,tetra,time,world') fails.push('hot reload: ' + JSON.stringify(hot));
     await page.click('#diceWorlds [data-world="tetra"]'); await page.waitForTimeout(600);
-    const tetraDate = await page.evaluate(() => document.getElementById('dateOut').textContent);   // Tetra's loop wakes when it is shown and draws its restored day
+    const tetraDate = await page.evaluate(() => document.getElementById('dateOut').textContent + ' | ' + document.getElementById('btnPlay').textContent);   // Tetra's loop wakes when it is shown and draws the shared day, its Play button showing the shared pause
     console.log('tetra after hot reload', tetraDate, 'errors', JSON.stringify(errors));
-    if (!/March/.test(tetraDate)) fails.push('hot reload: Tetra did not wake with its day (' + tetraDate + ')');
+    if (!/March/.test(tetraDate) || !/Play$/.test(tetraDate)) fails.push('hot reload: Tetra did not wake with the shared clock (' + tetraDate + ')');
     if (errors.length) fails.push('hot reload: page errors ' + errors.join('; '));
     await ctx.close();
   }

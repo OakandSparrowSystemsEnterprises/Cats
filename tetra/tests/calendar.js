@@ -58,10 +58,15 @@ const PAGE = require('./_page');
     const got = await page.evaluate(v => { tetra.setDay(0); const r = document.getElementById('rngDay'); r.value = String(v); r.dispatchEvent(new Event('input', { bubbles: true })); return tetra.state.day; }, v);
     if (Math.abs(got - want) > 1e-6) fails.push(`slider ${v} set day ${got} (wanted ${want})`);
   }
-  // the dock keeps room for the sliders with the weekday on the date line, on a computer and on a phone
+  // the dock keeps room for the sliders with the weekday on the date line, on a computer and on a phone, and it never moves as the dates slide
+  // (Ruby, 2026-10-04: "the menu glitches up and down on tetra when you slide around the days"): same dock height and slider position on every date
   const widths = {};
   for (const w of [1366, 1024, 860, 393]) {
-    await page.setViewportSize({ width: w, height: 820 }); await page.evaluate(() => tetra.setDay(364.5)); await page.waitForTimeout(400);
+    await page.setViewportSize({ width: w, height: 820 });
+    const shapes = [];
+    for (const d of [0, 6.5, 364.5, 364.9, 200.5, -365.25 * 2700 + 364.5]) { await page.evaluate(d => tetra.setDay(d), d); await settle(); shapes.push(await page.evaluate(() => { const r = document.querySelector('#app .dock').getBoundingClientRect(), s = document.getElementById('rngDay').getBoundingClientRect(); return { h: Math.round(r.height), top: Math.round(r.top), x: Math.round(s.left), w: Math.round(s.width), date: document.getElementById('dateOut').textContent }; })); }
+    const first = shapes[0]; const moved = shapes.filter(s => s.h !== first.h || s.top !== first.top || s.x !== first.x || s.w !== first.w);
+    if (moved.length) fails.push(`at ${w}px the dock moved with the date: ${JSON.stringify(shapes)}`);
     widths[w] = await page.evaluate(() => ({ day: document.getElementById('rngDay').getBoundingClientRect().width, spin: document.getElementById('rngSpin').getBoundingClientRect().width, scroll: document.documentElement.scrollWidth }));
     if (widths[w].day < 60 || widths[w].spin < 60) fails.push(`at ${w}px the sliders are ${widths[w].day.toFixed(0)} and ${widths[w].spin.toFixed(0)} px wide`);
     if (widths[w].scroll > w) fails.push(`at ${w}px the page scrolls sideways (${widths[w].scroll})`);

@@ -12,18 +12,18 @@ const PAGE = require('./_page');
   await page.evaluate(() => { tetra.state.playing = false; });
   await page.screenshot({ path: PAGE.out('s12_home.png') });
   // Far face: Mount Celestial card + phase across a whole day
-  await page.click('[data-face="far"]'); await page.waitForTimeout(2200); await page.screenshot({ path: PAGE.out('s12_far.png') });
+  await page.click('#app [data-face="far"]'); await page.waitForTimeout(2200); await page.screenshot({ path: PAGE.out('s12_far.png') });
   await page.evaluate(() => tetra.select('celestial')); await page.waitForTimeout(1500); await page.screenshot({ path: PAGE.out('s12_celestial.png') });
   console.log('celestial card', (await page.evaluate(() => document.getElementById('placeBody').innerText)).slice(0, 400).replace(/\n+/g, ' | '));
   // (the year-long phase sweep lives in phases.js)
   await page.evaluate(() => tetra.setDay(120.3));
   await page.evaluate(() => tetra.select('ehia')); await page.waitForTimeout(1200);
   console.log('ehia card', (await page.evaluate(() => document.getElementById('placeBody').innerText)).slice(0, 300).replace(/\n+/g, ' | '));
-  await page.click('[data-face="west"]'); await page.waitForTimeout(2200); await page.screenshot({ path: PAGE.out('s12_west.png') });
+  await page.click('#app [data-face="west"]'); await page.waitForTimeout(2200); await page.screenshot({ path: PAGE.out('s12_west.png') });
   await page.evaluate(() => tetra.select('delta')); await page.waitForTimeout(1200);
   console.log('wetia card', (await page.evaluate(() => document.getElementById('placeBody').innerText)).slice(0, 300).replace(/\n+/g, ' | '));
-  await page.click('[data-face="south"]'); await page.waitForTimeout(2200); await page.screenshot({ path: PAGE.out('s12_south.png') });
-  await page.click('[data-face="canon"]'); await page.waitForTimeout(2200); await page.screenshot({ path: PAGE.out('s12_canon.png') });
+  await page.click('#app [data-face="south"]'); await page.waitForTimeout(2200); await page.screenshot({ path: PAGE.out('s12_south.png') });
+  await page.click('#app [data-face="canon"]'); await page.waitForTimeout(2200); await page.screenshot({ path: PAGE.out('s12_canon.png') });
   await page.click('#tabWorld'); await page.evaluate(() => { document.querySelector('#codex .body').scrollTop = 0; }); await page.waitForTimeout(300);
   await page.screenshot({ path: PAGE.out('s12_world_tab.png') });
   console.log('world tab text', (await page.evaluate(() => document.getElementById('paneWorld').innerText)).replace(/\n+/g, ' | ').slice(0, 2500));

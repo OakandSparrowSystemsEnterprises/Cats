@@ -1,9 +1,6 @@
-.PHONY: maps build test audit
+.PHONY: maps audit
 maps:
 	cd pipeline && python3 mapgen.py
-build:
-	python3 pipeline/build.py
-test: build
-	node tests/smoke.js
 audit:
 	python3 tools/audit.py
+# The page is Tetra's: run `make build`, `make test` and `make audit` in ../tetra after changing the maps or world.html.

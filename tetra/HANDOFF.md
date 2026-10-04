@@ -129,6 +129,10 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - 2026-10-03, Ruby: "4: -0 is when they set off to find a rumerd central island year 1 is when they name islandia" (v11: the Key events list reads: -0, they set off to find a rumoured central island; 0, the central island is found; 1, they name it Islandia.)
 - 2026-10-03, Ruby: "9: the goodbye words are adiy and beios" (v11: the -100 entry reads adiy and beios.)
 - 2026-10-03, Ruby: "5:still working on that" (the key events after year 1; the Still unwritten item stays.)
+### The Dice System: Cuba joins the page
+
+- 2026-10-04, Ruby (about Cuba, the cube planet): "it neends to be in the same file as tetra, and i cant see the star. unwriten ansewrs coming after this one" and Joshua: "This lives in the same world as tetra." (v11: Cuba is a second world in this page, with Tetra and Cuba buttons under the title; Tetra's star shines over Cuba too. Cuba's own ledger is `../cuba/HANDOFF.md`.)
+
 ### Process rules Joshua gave
 - "dont use the exact pictures of the explorers (opal the explorer went back and made comlpete maps of them [generate maps based on the schetches please])"
 - "Make shure landmasses line up on all sides so there isn't any land side water things"
@@ -200,7 +204,7 @@ Page (`template.html`, `build.py`):
 
 ## 7. Suggested next steps
 
-- 2026-10-04: Ruby has started the second Dice System world, Cuba, the cube planet. Its ledger is `../cuba/HANDOFF.md`; when it exists, list it in `WORLD.worlds` here.
+- 2026-10-04: Ruby has started the second Dice System world, Cuba, the cube planet. Its ledger is `../cuba/HANDOFF.md`. It lives in this page since the same day (the Cuba button under the title) and `WORLD.worlds` names it.
 
 - Put Joshua's answers to section 5 into the ledger, then into `WORLD`.
 - When Ruby sends the next round: follow "How a round from Ruby is processed" in `CLAUDE.md`.
@@ -272,6 +276,8 @@ The round of 2026-10-04 (her problem report and her answers; still version 11):
 - Screenshots: `reference/screenshots-v11/star_level.png` (the first morning, Starday 1 January, the star level), `calendar.png`, `calendar_strip.png` and `restart_day.png` (replacing the 2026-10-03 ones), `week.png`, `eclipse_all.png`, `celestial.png`, `phone_hud.png`, `phone_strip.png`.
 - Later: the moon's swing eases in and out (`swing`, `SWING_RAMP`); the review fixes (reading labels on the Week row and "The week", the stale lines in sections 2 and 3, the test labels); Ruby confirmed the January start with the strip from March.
 - Published to the same artifact with the label "v11 January again, day names, Eclipse all, level star".
+
+Later on 2026-10-04, Cuba joins the page (Ruby: "it neends to be in the same file as tetra"): `{{CUBA}}` in the template takes `../cuba/pipeline/world.html` filled by `build.py`; `#diceWorlds` and its script switch worlds (class `away`); Tetra's `[data-face]` queries scoped to `#app`; the frame loop idles while away; `WORLD.worlds` and the Dice System section name Cuba; `tests/cuba.js` in the suite; screenshots `reference/screenshots-v11/cuba_home.png`, `cuba_world_tab.png`, `cuba_phone.png`. Published with the label "v11 Cuba joins the page: the cube planet's Canon side".
 
 
 

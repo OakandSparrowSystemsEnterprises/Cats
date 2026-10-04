@@ -4,6 +4,7 @@ Cuba is the second world of The Dice System, after Tetra (see `../tetra/`, read 
 
 ## 1. State
 
+- **Draft 2 (2026-10-04, later the same day)**: her answers to the Still unwritten list are in (the Canyon, the Plus Continent, the size, the leftward turn, the two fields as rings, Amber from the Far side; the longer year and the d5 moon recorded as "probably", not built). Cuba lives inside Tetra's page now, as Ruby asked ("it neends to be in the same file as tetra"): one file, a Tetra/Cuba switch under the title, and the star shining over Cuba ("i cant see the star"). The separate Cuba page and its artifact are retired. Build, test and ship from `../tetra` (`make build && make test && make audit`); Cuba's own folder keeps the maps (`make maps`) and the page fragment `pipeline/world.html`.
 - **Draft 1 (2026-10-04)**: a WebGL cube with six named sides in Ruby's arrangement; the Canon side drawn with her central island, its arms crossing onto the East, West, North and South sides, and the small hole to the Far side; the Far side with the hole's other end; the other four sides uncharted beyond the arm; a Codex with her words and the readings. Built in `pipeline/`, shipped as `dist/cuba.html` (published, see section 5) and `dist/cuba_world.html`. Screenshots in `tests/out/` after `make test`.
 - The island is drawn from a written description of her photo (section 2) and her words, not from the photo: the photo itself has not reached the repository. Checking the shape against it is the first thing to do when it arrives (`reference/ruby/README.md`).
 
@@ -23,21 +24,34 @@ Cuba is the second world of The Dice System, after Tetra (see `../tetra/`, read 
 
 - 2026-10-04, Ruby: "lets imagine that amber the explorer makes a chamber out of a tree and (calculated corectly)launches of ither spikia or the far side using majic, gets flung by the moving moon (going in or out of solar eclipse) gets flung by the star and lands on the cannon face of cuba (year 1650) (also if there were 5 magical fields, and tetra was in the first one, cuba would be in the last one (going away from the star would be the direction they were stacked in))" (recorded as her imagining, her words on the World tab under "How Cuba was reached" and in the "Place" row. Readings: Amber is a new explorer (Tetra's are Sapphire, Amethyst, Obsidian and Opal); the launch place, Spikia or Tetra's Far side, is undecided, open question 6; year 1650 is in Tetra's count (Tetra is at 1700 now); "if there were 5 magical fields" is a picture of where Cuba sits, farther from the star than Tetra, not a statement that there are five, open question 5. Not built: nothing of the flight is drawn.)
 
+### One page, and the star
+
+- 2026-10-04, Ruby: "it neends to be in the same file as tetra, and i cant see the star. unwriten ansewrs coming after this one" (draft 2: Cuba is a second world inside Tetra's page, `dist/tetra.html` and `dist/tetra_world.html` in `../tetra`; the buttons under the title, "Tetra" and "Cuba", switch between them, and the page remembers the last one shown. The star: Tetra's dark purple star shines over Cuba too, in the same direction in the world, drawn a little smaller because Cuba is farther out; reading: the same star, its light reaching the ground the way it does on Tetra; the World tab says so. Her unwritten answers are awaited; nothing else was changed for them.)
+- 2026-10-04, Joshua: "This lives in the same world as tetra." (confirming: the same page and the same system.)
+
+### Her answers to the Still unwritten list (2026-10-04)
+
+- 2026-10-04, Ruby: "1: the hole is called the canyon, the island is called \"the plus continent\" 2: i dont know yet 3:i dont know yet 4: i dont know probably as long as tetra is recorded o be from spikia thrugh to mount celecti from one end of the hole to the other 5: 5.1: same as tetra 5.2: same as tetra but probably one month longer 5.3: a d5 probably 6: one magical one magnetic bouth a little stronger than tetra. yes. 7:  dont know yet 8:far side" (her numbers follow the Still unwritten list of draft 1, top to bottom: 1 names; 2 how far the arms go; 3 the other sides; 4 size; 5 which way it turns, its day and year, its moon; 6 the fields and whether it shares Tetra's star; 7 colours and what grows; 8 Amber's launch place. Draft 2 does: 1 the hole is the Canyon and the island the Plus Continent, on the markers, the cards and the World tab. 2, 3, 7: still unwritten. 4: about 20,000 miles from one end of the Canyon to the other, "probably", as long as Tetra from Spikia through to Mount Celestial; reading: the Canyon runs straight through, so that is the length of every edge; a Size row. 5.1: Cuba turns the same way as Tetra, leftward, once a day, the day as long as Tetra's (`state.spin -= dt*TAU/DAY_SECONDS`); the Turn row. 5.2: the year the same as Tetra's but probably one month longer; read as fourteen months of 28 days and the Restart Day; the fourteenth month has no name, so no Cuba calendar is shown yet; the Year row says so; open question 9. 5.3: the moon is a d5, probably; recorded, not drawn; open question 10. 6: one magical field and one magnetic field, both a little stronger than Tetra's: gold and blue rings drawn around the world like Tetra's, a little brighter and thicker; "yes": Cuba shares Tetra's star. 8: Amber launched from Tetra's Far side; the World tab says so.)
+
 ## 3. Open questions for Ruby (do not guess these)
 
 1. (Joshua) The photo itself: please put it in `reference/ruby/canon_side.jpg` or send it in chat, so the island can be checked against it.
 2. (Answered 2026-10-04: "the arms connect to the north south east and west faces".) Still open: how far the land goes on each of those four sides. Drawn a short way in.
-3. Names for the island and for the hole.
+3. (Answered 2026-10-04: the Canyon and the Plus Continent.)
 4. What is on the Far side around the other end of the hole, and on the other four sides.
-5. How many magical fields there are, and whether Cuba shares Tetra's dark purple star and its moon (read as the same star, farther out, from "going away from the star").
-6. Where Amber launched from: Spikia or Tetra's Far side.
-7. How big Cuba is, which way it turns, how long its day and year are. The spin in the page is a placeholder.
+5. (Answered 2026-10-04: one magical, one magnetic, both a little stronger than Tetra's; Cuba shares Tetra's star, "yes". Its moon is a d5, probably.)
+6. (Answered 2026-10-04: "far side".)
+7. (Answered 2026-10-04, with her "probably" kept: about 20,000 miles from one end of the Canyon to the other; it turns like Tetra, leftward, a day as long as Tetra's; a year one month longer than Tetra's.)
+8. (2026-10-04) Her numbers 2, 3 and 7 are "dont know yet": how far the arms go on the four sides, what the other sides hold, colours and what grows. Open.
+9. (2026-10-04) The year is "same as tetra but probably one month longer": what is the fourteenth month called, and where does it sit in the year? Without it no Cuba calendar is shown.
+10. (2026-10-04) The moon is "a d5 probably": what does a d5 look like to her (five sides: a triangular prism, or something else), how many craters, how does it move, does it eclipse? Not drawn until she says.
 
 ## 4. Where it lives
 
-`cuba/` beside `tetra/`: its own page and pipeline (see `CLAUDE.md` here), built the way Tetra was; it uses Tetra's Playwright install and Python libraries and copies no code. Tetra's Dice System list should name Cuba now that it exists (not done yet).
+The page is Tetra's (`../tetra/pipeline/template.html`, one file for both worlds, Ruby's rule). `cuba/pipeline/` holds Cuba's map generator and textures and the page fragment `world.html` (its CSS scoped under `#capp`, its ids prefixed with `c`), which `../tetra/pipeline/build.py` fills with the textures and inserts at `{{CUBA}}`. Tetra's Dice System list names Cuba. Tests: `../tetra/tests/cuba.js`.
 
 ## 5. Publishing
 
+- Draft 2, 2026-10-04: Cuba ships inside Tetra's page: `../tetra/dist/tetra.html` republished to Tetra's artifact (`https://claude.ai/artifact/G6JjTxacMzAGCsErETb8v`, see `../tetra/HANDOFF.md`) and `../tetra/dist/tetra_world.html` sent to Joshua. The separate Cuba artifact below is superseded and can be deleted when Joshua says so.
 - Draft 1, 2026-10-04: `dist/cuba.html` published from the Claude Code session as a new artifact (URL below), label "Cuba draft 1: the Canon side"; `dist/cuba_world.html` sent to Joshua. Version 1 drew the cube inside out (clockwise triangles, so the near faces were culled and the inside of the Far side showed where Canon should be); the smoke test had not looked at pixels and passed. Version 2, the same day, fixed the winding and the test now reads the drawn pixels at the island, the hole and the hole's other end.
 - Artifact: `https://claude.ai/artifact/JR26dyQ1CbKAHadDZZSSYv` (private; version 1 drew the box inside out and was replaced the same day, see section 1).

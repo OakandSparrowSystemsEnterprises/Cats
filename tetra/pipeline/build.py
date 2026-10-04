@@ -29,7 +29,19 @@ canon_name = {r['id']: r['name'] for r in geo['regions'] if r['face'] == 'canon'
 canon = [dict(id=k, name=canon_name[k], face='canon', b=bary_of(anchors['canon'][k])) for k in canon_name if k in anchors['canon']]
 assert len(canon) == len(canon_name), 'a Canon region has no anchor on the generated map'
 geo['regions'] = canon + extra
-page = (tpl.replace('{{TEX_CANON}}', b64('map_canon.jpg'))
+# Cuba, the cube planet, lives in this same page (Ruby, 2026-10-04): its fragment and textures come from ../../cuba/pipeline
+cuba_dir = os.path.normpath(os.path.join(here, '..', '..', 'cuba', 'pipeline'))
+def cb64(name):
+    return 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(cuba_dir, name), 'rb').read()).decode('ascii')
+cuba = open(os.path.join(cuba_dir, 'world.html'), encoding='utf-8').read()
+for key, name in (('TEX_CANON', 'map_canon.jpg'), ('TEX_EAST', 'map_east.jpg'), ('TEX_WEST', 'map_west.jpg'), ('TEX_NORTH', 'map_north.jpg'),
+                  ('TEX_SOUTH', 'map_south.jpg'), ('TEX_FAR', 'map_far.jpg'), ('TEX_BLANK', 'map_blank.jpg')):
+    assert '{{CUBA_' + key + '}}' in cuba, key
+    cuba = cuba.replace('{{CUBA_' + key + '}}', cb64(name))
+cuba = cuba.replace('{{CUBA_ANCHORS}}', json.dumps(json.load(open(os.path.join(cuba_dir, 'anchors.json'))), separators=(',', ':')))
+assert '{{' not in cuba, 'a Cuba placeholder was left unreplaced'
+page = (tpl.replace('{{CUBA}}', cuba)
+           .replace('{{TEX_CANON}}', b64('map_canon.jpg'))
            .replace('{{TEX_WEST}}', b64('map_west.jpg'))
            .replace('{{TEX_SOUTH}}', b64('map_south.jpg'))
            .replace('{{TEX_FAR}}', b64('map_far.jpg'))

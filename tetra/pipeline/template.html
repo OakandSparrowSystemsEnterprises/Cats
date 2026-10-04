@@ -232,6 +232,14 @@
   }
   @media (max-width:420px){ .time .k{display:none} .time{grid-template-columns:1fr auto} }
   @media (prefers-reduced-motion:reduce){ .marker,.codex{transition:none} }
+  /* the two worlds of the Dice System share this page: one is shown, the other sleeps (class away) */
+  #app.away,#capp.away{visibility:hidden;pointer-events:none}
+  #diceWorlds{position:fixed;z-index:50;left:max(18px,env(safe-area-inset-left,0px));top:calc(104px + env(safe-area-inset-top,0px));display:flex;gap:6px;align-items:center}
+  #diceWorlds span{font:400 10px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+  #diceWorlds button{background:rgba(8,11,20,.7);border:1px solid var(--line-2);border-radius:999px;color:var(--muted);font:600 11px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
+  #diceWorlds button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold-soft);background:rgba(245,182,79,.14)}
+  .worlds i.cuba{background:var(--stone)}
+  @media (max-width:819px){#diceWorlds{top:calc(92px + env(safe-area-inset-top,0px));left:14px}#diceWorlds span{display:none}}
 </style>
 
 <div id="app">
@@ -292,7 +300,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The Dice System</p>
-          <p>Worlds beyond chance. Tetra is the four-sided world; the others are only just being spoken of.</p>
+          <p>Worlds beyond chance. Tetra is the four-sided world and Cuba the cube planet; they share this page, and the buttons under the title switch between them.</p>
           <ul class="worlds" id="worlds"></ul>
           <p class="q" style="margin-top:12px">Different worlds. Same imagination.</p>
         </div>
@@ -356,6 +364,14 @@
   <img id="tex-south" alt="" hidden src="{{TEX_SOUTH}}">
   <img id="tex-far" alt="" hidden src="{{TEX_FAR}}">
 </div>
+{{CUBA}}
+<nav id="diceWorlds" aria-label="The worlds of the Dice System"><span>The Dice System</span><button type="button" data-world="tetra" aria-pressed="true">Tetra</button><button type="button" data-world="cuba" aria-pressed="false">Cuba</button></nav>
+<script>
+(()=>{const A=document.getElementById('app'),C=document.getElementById('capp'),btns=[...document.querySelectorAll('#diceWorlds [data-world]')];
+function show(id){A.classList.toggle('away',id!=='tetra');C.classList.toggle('away',id!=='cuba');btns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===id)));try{localStorage.setItem('dice.world',id)}catch(e){}}
+btns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.world)));let id='tetra';try{id=localStorage.getItem('dice.world')||'tetra'}catch(e){}show(id);
+window.dice={show,get world(){return C.classList.contains('away')?'tetra':'cuba'}}})();
+</script>
 
 <script>
 (()=>{
@@ -413,7 +429,7 @@ const WORLD = {
              {name:'Amethyst the explorer', desc:'Charted the South Face: tropical at the top, the southern continent with Snowia, Coldland and Beria, and Wetia.'},
              {name:'Obsidian the explorer', desc:'Charted the Far Face: Mount Celestial, Wetia, and the nations Warmia, Ehia and Tree Land.'},
              {name:'Opal the explorer', desc:'Went back over the West, South and Far faces and drew the complete maps from the other explorers\u2019 charts. Opal\u2019s maps are the ones on the world now.'}],
-  worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'}],
+  worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},{id:'cuba',name:'Cuba',desc:'The cube planet, six square sides, farther from the star. Its Canon side is drawn; the Cuba button under the title switches to it.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
   moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
   size:{miles:20000, from:'the corner of Spikia', to:'the base of Mount Celestial', path:'straight through the world'},
@@ -821,7 +837,7 @@ function flyTo(yaw,pitch){state.fly={yaw,pitch:clamp(pitch,-1.35,1.35)}}
 function selectRegion(id){state.selected=id;state.selectedFace=REGIONS.find(r=>r.id===id).face;const r=REGIONS.find(x=>x.id===id);setFollow(true);flyTo(r.az,r.el);showTab('tabPlace');renderPlace();openCodex(true)}
 function selectFace(id,fly){state.selected=null;state.selectedFace=id;const f=faceById[id];if(fly){setFollow(true);flyTo(faceYaw(f),id==='far'?-1.1:Math.asin(clamp(f.normal[1],-1,1)))}showTab('tabPlace');renderPlace();if(!fly||W>=820)openCodex(true)}
 function release(){setFollow(false);state.fly=null;state.selected=null;state.selectedFace=null;renderPlace()}
-document.querySelectorAll('[data-face]').forEach(b=>b.addEventListener('click',()=>selectFace(b.dataset.face,true)));
+document.querySelectorAll('#app [data-face]').forEach(b=>b.addEventListener('click',()=>selectFace(b.dataset.face,true)));
 
 /* ============================== POINTER ============================== */
 const pts=new Map();let drag=null,pinch=null,moved=0,downAt=null;
@@ -849,7 +865,8 @@ function updateDate(){const {y,doy,mi,dom,season,wd}=dateParts(state.day);const 
 
 /* ============================== LOOP ============================== */
 let last=performance.now(),uiTick=0;
-function frame(t){const dt=Math.min(0.05,(t-last)/1000);last=t;
+function frame(t){if(app.classList.contains('away')){last=t;requestAnimationFrame(frame);return}   // asleep while Cuba is shown
+  const dt=Math.min(0.05,(t-last)/1000);last=t;
   if(state.playing)state.day+=dt*state.speed/DAY_SECONDS;
   if(state.fly){const k=1-Math.pow(0.0008,dt);const dy=wrapPi(state.fly.yaw-state.baseYaw);state.baseYaw+=dy*k;state.pitch+=(state.fly.pitch-state.pitch)*k;if(Math.abs(dy)<0.003&&Math.abs(state.fly.pitch-state.pitch)<0.003)state.fly=null}
   resizeIfNeeded();shiftTarget=(codex.classList.contains('open')&&W>=820)?372/W:0;shift+=(shiftTarget-shift)*(1-Math.pow(0.001,dt));vshiftTarget=W<820?(codex.classList.contains('open')?0.5:0.2):0.05;vshift+=(vshiftTarget-vshift)*(1-Math.pow(0.001,dt));updateCamera();updateWorld();const sun=sunDir(state.day);MOON=moonState(state.day,sun);
@@ -858,7 +875,7 @@ function frame(t){const dt=Math.min(0.05,(t-last)/1000);last=t;
   if(texReady){ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));ctx.uniformMatrix4fv(loc.model,false,new Float32Array(cam.model));ctx.uniform3fv(loc.sun,new Float32Array(sun));ctx.uniform1f(loc.time,t*0.001);ctx.uniform1f(loc.spin,-1);ctx.uniform1f(loc.amb,0.32*(1-0.45*MOON.eclipse));ctx.uniform3fv(loc.sunc,new Float32Array(seasonLight(state.day).map(v=>v*(1-0.85*MOON.eclipse))));ctx.activeTexture(ctx.TEXTURE0);ctx.uniform1i(loc.tex,0);
     FACES.forEach((f,i)=>{ctx.bindTexture(ctx.TEXTURE_2D,f.texture);ctx.uniform1f(loc.hi,state.selectedFace===f.id&&!state.selected?1:0);ctx.uniform1f(loc.far,f.id==='far'?1:0);ctx.drawArrays(ctx.TRIANGLES,i*3,3)});drawBodies(sun)}
   drawOverlay(t,sun);drawRain(dt,rainAmount(state.day));updateMarkers();updateDate();
-  if((uiTick++%12)===0){const af=activeFace();facingEl.textContent='Facing · '+WORLD.faces[af.id].name;document.querySelectorAll('[data-face]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.face===(state.selectedFace||af.id))));if(state.tab==='tabWorld')updateYear();if(state.tab==='tabRegions')updateRegionPhases(sun);if(state.tab==='tabPlace')updatePlacePhase(sun);if(uiTick%120===0)refreshJson()}
+  if((uiTick++%12)===0){const af=activeFace();facingEl.textContent='Facing · '+WORLD.faces[af.id].name;document.querySelectorAll('#app [data-face]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.face===(state.selectedFace||af.id))));if(state.tab==='tabWorld')updateYear();if(state.tab==='tabRegions')updateRegionPhases(sun);if(state.tab==='tabPlace')updatePlacePhase(sun);if(uiTick%120===0)refreshJson()}
   requestAnimationFrame(frame)}
 function resizeIfNeeded(){const r=app.getBoundingClientRect();if(Math.abs(r.width-W)>0.5||Math.abs(r.height-H)>0.5)resize()}
 

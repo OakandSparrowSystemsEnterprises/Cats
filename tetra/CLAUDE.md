@@ -14,6 +14,10 @@ Shipped state: **version 11** (2026-10-03). `dist/tetra_world.html` is the singl
 6. Names are spelled exactly as Ruby spells them (`It's Hot` is the nation's full name; `Marshia`, `Baiuland`, `Greeneria`, `Wetia`, `Tredesember`; `Ughia`, which was read as Uohia until 2026-10-03; `Uncooland`, which was written Unoooland until 2026-10-03).
 7. Deliverables each round: the republished artifact (same URL) **and** the standalone `dist/tetra_world.html`.
 
+## Two worlds in one page (since 2026-10-04)
+
+Ruby: "it neends to be in the same file as tetra". Cuba, the cube planet (`../cuba/`, read its `CLAUDE.md` and `HANDOFF.md`), is a second world in this page. `build.py` fills `../cuba/pipeline/world.html` with Cuba's textures and inserts it at `{{CUBA}}`, right after Tetra's `#app`. A fixed `<nav id="diceWorlds">` under the title holds the Tetra and Cuba buttons; the small script after it toggles class `away` on `#app` and `#capp` (hidden, no pointer events, frame loop idle) and remembers the choice in `localStorage` (`dice.world`); `window.dice = {show(id), world}`. Cuba's ids all start with `c` and its CSS is scoped under `#capp`, so the two apps never touch; Tetra's own face-button queries are scoped to `#app [data-face]` and the tests click `#app [data-face=...]`. Cuba draws Tetra's star (`SUN0`) a little smaller. `tests/cuba.js` covers the switch and Cuba's page.
+
 ## Repo layout
 
 ```
@@ -56,7 +60,7 @@ npm install && npx playwright install chromium
 make maps      # cd pipeline && python3 mapgen2.py     (~15 s; deterministic, fixed seeds)
 make check     # cd pipeline && python3 check_edges.py  (prints per-edge agreement, writes edge_check.png)
 make build     # python3 pipeline/build.py  -> dist/tetra.html (fragment) and dist/tetra_world.html (standalone)
-make test      # rebuilds dist/ first, then smoke, walkthrough, phases, calendar, tap  (all must exit 0)
+make test      # rebuilds dist/ first, then smoke, walkthrough, phases, calendar, cuba, tap  (all must exit 0)
 make seams     # rebuilds dist/ first, then six seam screenshots in tests/out/seam_*.png: look at them after any map change
 make audit     # em dashes, retired names, placeholders: must print 'audit clean'
 ```
@@ -65,7 +69,7 @@ Verified on 2026-10-02: from a clean copy of this repo, `make maps && make build
 
 Verified again the same day from the repository checkout (Claude Code; Python 3.11, numpy 2.4, OpenCV 4.14, Playwright 1.56, Chromium 141) with the same result. OpenCV 5.x writes slightly different JPEG bytes (the maps are pixel-identical within JPEG noise, anchors and fractions identical), so `requirements.txt` pins `opencv-python-headless<5`.
 
-**Shipping.** `dist/tetra.html` is the body fragment the claude.ai artifact is published from; `dist/tetra_world.html` is the same thing wrapped in a full document and is what Joshua sends to Ruby. A Claude Code session that has the Artifact tool can republish the live link itself: read the URL above first (action read), then publish `dist/tetra.html` to it (action publish with that url and a short label), as was done for v11 on 2026-10-03. Without that tool, hand `dist/tetra.html` to a Claude conversation and have it publish to the URL. Version labels so far: "v10 Ruby's fixes, purple star, rings", "v11 Canon as a map, Tree Land joined, d3 moon, years", "v11 March first, 7-day week, 25 hours, size, Eclipse", "v11 January again, day names, Eclipse all, level star". Either way also deliver `dist/tetra_world.html`; it is self-contained (about 1.6 MB, all textures inlined as base64).
+**Shipping.** `dist/tetra.html` is the body fragment the claude.ai artifact is published from; `dist/tetra_world.html` is the same thing wrapped in a full document and is what Joshua sends to Ruby. A Claude Code session that has the Artifact tool can republish the live link itself: read the URL above first (action read), then publish `dist/tetra.html` to it (action publish with that url and a short label), as was done for v11 on 2026-10-03. Without that tool, hand `dist/tetra.html` to a Claude conversation and have it publish to the URL. Version labels so far: "v10 Ruby's fixes, purple star, rings", "v11 Canon as a map, Tree Land joined, d3 moon, years", "v11 March first, 7-day week, 25 hours, size, Eclipse", "v11 January again, day names, Eclipse all, level star", "v11 Cuba joins the page: the cube planet's Canon side". Either way also deliver `dist/tetra_world.html`; it is self-contained (about 1.6 MB, all textures inlined as base64).
 
 ## Geometry conventions (read before touching maps or edges)
 
@@ -117,6 +121,7 @@ Copy style inside the page: small caps eyebrows in Cinzel (`var(--display)`), Co
 - The World tab is static HTML in `#paneWorld` (sections: the world, the calendar, the two fields, the star, the moon, the four faces, the Dice System, Life of Tetra, Nations, Explorers, Key events, Still unwritten) plus lists filled from `WORLD` at startup (`#facelist`, `#worlds`, `#nations`, `#explorers`, `#timeline`).
 - `tests/phases.js` sweeps a year (every 7th day, every half hour) through `window.tetra.phase` for a fixed list of ids; it fails if any of the four Far-face places it knows (`warmia`, `ehia`, `treeland`, `delta-far`) reaches anything other than First light, The slow morning, Late light or Dusk (High sun, Morning, Afternoon, Evening, Before dawn and Deep night all fail it), if Mount Celestial is ever not twilight ("Eclipse" aside), or if the Canon face loses High sun or Deep night. It also scans the 14th of January (a new moon, day 13) for the deepest moment of the eclipse and fails if any place it knows does not read Eclipse then, if anything still does a day later, or if the swing does not ease in and out over that day. Add any new Far-face id to that list.
 - `tests/calendar.js` sets fourteen days through the year with `tetra.setDay` and checks the HUD date and sub line, the year strip's lit month and the season list's lit season (waiting 14 frames for the tick, not a fixed time), then Reset and +1 year, the strip's order and numbering (Mar ... Dec R Jan Feb Tre; September the 7th), the day slider's landing days, and that the two sliders keep at least 60 px at 1366, 1024, 860 and 393 px with the longest date on the HUD.
+- `tests/cuba.js` opens the page (Tetra first), switches to Cuba, checks the six sides in Ruby's arrangement through `cuba.neighbours()`, the island and hole pixels (`cuba.sample`), the purple glow at `cuba.starPixel()`, the Far side's marker, the phone tap opening Cuba's Codex, and the switch back to Tetra's HUD. Screenshots `tests/out/cuba_*.png`.
 - `tests/tap.js` performs a real touch tap at phone width and fails if the Codex stays closed.
 - `tests/archive/` holds the ad hoc scripts from earlier rounds (older ids may no longer exist; they are kept for the recipes, not as a suite).
 - For map changes also look at `pipeline/map_*_prev.png` (markers), `tests/out/seam_*.png` (edges), and `edge_check.png`.

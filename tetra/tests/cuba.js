@@ -45,6 +45,10 @@ const PAGE = require('./_page');
       for (const y of [0.6, -0.6, 0.3, -0.3, 0.18, -0.18, 0].flatMap(o => [phi + Math.PI + o, phi + o])) { cuba.setYaw(y); await frames(); const o = cuba.otherWorld(); if (o && o.x > (phone ? 0 : 40) && o.x < innerWidth - (phone ? 0 : 400) && o.y > (phone ? 0 : 40) && o.y < innerHeight * (phone ? 1 : 0.78)) return o; } return cuba.otherWorld(); }, phone);
     if (!otherC || otherC.x < 0 || otherC.x > width || otherC.y < 0 || otherC.y > height) fails.push(`${width}: Tetra is not in Cuba's sky when turned toward it (${JSON.stringify(otherC)})`);
     if (!phone) await page.screenshot({ path: PAGE.out('cuba_tetra_sky.png') });
+    // the dice: a fair d3 on Tetra (three sides, pointed ends: 33 strip segments, 6 vertices each, and 33 cap triangles at each end) and a fair d5 on Cuba (five sides and ten cap triangles)
+    const dice = await page.evaluate(() => ({ t: tetra.moonDie(), c: cuba.moonDie() }));
+    if (!dice.t || dice.t.sides !== 3 || dice.t.count !== 396 || !(dice.t.tip > dice.t.flat)) fails.push(`${width}: Tetra's moon is not the fair d3 rod (${JSON.stringify(dice.t)})`);
+    if (!dice.c || dice.c.sides !== 5 || dice.c.count !== 60 || !(dice.c.tip > dice.c.flat)) fails.push(`${width}: Cuba's moon is not the fair d5 rod (${JSON.stringify(dice.c)})`);
     await page.evaluate(() => { cuba.setDay(0); cuba.state.pitch = 0.22; cuba.state.dist = 4.6; cuba.face('canon', false); }); await settle(page);
     // the turn: leftward like Tetra. Facing Canon, a point on the Canon side moves toward the viewer's left as the day advances
     const turn = await page.evaluate(() => { const a = cuba.sample('hole').x; cuba.setDay(0.04); const b = cuba.sample('hole').x; cuba.setDay(0); return { a, b }; });
@@ -66,7 +70,7 @@ const PAGE = require('./_page');
       const strip = await page.evaluate(() => [...document.querySelectorAll('#cyearStrip .m')].map(e => e.textContent).join(' '));
       if (strip !== 'Mar Apr May Jun Jul Aug Sep Oct Nov Dec R Jan Amb Feb Tre') fails.push('Cuba strip order is ' + strip);
       const world = (await page.evaluate(() => document.getElementById('cpaneWorld').innerText)).toLowerCase();
-      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
+      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'pointed ends', 'montezuma', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
       await page.screenshot({ path: PAGE.out('cuba_world_tab.png') });
     }
     // the d5 moon: an eclipse at the deepest moment of the 14th of January, every place reading Eclipse, and none the day after
@@ -108,6 +112,8 @@ const PAGE = require('./_page');
       for (const y of [0.6, -0.6, 0.3, -0.3, 0.18, -0.18, 0].flatMap(o => [phi + Math.PI + o, phi + o])) { tetra.state.baseYaw = y; await frames(); const o = tetra.otherWorld(); if (o && o.x > (phone ? 0 : 40) && o.x < innerWidth - (phone ? 0 : 400) && o.y > (phone ? 0 : 40) && o.y < innerHeight * (phone ? 1 : 0.78)) return o; } return tetra.otherWorld(); }, phone);
     if (!otherT || otherT.x < 0 || otherT.x > width || otherT.y < 0 || otherT.y > height) fails.push(`${width}: Cuba is not in Tetra's sky when turned toward it (${JSON.stringify(otherT)})`);
     if (!phone) { await page.evaluate(() => tetra.setDay(10.3)); await page.waitForTimeout(500); await page.screenshot({ path: PAGE.out('tetra_cuba_sky.png') }); }
+    // Tetra's fair d3 in the home view on Starday 1 January (the moon sits opposite the star, to the right of the world)
+    if (!phone) { await page.evaluate(() => { tetra.setDay(0); tetra.state.pitch = 0.36; tetra.state.dist = 4.5; tetra.state.baseYaw = 0; }); await settle(page); const d3 = await page.evaluate(() => tetra.moon()); if (!d3 || !(d3.x > 0 && d3.x < width && d3.y > 0 && d3.y < height)) fails.push(`${width}: Tetra's moon is not in the home view (${JSON.stringify(d3)})`); await page.screenshot({ path: PAGE.out('tetra_moon_d3.png') }); }
     if (back.world !== 'tetra' || back.cubaHidden !== 'hidden' || !/January|February|Tredesember|March|April|May|June|July|August|September|October|November|December|Restart/.test(back.date)) fails.push(`${width}: switching back failed ${JSON.stringify(back)}`);
     console.log(width, 'errors', JSON.stringify(errors)); if (errors.length) fails.push(`${width}: page errors`);
     await ctx.close();

@@ -293,7 +293,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The moon</p>
-          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind: one crater on its one side, two craters on its two side, three craters on its three side. It is a third of the size of Tetra, circles a little farther out than the magical field, and rolls slowly so every side comes round. Every ordinary day it sits on the opposite side from the star, drifting gently about that spot. Every month, in the middle of the month, is the new moon: the die swings round in front of the star and the world goes dark, a solar eclipse. Its light waxes and wanes through the month like our own moon’s, full when the month turns, and the Restart Day is never a new moon. While the die covers the star, every place on Tetra reads “Eclipse”, day side and night side alike.</span></div></div>
+          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind: one crater on its one side, two craters on its two side, three craters on its three side. It is a fair die (Ruby: “a fair d3 for tetra”): a rounded three-sided rod whose ends come to points, so it can only ever come to rest on one of its three sides. It is a third of the size of Tetra, circles a little farther out than the magical field, and rolls slowly so every side comes round. Every ordinary day it sits on the opposite side from the star, drifting gently about that spot. Every month, in the middle of the month, is the new moon: the die swings round in front of the star and the world goes dark, a solar eclipse. Its light waxes and wanes through the month like our own moon’s, full when the month turns, and the Restart Day is never a new moon. While the die covers the star, every place on Tetra reads “Eclipse”, day side and night side alike.</span></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">The four faces</p>
@@ -308,7 +308,7 @@
         <div class="sect">
           <p class="eyebrow">Life of Tetra</p>
           <div class="flora"><img id="zinniaImg" alt="Line drawing of the Umbrella Tree Zinnia: a tall stem with a wide crown of petals and small blossoms hanging from its rim" src="{{ZINNIA}}"><div><b>The Umbrella Tree Zinnia</b><p>A single tall stem that is not wood, crowned with a wide umbrella of broad petals. Small blossoms hang on threads from the rim of the crown.</p><p class="q">It grows in magical places with a lot of water, most of all in Wetia and on the West Face.</p><p>There are more of them on Cuba than here, since there is more magic there (Ruby).</p></div></div>
-          <p class="note" style="margin-top:12px">Ruby: “add most of the recognizable plants from the real world to bouth”. So most of the plants you would know from Earth grow on Tetra too, for example oaks, pines, birches, maples, willows, palms, bamboo, cactuses, ferns, mosses, grasses, clover, dandelions, daisies, roses, sunflowers, lilies, lotuses, wheat, corn, rice, apple trees, cherry trees, orange trees and strawberries. Which grows where is unwritten.</p>
+          <p class="note" style="margin-top:12px">Ruby: “add most of the recognizable plants from the real world to bouth”. So most of the plants you would know from Earth grow on Tetra too, for example oaks, pines, birches, maples, willows, palms, bamboo, cactuses, ferns, mosses, grasses, clover, dandelions, daisies, roses, sunflowers, lilies, lotuses, wheat, corn, rice, apple trees, cherry trees, orange trees and strawberries. Which grows where is unwritten. Ruby: “anything that grows on tetra also grows on cuba”, so all of these grow on Cuba too.</p>
         </div>
         <div class="sect">
           <p class="eyebrow">Nations</p>
@@ -441,7 +441,7 @@ const WORLD = {
              {name:'Opal the explorer', desc:'Went back over the West, South and Far faces and drew the complete maps from the other explorers\u2019 charts. Opal\u2019s maps are the ones on the world now.'}],
   worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},{id:'cuba',name:'Cuba',desc:'The cube planet, six square sides, farther from the star. Its Canon side is drawn; the Cuba button under the title switches to it.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
-  moon:{name:'A d3 moon', shape:'a three-sided die, not the cube kind; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
+  moon:{name:'A d3 moon', shape:'a fair three-sided die, not the cube kind: a rounded three-sided rod with pointed ends, so it can only come to rest on one of its three sides; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
   size:{miles:20000, from:'the corner of Spikia', to:'the base of Mount Celestial', path:'straight through the world'},
   years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
   timeline:[      /* Ruby's comics of the key events (2026-10-03), two pages so far; said = her words as read from the photos */
@@ -655,6 +655,7 @@ function drawStars(t,sun){sc.setTransform(DPR,0,0,DPR,0,0);sc.clearRect(0,0,W,H)
 // "the middle of the month is the new moon"; "make shure the earth moon cycle still hapens (the fazes only)"; "make shure the reset
 // day is not a new moon"; "it feels wierd that the moon just stops in place".
 // So: a real three-sided rolling die in the scene, a third of Tetra's edge long, orbiting just outside the outermost gold ring.
+// 2026-10-04, "a fair d3 for tetra": its two ends come to points (cap, Lf in buildMoon), so it can only come to rest on one of its three sides.
 // On ordinary days it sits opposite the star, drifting a little about that spot and rolling slowly so all three sides come round; on
 // the new moon (day 14 of each month) it swings once round the orbit, through the line to the star at midday, and the world darkens.
 // Its light waxes and wanes on a 28-day cycle, new at mid-month and full when the month turns; the Restart Day counts as full.
@@ -681,8 +682,8 @@ function moonState(day,sun){const {mi,dom}=dateParts(day);const newMoon=mi>=0&&d
   return{dir,pos:mulS(dir,MOON_ORBIT),theta,eclipse,newMoon,phase,light,roll:MOON_ROLL0+TAU*day*ROLLS_PER_DAY,axis}}
 function moonScreen(){const mp=project(cam.vp,MOON.pos);if(!mp)return null;const up=project(cam.vp,add(MOON.pos,mulS(cam.u,MOON_HALF)));
   const half=up?Math.hypot(up.x-mp.x,up.y-mp.y):0;const front=len(sub(MOON.pos,cam.eye))<len(sub(TARGET,cam.eye));return{x:mp.x,y:mp.y,half,front}}
-// the die: a rounded triangular prism along X, three flat faces (0, 1, 2) and rounded corners and ends (3)
-function buildMoon(){const L=MOON_HALF,sd=MOON_SIDE,Rc=sd/Math.sqrt(3),rc=0.22*Rc,d=rc/Math.tan(Math.PI/6);const pts=[];
+// the die: a rounded triangular prism along X whose ends come to points (cap, Lf), three flat faces (0, 1, 2), rounded corners and the pointed ends (3)
+function buildMoon(){const L=MOON_HALF,sd=MOON_SIDE,Rc=sd/Math.sqrt(3),rc=0.22*Rc,d=rc/Math.tan(Math.PI/6),cap=0.32*Rc,Lf=L-cap;const pts=[];
   const corners=[0,1,2].map(k=>{const a=Math.PI/2+k*TAU/3;return[Rc*Math.cos(a),Rc*Math.sin(a)]});
   for(let k=0;k<3;k++){const A=corners[k],B=corners[(k+1)%3],Bn=corners[(k+2)%3];const ex=B[0]-A[0],ey=B[1]-A[1],el=Math.hypot(ex,ey);const ux=ex/el,uy=ey/el;const n=[uy,-ux];
     const P0=[A[0]+ux*d,A[1]+uy*d],P1=[B[0]-ux*d,B[1]-uy*d],flat=el-2*d;
@@ -690,12 +691,13 @@ function buildMoon(){const L=MOON_HALF,sd=MOON_SIDE,Rc=sd/Math.sqrt(3),rc=0.22*R
     const C=[B[0]*(1-2*rc/Rc),B[1]*(1-2*rc/Rc)];const fx=Bn[0]-B[0],fy=Bn[1]-B[1],fl=Math.hypot(fx,fy);const n2=[fy/fl,-fx/fl];
     let a0=Math.atan2(n[1],n[0]),a1=Math.atan2(n2[1],n2[0]);while(a1<a0)a1+=TAU;
     for(let i=1;i<5;i++){const a=a0+(a1-a0)*i/5;pts.push({y:C[0]+rc*Math.cos(a),z:C[1]+rc*Math.sin(a),ny:Math.cos(a),nz:Math.sin(a),f:3,v:0})}}
-  const P=[],N=[],F=[];const push=(x,y,z,nx,ny,nz,f,u,v)=>{P.push(x,y,z);N.push(nx,ny,nz);F.push(f,u,v)};const uu=L/(sd/2);
+  const P=[],N=[],F=[];const push=(x,y,z,nx,ny,nz,f,u,v)=>{P.push(x,y,z);N.push(nx,ny,nz);F.push(f,u,v)};const uu=Lf/(sd/2);
   for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];
-    push(-L,a.y,a.z,0,a.ny,a.nz,a.f,-uu,a.v);push(L,a.y,a.z,0,a.ny,a.nz,a.f,uu,a.v);push(L,b.y,b.z,0,b.ny,b.nz,b.f,uu,b.v);
-    push(-L,a.y,a.z,0,a.ny,a.nz,a.f,-uu,a.v);push(L,b.y,b.z,0,b.ny,b.nz,b.f,uu,b.v);push(-L,b.y,b.z,0,b.ny,b.nz,b.f,-uu,b.v);
-    for(const sgn of[-1,1]){push(sgn*L,0,0,sgn,0,0,3,0,0);push(sgn*L,a.y,a.z,sgn,0,0,3,0,0);push(sgn*L,b.y,b.z,sgn,0,0,3,0,0)}}
-  return{pb:buf(P),nb:buf(N),fb:buf(F),count:P.length/3}}
+    push(-Lf,a.y,a.z,0,a.ny,a.nz,a.f,-uu,a.v);push(Lf,a.y,a.z,0,a.ny,a.nz,a.f,uu,a.v);push(Lf,b.y,b.z,0,b.ny,b.nz,b.f,uu,b.v);
+    push(-Lf,a.y,a.z,0,a.ny,a.nz,a.f,-uu,a.v);push(Lf,b.y,b.z,0,b.ny,b.nz,b.f,uu,b.v);push(-Lf,b.y,b.z,0,b.ny,b.nz,b.f,-uu,b.v);
+    for(const sgn of[-1,1]){const apex=[sgn*L,0,0],Pa=[sgn*Lf,a.y,a.z],Pb=[sgn*Lf,b.y,b.z];let nn=norm(cross(sub(Pb,Pa),sub(apex,Pa)));if(dot(nn,[sgn,(a.y+b.y)/2,(a.z+b.z)/2])<0)nn=mulS(nn,-1);
+      push(apex[0],0,0,nn[0],nn[1],nn[2],3,0,0);push(Pa[0],Pa[1],Pa[2],nn[0],nn[1],nn[2],3,0,0);push(Pb[0],Pb[1],Pb[2],nn[0],nn[1],nn[2],3,0,0)}}
+  return{pb:buf(P),nb:buf(N),fb:buf(F),count:P.length/3,sides:3,tip:L,flat:Lf}}
 // Mount Celestial: a faceted peak on the Far Face's centre, in the world's own (unspun) frame
 function buildPeak(){const f=faceById.far,c=f.center,nrm=norm(f.normal);const t1=norm(cross(nrm,Math.abs(nrm[1])<.9?[0,1,0]:[1,0,0])),t2=cross(nrm,t1);
   const ring=(h,r,jit)=>Array.from({length:18},(_,i)=>{const a=TAU*i/18,rr=r*(1+jit*Math.sin(i*2.7+1.3));return add(add(c,mulS(nrm,h)),add(mulS(t1,rr*Math.cos(a)),mulS(t2,rr*Math.sin(a))))});
@@ -908,7 +910,7 @@ function start(saved){try{if(saved&&typeof saved==='object'){if(typeof saved.day
   btnPlay.textContent=state.playing?'Pause':'Play';buildMarkers();renderFaceList();renderRegionGroups();renderWorlds();renderNations();renderExplorers();renderYear();updateYear();renderPlace();refreshJson();
   if(W>=820)openCodex(true);
   window.dice?.snapshot?.('tetra',()=>({day:state.day,baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,speed:state.speed,playing:state.playing,selected:state.selected,follow:state.follow}));
-  window.tetra={otherWorld:()=>lastOther,otherDir:()=>OTHER_DIR,moon:()=>({...(moonScreen()||{}),theta:MOON.theta,eclipse:MOON.eclipse,newMoon:MOON.newMoon,phase:MOON.phase,roll:MOON.roll,axis:MOON.axis,dir:MOON.dir,eye:cam.eye}),setRoll0:r=>{MOON_ROLL0=r},get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>{const sun=sunDir(state.day);MOON=moonState(state.day,sun);return phaseFor(REGIONS.find(x=>x.id===id),sun)}};
+  window.tetra={moonDie:()=>(moonMesh?{sides:moonMesh.sides,count:moonMesh.count,tip:moonMesh.tip,flat:moonMesh.flat}:null),otherWorld:()=>lastOther,otherDir:()=>OTHER_DIR,moon:()=>({...(moonScreen()||{}),theta:MOON.theta,eclipse:MOON.eclipse,newMoon:MOON.newMoon,phase:MOON.phase,roll:MOON.roll,axis:MOON.axis,dir:MOON.dir,eye:cam.eye}),setRoll0:r=>{MOON_ROLL0=r},get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>{const sun=sunDir(state.day);MOON=moonState(state.day,sun);return phaseFor(REGIONS.find(x=>x.id===id),sun)}};
   requestAnimationFrame(frame)}
 if(window.dice?.ready)window.dice.ready('tetra',start);else start({});
 })();

@@ -132,6 +132,7 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 ### The Dice System: Cuba joins the page
 
 - 2026-10-04, Ruby (about Cuba, the cube planet): "it neends to be in the same file as tetra, and i cant see the star. unwriten ansewrs coming after this one" and Joshua: "This lives in the same world as tetra." (v11: Cuba is a second world in this page, with Tetra and Cuba buttons under the title; Tetra's star shines over Cuba too. Cuba's own ledger is `../cuba/HANDOFF.md`.)
+- 2026-10-04, Ruby: "4: i cant see tetra when i go to the tetra page" (a real bug of the merge, fixed the same evening: see section 10 and the bridge note in `CLAUDE.md`.)
 
 ### Process rules Joshua gave
 - "dont use the exact pictures of the explorers (opal the explorer went back and made comlpete maps of them [generate maps based on the schetches please])"
@@ -277,7 +278,7 @@ The round of 2026-10-04 (her problem report and her answers; still version 11):
 - Later: the moon's swing eases in and out (`swing`, `SWING_RAMP`); the review fixes (reading labels on the Week row and "The week", the stale lines in sections 2 and 3, the test labels); Ruby confirmed the January start with the strip from March.
 - Published to the same artifact with the label "v11 January again, day names, Eclipse all, level star".
 
-Later on 2026-10-04, Cuba joins the page (Ruby: "it neends to be in the same file as tetra"): `{{CUBA}}` in the template takes `../cuba/pipeline/world.html` filled by `build.py`; `#diceWorlds` and its script switch worlds (class `away`); Tetra's `[data-face]` queries scoped to `#app`; the frame loop idles while away; `WORLD.worlds` and the Dice System section name Cuba; `tests/cuba.js` in the suite; screenshots `reference/screenshots-v11/cuba_home.png`, `cuba_world_tab.png`, `cuba_phone.png`. Published with the label "v11 Cuba joins the page: the cube planet's Canon side".
+Later on 2026-10-04, Cuba joins the page (Ruby: "it neends to be in the same file as tetra"): `{{CUBA}}` in the template takes `../cuba/pipeline/world.html` filled by `build.py`; `#diceWorlds` and its script switch worlds (class `away`); Tetra's `[data-face]` queries scoped to `#app`; the frame loop idles while away; `WORLD.worlds` and the Dice System section name Cuba; `tests/cuba.js` in the suite; screenshots `reference/screenshots-v11/cuba_home.png`, `cuba_world_tab.png`, `cuba_phone.png`. Published with the label "v11 Cuba joins the page: the cube planet's Canon side". Later the same evening (Ruby: "i cant see tetra when i go to the tetra page"): the hot-reload bridge `window.dice` replaces the two separate `window.claude.hot.ready` calls (only one survived, so one world stayed blank after a republish); Tetra's tail registers `dice.ready('tetra', start)` and `dice.snapshot('tetra', ...)`, and `dice.boot()` runs at the end of the page. Cuba got Tetra's mechanics (see `../cuba/HANDOFF.md`). Published with the label "v11 Cuba: Tetra's mechanics, Amberary, the d5 moon, one startup".
 
 
 

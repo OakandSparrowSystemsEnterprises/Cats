@@ -364,14 +364,21 @@
   <img id="tex-south" alt="" hidden src="{{TEX_SOUTH}}">
   <img id="tex-far" alt="" hidden src="{{TEX_FAR}}">
 </div>
+<script>
+/* The Dice System bridge: the two worlds register their start functions here, and one hot-reload hook starts both (each used to register its own, and only
+   one survived, so after a republish one world stayed blank). Snapshots are gathered the same way, one object with a slice per world and the world shown. */
+(()=>{const starters={},snaps={};let booted=false,data=null;const el=id=>document.getElementById(id);const btns=()=>[...document.querySelectorAll('#diceWorlds [data-world]')];
+function show(id){const A=el('app'),C=el('capp');if(A)A.classList.toggle('away',id!=='tetra');if(C)C.classList.toggle('away',id!=='cuba');btns().forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===id)));try{localStorage.setItem('dice.world',id)}catch(e){}}
+function sliceFor(k){if(data[k]!==undefined)return data[k];return k==='tetra'&&!data.tetra&&!data.cuba?data:{}}   // older snapshots were Tetra's alone
+function startAll(d){data=d&&typeof d==='object'?d:{};for(const k in starters){if(starters[k].started)continue;starters[k].started=true;try{starters[k](sliceFor(k))}catch(e){console.error(e)}}}
+window.dice={ready(key,fn){starters[key]=fn;if(booted)startAll(data)},snapshot(key,fn){snaps[key]=fn},show,get world(){const C=el('capp');return C&&!C.classList.contains('away')?'cuba':'tetra'},
+  boot(){if(booted)return;booted=true;let id='tetra';try{id=localStorage.getItem('dice.world')||'tetra'}catch(e){}show(id);btns().forEach(b=>b.addEventListener('click',()=>show(b.dataset.world)));
+    const hot=window.claude&&window.claude.hot;const snap=()=>{const o={world:window.dice.world};for(const k in snaps){try{o[k]=snaps[k]()}catch(e){}}return o};
+    try{if(hot&&hot.snapshot)hot.snapshot(snap)}catch(e){}
+    try{if(hot&&hot.ready)hot.ready(d=>{startAll(d);if(d&&d.world==='cuba'||d&&d.world==='tetra')show(d.world)});else startAll(hot&&hot.data||{})}catch(e){startAll({})}}}})();
+</script>
 {{CUBA}}
 <nav id="diceWorlds" aria-label="The worlds of the Dice System"><span>The Dice System</span><button type="button" data-world="tetra" aria-pressed="true">Tetra</button><button type="button" data-world="cuba" aria-pressed="false">Cuba</button></nav>
-<script>
-(()=>{const A=document.getElementById('app'),C=document.getElementById('capp'),btns=[...document.querySelectorAll('#diceWorlds [data-world]')];
-function show(id){A.classList.toggle('away',id!=='tetra');C.classList.toggle('away',id!=='cuba');btns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===id)));try{localStorage.setItem('dice.world',id)}catch(e){}}
-btns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.world)));let id='tetra';try{id=localStorage.getItem('dice.world')||'tetra'}catch(e){}show(id);
-window.dice={show,get world(){return C.classList.contains('away')?'tetra':'cuba'}}})();
-</script>
 
 <script>
 (()=>{
@@ -883,9 +890,10 @@ function resizeIfNeeded(){const r=app.getBoundingClientRect();if(Math.abs(r.widt
 function start(saved){try{if(saved&&typeof saved==='object'){if(typeof saved.day==='number')state.day=saved.day;if(typeof saved.baseYaw==='number')state.baseYaw=saved.baseYaw;if(typeof saved.pitch==='number')state.pitch=saved.pitch;if(typeof saved.dist==='number')state.dist=saved.dist;if(typeof saved.speed==='number'){state.speed=saved.speed;rngSpin.value=String(saved.speed);spinOut.textContent=state.speed.toFixed(1)+'×'}if(typeof saved.playing==='boolean'){state.playing=saved.playing}if(saved.selected&&REGIONS.some(r=>r.id===saved.selected)){state.selected=saved.selected;state.selectedFace=REGIONS.find(r=>r.id===saved.selected).face;state.follow=!!saved.follow}}}catch(e){}
   btnPlay.textContent=state.playing?'Pause':'Play';buildMarkers();renderFaceList();renderRegionGroups();renderWorlds();renderNations();renderExplorers();renderYear();updateYear();renderPlace();refreshJson();
   if(W>=820)openCodex(true);
-  try{window.claude?.hot?.snapshot?.(()=>({day:state.day,baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,speed:state.speed,playing:state.playing,selected:state.selected,follow:state.follow}))}catch(e){}
+  window.dice?.snapshot?.('tetra',()=>({day:state.day,baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,speed:state.speed,playing:state.playing,selected:state.selected,follow:state.follow}));
   window.tetra={moon:()=>({...(moonScreen()||{}),theta:MOON.theta,eclipse:MOON.eclipse,newMoon:MOON.newMoon,phase:MOON.phase,roll:MOON.roll,axis:MOON.axis,dir:MOON.dir,eye:cam.eye}),setRoll0:r=>{MOON_ROLL0=r},get state(){return state},setDay:d=>{state.day=d},select:selectRegion,face:selectFace,release,phase:id=>{const sun=sunDir(state.day);MOON=moonState(state.day,sun);return phaseFor(REGIONS.find(x=>x.id===id),sun)}};
   requestAnimationFrame(frame)}
-try{if(window.claude?.hot?.ready)window.claude.hot.ready(start);else start(window.claude?.hot?.data??{})}catch(e){start({})}
+if(window.dice?.ready)window.dice.ready('tetra',start);else start({});
 })();
 </script>
+<script>window.dice.boot()</script>

@@ -70,7 +70,7 @@ const PAGE = require('./_page');
       const strip = await page.evaluate(() => [...document.querySelectorAll('#cyearStrip .m')].map(e => e.textContent).join(' '));
       if (strip !== 'Mar Apr May Jun Jul Aug Sep Oct Nov Dec R Jan Amb Feb Tre') fails.push('Cuba strip order is ' + strip);
       const world = (await page.evaluate(() => document.getElementById('cpaneWorld').innerText)).toLowerCase();
-      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'pointed ends', 'montezuma', '1 mile high', 'east side of cuba', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
+      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'pointed ends', 'montezuma', '1 mile high', 'east side of cuba', 'quarter of the sise', 'volcano', 'shoots lava', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
       await page.screenshot({ path: PAGE.out('cuba_world_tab.png') });
     }
     // the d5 moon: an eclipse at the deepest moment of the 14th of January, every place reading Eclipse, and none the day after
@@ -82,6 +82,16 @@ const PAGE = require('./_page');
     await page.evaluate(() => cuba.face('far', false)); await settle(page);
     const far = await page.evaluate(() => ({ markers: cuba.markers(), px: cuba.sample('hole-far') }));
     if (!far.markers.includes('The other end of the Canyon') || far.markers.includes('The Plus Continent') || !dark(far.px && far.px.rgb)) fails.push(`${width}: far side ${JSON.stringify(far)}`);
+    // the Far side from Ruby's words (2026-10-05): the main island and the two corner lands are painted land, the volcano is drawn north of the Canyon and erupts on the Restart Day only
+    const farLand = await page.evaluate(async (phone) => { let lit = 0; for (let f = 0; f < 1; f += 1 / 48) { cuba.setDay(f); if (cuba.phase('volcano').t === 'High sun') { lit = f; break; } } cuba.setDay(lit); cuba.state.dist = phone ? 6.5 : 4.6; cuba.face('far', false); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); return { lit, markers: cuba.markers(), island: cuba.sample('far-island'), ne: cuba.sample('far-ne'), se: cuba.sample('far-se'), volcano: cuba.volcano(), hole: cuba.sample('hole-far'), day: cuba.state.day }; }, phone);
+    console.log(width, 'far', JSON.stringify(farLand));
+    for (const need of ['The main island', 'The volcano', 'The north-east corner land', 'The south-east corner land']) if (!farLand.markers.includes(need)) fails.push(`${width}: the Far side lacks the marker ${need}`);
+    if (!phone) await page.screenshot({ path: PAGE.out('cuba_far.png') });
+    if (!land(farLand.island && farLand.island.rgb) || !land(farLand.ne && farLand.ne.rgb) || !land(farLand.se && farLand.se.rgb)) fails.push(`${width}: the Far side's land is not painted land ${JSON.stringify(farLand)}`);
+    if (!farLand.volcano || farLand.volcano.erupting || !farLand.volcano.screen || farLand.volcano.screen.y >= farLand.hole.y) fails.push(`${width}: the volcano is not quiet and north of the Canyon ${JSON.stringify(farLand.volcano)}`);
+    const erupt = await page.evaluate(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)); cuba.setDay(392.6); cuba.face('far', false); await wait(600); const a = cuba.volcano(); const dateA = cuba.date(); cuba.setDay(10); cuba.face('far', false); for (let i = 0; i < 200 && cuba.volcano().sparks > 0; i++) await new Promise(r => requestAnimationFrame(r)); const b = cuba.volcano(); return { a, dateA, b }; });   // sparks age in frame time (dt capped at 0.05 s), so wait in frames, not seconds
+    if (!erupt.a.erupting || erupt.a.sparks < 5 || erupt.dateA.mi !== -1 || erupt.b.erupting || erupt.b.sparks > 0) fails.push(`${width}: the volcano does not erupt on the Restart Day only ${JSON.stringify(erupt)}`);
+    await page.evaluate(() => { cuba.setDay(392.7); cuba.face('far', false); }); await page.waitForTimeout(700); await page.screenshot({ path: PAGE.out(phone ? 'cuba_volcano_phone.png' : 'cuba_volcano.png') }); await page.evaluate(() => { cuba.setDay(0); cuba.state.dist = 4.6; cuba.face('far', false); });
     if (phone) {
       const closed = await page.evaluate(() => document.getElementById('ccodex').classList.contains('closed'));
       await page.tap('#capp [data-face="canon"]'); await page.waitForTimeout(1500);

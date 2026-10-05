@@ -1,19 +1,28 @@
 """Cuba, the cube planet: the face textures.
 
-Only the Canon side is drawn (Ruby, 2026-10-04, from the description of her picture and her words): a central island shaped like a
+The Canon side (Ruby, 2026-10-04, from the description of her picture and her words): a central island shaped like a
 broad cross, with arms toward the middle of each side and recessed, rounded corners, and a small hole at its centre that takes you
 through the world to the Far side. Ruby: "the arms connect to the north south east and west faces", so the arms reach the four
 sides and the land crosses onto the East, West, North and South sides. Readings taken here, all marked in HANDOFF.md: on those four
-sides the land continues a short way (TONGUE) and stops, the rest of them being uncharted slate; the hole is small; the Far side gets
-the hole's other end and nothing else. Colours are placeholders, nothing about them has been said.
+sides the land continues a short way (TONGUE) and stops, the rest of them being uncharted slate; the hole is small. Colours are
+placeholders, nothing about them has been said.
+
+The Far side (Ruby, 2026-10-05): "the far side has a main island about a quarter of the sise of the face with land on the north east and
+south east corners, making it half water. on the central island, north of the canyon, there is a volcano (active) (shoots lava every
+reset day)". So: a main island of a quarter of the face's area around the Canyon's other end, two corner lands of an eighth each in
+the north-east and south-east corners (the texture's right is East on this side: looking at Far with North up, East is on the right),
+the face half water, and the volcano north of the hole on the island. Readings: the island is round, the corner lands are rounded
+wedges and equal in size (an eighth each), the volcano's place north of the hole and its size. What continues past the Far side's edges onto East, North and South is
+unwritten, so those sides stay slate beyond their arm and no edge agreement is asserted there.
 
 Ruby (2026-10-04): "make cuba look sort of like tetra as far as how landmasses are desighnd": the land is painted with Tetra's own
 painter (../../tetra/pipeline: heights, render_painted, texsynth patches from Ruby's Canon painting), so the Plus Continent carries the
 same painted hills, forests, shores and rivers as Tetra's faces. Which plants and colours belong where is still unwritten; the zones
 here (green and forest, a little gold at the shore) are a reading.
 
-Writes map_canon.jpg, map_east/west/north/south.jpg (the tongue of land at the edge shared with Canon), map_far.jpg (the hole's other
-end), map_blank.jpg, map_canon_prev.png (markers drawn) and anchors.json. Deterministic (fixed seed).
+Writes map_canon.jpg, map_east/west/north/south.jpg (the tongue of land at the edge shared with Canon), map_far.jpg (the main island,
+the corner lands, the volcano and the hole's other end), map_blank.jpg, map_canon_prev.png and map_far_prev.png (markers drawn) and
+anchors.json. Deterministic (fixed seed).
 """
 import json, os, sys, numpy as np, cv2
 
@@ -36,6 +45,13 @@ EDGE_CALM = 48         # px over which the wobble dies out toward an edge, so bo
 FILLET = 0.07 * S      # the rounded bends where the arms meet the centre
 WOBBLE = 0.030 * S     # a hand-drawn coast
 HOLE_R = 0.022 * S     # the small hole at the centre
+# the Far side (Ruby, 2026-10-05)
+FAR_R = S * (0.25 / np.pi) ** 0.5     # a round main island of a quarter of the face's area, about the hole (its roundness is a reading)
+FAR_CORNER_A = 0.355 * S              # the corner lands: quarter ellipses on the north-east and south-east corners, an eighth of the face each
+FAR_CORNER_B = 0.45 * S               # (A along the top or bottom edge, B down the east edge; the wedge shape is a reading)
+FAR_WOBBLE = 0.6 * WOBBLE             # a calmer coast, so the straits between the island and the corner lands stay open
+VOLCANO = (S // 2, int(0.34 * S))     # north of the Canyon's other end, on the main island (how far north is a reading)
+VOLCANO_R = 0.055 * S                 # the dark rock around the vent on the texture; the cone itself is a mesh in the page (a reading)
 
 
 def noise(shape, cell, seed):
@@ -87,12 +103,22 @@ def tongue():
 TRI = np.ones((S, S), bool)                           # a square face: the whole texture is the face
 
 
-def painted(d, seed, rivers=()):
+def far_land():
+    """the Far side's land as a signed distance: the round main island about the hole, and the two corner lands"""
+    d = np.hypot(xx - cx, yy - cy) - FAR_R
+    for corner_y in (0.0, S - 1.0):                    # the north-east and the south-east corner; the texture's right is East on this side
+        e = np.hypot((S - 1 - xx) / FAR_CORNER_A, (yy - corner_y) / FAR_CORNER_B)
+        d = np.minimum(d, (e - 1) * min(FAR_CORNER_A, FAR_CORNER_B))
+    return d + (fbm(SEED + 11) - 0.5) * 2 * FAR_WOBBLE * edge_calm()
+
+
+def painted(d, seed, rivers=(), hub_at=None, hub_r=0.21):
     """Tetra's painter over a signed-distance land design: heights, zones (green and forest, gold along the shore: a reading), rivers."""
     land_soft = np.clip(0.5 - d / 6.0, 0, 1)
     h, d_in = heights(land_soft, seed, terrain_amp=0.06)
-    # relief is a reading: gentle hills over the land and one high hub around the middle, so the painter's mountains gather there and not everywhere
-    hub = np.clip(1 - np.hypot(xx - cx, yy - cy) / (0.21 * S), 0, 1) ** 1.5
+    # relief is a reading: gentle hills over the land and one high hub (around the middle, or around the volcano on the Far side), so the painter's mountains gather there and not everywhere
+    hx, hy = hub_at or (cx, cy)
+    hub = np.clip(1 - np.hypot(xx - hx, yy - hy) / (hub_r * S), 0, 1) ** 1.5
     h = np.where(land_soft > 0.5, h + 0.09 * hub, h).astype(np.float32)
     n = fbm(seed + 41)
     zones = {'green': np.clip(0.55 + 0.6 * (n - 0.5), 0, 1), 'forest': np.clip(0.45 + 0.8 * (0.5 - n), 0, 1),
@@ -109,6 +135,23 @@ def render_canon():
     hole_shade = np.clip(1 - (np.hypot(xx - cx, yy - cy) - HOLE_R) / (HOLE_R * 1.6), 0, 1)
     tex *= (1 - 0.45 * hole_shade)[..., None]
     tex[hole] = np.array([14, 12, 20], np.float32)
+    return np.clip(tex, 0, 255).astype(np.uint8), land, hole
+
+
+def render_far():
+    """the Far side: the main island with the hole's other end and the volcano, the two corner lands, half water"""
+    d = far_land()
+    land = d < 0
+    r_hole = np.hypot(xx - cx, yy - cy)
+    hole = r_hole < HOLE_R
+    tex = painted(d, SEED + 13, rivers=[(int(0.40 * S), int(0.56 * S)), (int(0.62 * S), int(0.61 * S))], hub_at=VOLCANO, hub_r=0.13)
+    tex *= (1 - 0.45 * np.clip(1 - (r_hole - HOLE_R) / (HOLE_R * 1.6), 0, 1))[..., None]
+    tex[hole] = np.array([14, 12, 20], np.float32)
+    # the volcano's foot: dark rock around the vent (the cone is a mesh in the page)
+    rv = np.hypot(xx - VOLCANO[0], yy - VOLCANO[1])
+    rock = np.clip(1 - (rv - 0.5 * VOLCANO_R) / (0.9 * VOLCANO_R), 0, 1)[..., None]
+    tex = tex * (1 - 0.6 * rock) + rock * np.array([46, 34, 32], np.float32) * 0.6
+    tex[rv < 0.2 * VOLCANO_R] = np.array([34, 16, 12], np.float32)
     return np.clip(tex, 0, 255).astype(np.uint8), land, hole
 
 
@@ -149,11 +192,28 @@ def main():
         assert not land[py, px], f'the corner at ({px},{py}) is land'
     assert hole[S // 2, S // 2] and land[S // 2, S // 2 + int(HOLE_R) + 8]
     water = 1 - land.mean()
-    anchors = {'canon': {'island': [S // 2, int(0.30 * S)], 'hole': [S // 2, S // 2]}, 'far': {'hole-far': [S // 2, S // 2]}}
+    # the Far side: half water, three pieces of land (the island and the two corner lands), the hole in the island, the volcano on it
+    far, far_land_mask, far_hole = render_far()
+    far_water = 1 - far_land_mask.mean()
+    assert 0.46 < far_water < 0.54, f'the Far side is {far_water:.3f} water, not half'
+    n_far, _ = cv2.connectedComponents(far_land_mask.astype(np.uint8))
+    assert n_far == 4, f'the Far side has {n_far - 1} pieces of land, not three'
+    assert far_land_mask[0, S - 1] and far_land_mask[S - 1, S - 1], 'no land on the north-east or the south-east corner'
+    assert not far_land_mask[0, 0] and not far_land_mask[S - 1, 0], 'land on a west corner of the Far side'
+    assert far_hole[S // 2, S // 2] and far_land_mask[VOLCANO[1], VOLCANO[0]]
+    anchors = {'canon': {'island': [S // 2, int(0.30 * S)], 'hole': [S // 2, S // 2]},
+               'far': {'hole-far': [S // 2, S // 2], 'far-island': [S // 2, int(0.68 * S)], 'volcano': list(VOLCANO), 'far-ne': [int(0.90 * S), int(0.10 * S)], 'far-se': [int(0.90 * S), int(0.90 * S)]}}
     ax, ay = anchors['canon']['island']; assert land[ay, ax] and not hole[ay, ax]
+    for k, (px, py) in anchors['far'].items():
+        if k != 'hole-far':
+            assert far_land_mask[py, px] and not far_hole[py, px], f'the Far side marker {k} is not on land'
     os.chdir(HERE)
     write_jpg('map_canon.jpg', canon)
-    write_jpg('map_far.jpg', render_blank(with_hole=True))
+    write_jpg('map_far.jpg', far)
+    prev_far = cv2.cvtColor(far, cv2.COLOR_RGB2BGR).copy()
+    for (px, py) in anchors['far'].values():
+        cv2.circle(prev_far, (px, py), 9, (40, 220, 255), 2)
+    cv2.imwrite(os.path.join(HERE, 'map_far_prev.png'), prev_far)
     write_jpg('map_blank.jpg', render_blank())
     # the neighbouring sides, tongue at the edge they share with Canon: East's right edge, West's left, North's bottom, South's top
     base = render_blank(with_tongue=True)                  # tongue at the top edge
@@ -165,9 +225,9 @@ def main():
     for (px, py) in anchors['canon'].values():
         cv2.circle(prev, (px, py), 9, (40, 220, 255), 2)
     cv2.imwrite(os.path.join(HERE, 'map_canon_prev.png'), prev)
-    json.dump({'anchors': anchors, 'water_canon': round(float(water), 4), 'hole_radius_px': HOLE_R, 'size': S},
+    json.dump({'anchors': anchors, 'water_canon': round(float(water), 4), 'water_far': round(float(far_water), 4), 'hole_radius_px': HOLE_R, 'size': S},
               open(os.path.join(HERE, 'anchors.json'), 'w'), indent=1)
-    print(f'canon: water {water:.3f}, land one piece reaching all four sides, hole radius {HOLE_R:.0f}px; wrote map_canon.jpg, map_east/west/north/south.jpg, map_far.jpg, map_blank.jpg, anchors.json')
+    print(f'canon: water {water:.3f}, land one piece reaching all four sides, hole radius {HOLE_R:.0f}px; far: water {far_water:.3f}, the island and two corner lands, the volcano at {VOLCANO}; wrote map_canon.jpg, map_east/west/north/south.jpg, map_far.jpg, map_blank.jpg, anchors.json')
 
 
 if __name__ == '__main__':

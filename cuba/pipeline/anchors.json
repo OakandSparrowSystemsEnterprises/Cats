@@ -14,10 +14,27 @@
    "hole-far": [
     512,
     512
+   ],
+   "far-island": [
+    512,
+    696
+   ],
+   "volcano": [
+    512,
+    348
+   ],
+   "far-ne": [
+    921,
+    102
+   ],
+   "far-se": [
+    921,
+    921
    ]
   }
  },
  "water_canon": 0.5963,
+ "water_far": 0.5036,
  "hole_radius_px": 22.528,
  "size": 1024
 }

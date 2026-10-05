@@ -142,7 +142,7 @@ Quoted lines are verbatim from Joshua's relays (Messenger screenshots transcribe
 - 2026-10-04, Ruby: "also you shuld be able to see tetra from cuba and vice versa" (Cuba shows in Tetra's sky as a small turning cube away from the star, its place a reading.)
 
 - 2026-10-04, Ruby: "anything that grows on tetra also grows on cuba" (Life of Tetra says so; Cuba's Life entry lists Tetra's plants.)
-- 2026-10-04, Ruby: "cuba has a gian tree called montezuma that grow ut to a 15th of the hight of mount celectial" (Cuba's tree, in `../cuba/HANDOFF.md`; it ties to Mount Celestial's height here: in the build the peak is 0.6 of the moon's length, her "at least half".)
+- 2026-10-04, Ruby: "cuba has a gian tree called montezuma that grow ut to a 15th of the hight of mount celectial" (Cuba's tree, in `../cuba/HANDOFF.md`; it ties to Mount Celestial's height here: in the build the peak is 0.6 of the moon's length, her "at least half". Later that night, Ruby: "it grows to be 1 mile high and 1.5 mile radius in canopy and a 3/4 mile wide trunk it will grow on the east side of cuba when it is writen": with the fifteenth that makes Mount Celestial 15 miles high, which the build's peak (0.6 of the moon's length) is not. Recorded, not resolved: open question 23.)
 
 ### Process rules Joshua gave
 - "dont use the exact pictures of the explorers (opal the explorer went back and made comlpete maps of them [generate maps based on the schetches please])"
@@ -191,6 +191,7 @@ Page (`template.html`, `build.py`):
 20. (2026-10-04) "when you scroll desember moves in the seoson calender": what moves? The thin line inside the lit month slides along as the days pass (that is today's mark, and it moves in every month); or December itself was in a new place on the strip under yesterday's order. Asked her which.
 21. (Answered 2026-10-04: "remember to strt the simulation on jan 1 even though the we just order it in a way that makes new years hapen at the middle of the year (sort of)". The strip runs Mar ... Dec R Jan Feb Tre and the year begins on 1 January.)
 22. (2026-10-04) The moon's swing on the new-moon day now eases in and out but still goes round in one day, because every other day it must sit opposite the star. If she wants it slower, may the swing start the evening before and end the morning after?
+23. (2026-10-04) Mount Celestial's height. Ruby's Montezuma lines (a fifteenth of the mountain; a mile high) make it 15 miles high; her earlier "at least half the length of the moon high", with the moon a third of Tetra, makes it thousands of miles. The build keeps the tall peak until she chooses. See `../cuba/HANDOFF.md`, open question 18.
 14. (2026-10-03) Chicken island came out small (0.40 of the painting) because it has to fit between Spikia's coast and Islandia with water around it. If she wants it bigger, Islandia or the egg could sit lower, or the southern arch a little lower.
 12. (2026-10-03) The two bottom corners of the Canon face are land: the far-side land reaches them, because the bottom edge is her painted coast and the three other faces are land at those corners. Her words were "no land on the west and east sides". May the corners stay land, or should they be water too? Water there would also change the Far face's Canon-side coast.
 

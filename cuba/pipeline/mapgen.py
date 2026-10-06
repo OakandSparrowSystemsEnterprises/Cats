@@ -4,7 +4,7 @@ The Canon side (Ruby, 2026-10-04, from the description of her picture and her wo
 broad cross, with arms toward the middle of each side and recessed, rounded corners, and a small hole at its centre that takes you
 through the world to the Far side. Ruby: "the arms connect to the north south east and west faces", so the arms reach the four
 sides and the land crosses onto the East, West, North and South sides. Readings taken here, all marked in HANDOFF.md: on those four
-sides the land continues a short way (TONGUE) and stops, the rest of them being uncharted slate; the hole is small. Colours are
+sides the land continues as far as her later sketches show (ARM_REACH, below); the hole is small. Colours are
 placeholders, nothing about them has been said.
 
 The Far side (Ruby, 2026-10-05): "the far side has a main island about a quarter of the sise of the face with land on the north east and
@@ -13,16 +13,26 @@ reset day)". So: a main island of a quarter of the face's area around the Canyon
 the north-east and south-east corners (the texture's right is East on this side: looking at Far with North up, East is on the right),
 the face half water, and the volcano north of the hole on the island. Readings: the island is round, the corner lands are rounded
 wedges and equal in size (an eighth each), the volcano's place north of the hole and its size. What continues past the Far side's edges onto East, North and South is
-unwritten, so those sides stay slate beyond their arm and no edge agreement is asserted there.
+unwritten; the Far side's edges are not asserted against its neighbours.
+
+The other four sides (Ruby, 2026-10-06, her sketches of the explorers' maps, saved in ../reference/ruby/): the North side explored by
+Aquamarine, the East side discovered by Axinite, the South side by Benitoite, the West side from Chrysoberyl's map. Each sketch is read in
+the texture's own orientation (row 0 the top): North has Far at the top, Canon at the bottom, East on the left and West on the right;
+East has North at the top, Far on the left, Canon on the right; South has Canon at the top, Far at the bottom, East on the left (her
+sketch is turned a quarter, with Canon on its right); West has North at the top, Canon on the left, Far on the right. The Plus
+Continent's arm reaches onto each side as far as the sketch shows (ARM_REACH), the land shapes follow the sketches as ellipses, discs and
+a band (readings of rough drawings), the spiral on the North side and the ringed blob with a dark dot on the West side are read as islands
+with a high middle (the West one with a dark pit), and where two sketches disagree about a shared edge the constants were set by hand so
+the two textures meet (asserted in main for every edge between two drawn sides, as for Canon's). Nothing on them is named.
 
 Ruby (2026-10-04): "make cuba look sort of like tetra as far as how landmasses are desighnd": the land is painted with Tetra's own
 painter (../../tetra/pipeline: heights, render_painted, texsynth patches from Ruby's Canon painting), so the Plus Continent carries the
 same painted hills, forests, shores and rivers as Tetra's faces. Which plants and colours belong where is still unwritten; the zones
 here (green and forest, a little gold at the shore) are a reading.
 
-Writes map_canon.jpg, map_east/west/north/south.jpg (the tongue of land at the edge shared with Canon), map_far.jpg (the main island,
-the corner lands, the volcano and the hole's other end), map_blank.jpg, map_canon_prev.png and map_far_prev.png (markers drawn) and
-anchors.json. Deterministic (fixed seed).
+Writes map_canon.jpg, map_north/east/south/west.jpg (from the sketches), map_far.jpg (the main island, the corner lands, the volcano and
+the hole's other end), map_blank.jpg (unused now, kept as the page's fallback texture), map_*_prev.png (markers drawn) and anchors.json.
+Deterministic (fixed seed).
 """
 import json, os, sys, numpy as np, cv2
 
@@ -40,7 +50,7 @@ cx = cy = S / 2
 CENTRE = 0.19 * S      # half-width of the broad centre
 ARM_W = 0.105 * S      # half-width of an arm
 ARM_LEN = 0.56 * S     # the arms run past the sides, so the land crosses the edges (Ruby: the arms connect to the four faces)
-TONGUE = 0.14 * S      # how far the land continues onto the neighbouring side (a reading; nothing said)
+ARM_REACH = {'north': 0.34, 'east': 0.23, 'south': 0.22, 'west': 0.31}   # how far the arm runs onto each side, as a fraction of the side, measured on Ruby's sketches of 2026-10-06 (she says she does not know yet; this is what the explorers drew)
 EDGE_CALM = 48         # px over which the wobble dies out toward an edge, so both sides of an edge agree
 FILLET = 0.07 * S      # the rounded bends where the arms meet the centre
 WOBBLE = 0.030 * S     # a hand-drawn coast
@@ -52,6 +62,16 @@ FAR_CORNER_B = 0.45 * S               # (A along the top or bottom edge, B down 
 FAR_WOBBLE = 0.6 * WOBBLE             # a calmer coast, so the straits between the island and the corner lands stay open
 VOLCANO = (S // 2, int(0.34 * S))     # north of the Canyon's other end, on the main island (how far north is a reading)
 VOLCANO_R = 0.055 * S                 # the dark rock around the vent on the texture; the cone itself is a mesh in the page (a reading)
+# the four sides from the sketches (fractions of the side; readings of rough drawings, see the module docstring)
+NORTH_LAND = (-0.05, 0.26, 0.49, 0.46)   # ellipse centre x, y and radii: the big land on the East (left) edge, reaching the Far (top) edge; set so its edges meet the Far side's corner land (0.355 along the top) and the East side's land (about 0.71 down the left)
+NORTH_ISLAND = (0.70, 0.39, 0.13)        # the island with the spiral: centre and radius
+EAST_NF = (-0.10, -0.10, 0.82, 0.55)     # the land in the North-Far (top left) corner; rx set so its top edge reaches about 0.70, where the North side's land meets it
+EAST_SF = (-0.12, 1.05, 0.369, 0.52)     # the land in the South-Far (bottom left) corner; rx set so its bottom edge meets the South side's corner land (0.247 along it)
+EAST_BAND = ((0.26, 0.52), (0.45, 0.98), (0.80, 0.73), 0.065)   # the crescent across the lower middle: a quadratic curve and its half-width, a separate land clear of the corner land and the arm, as drawn
+SOUTH_EF = (-0.05, 1.08, 0.40, 0.33)     # the land in the East-Far (bottom left) corner
+WEST_ISLAND = (0.48, 0.64, 0.15)         # the ringed island with the dark dot: centre and radius
+WEST_PIT = 0.035                         # the dark mark at its middle, as Chrysoberyl drew it
+SIDE_WOBBLE = 0.6 * WOBBLE
 
 
 def noise(shape, cell, seed):
@@ -91,13 +111,78 @@ def island():
     return d
 
 
-def tongue():
-    """the land continuing onto a neighbouring side, drawn with the tongue at the TOP edge, centred; rotated per side"""
-    dx = np.abs(xx - cx) - ARM_W
-    dy = yy - TONGUE
-    d = np.hypot(np.maximum(dx, 0), np.maximum(dy, 0)) + np.minimum(np.maximum(dx, dy), 0)
-    d = d + (fbm(SEED + 5) - 0.5) * 2 * WOBBLE * edge_calm()
-    return d
+def rbox(x0, y0, hw, hh, r=0.0):
+    """signed distance to a rounded box centred at (x0, y0)"""
+    dx = np.abs(xx - x0) - hw + r
+    dy = np.abs(yy - y0) - hh + r
+    return np.hypot(np.maximum(dx, 0), np.maximum(dy, 0)) + np.minimum(np.maximum(dx, dy), 0) - r
+
+
+def ellipse(x0, y0, rx, ry):
+    """about the signed distance to an ellipse (fractions of S)"""
+    e = np.hypot((xx - x0 * S) / (rx * S), (yy - y0 * S) / (ry * S))
+    return (e - 1) * min(rx, ry) * S
+
+
+def disc(x0, y0, r):
+    return np.hypot(xx - x0 * S, yy - y0 * S) - r * S
+
+
+def band(p0, p1, p2, hw, n=48):
+    """a curved band: the distance to a quadratic curve (sampled) less its half-width (fractions of S)"""
+    d = np.full((S, S), np.inf, np.float32)
+    for i in range(n + 1):
+        t = i / n
+        px = ((1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0]) * S
+        py = ((1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1]) * S
+        d = np.minimum(d, np.hypot(xx - px, yy - py))
+    return d - hw * S
+
+
+def arm_onto(side):
+    """the Plus Continent's arm crossing onto a side from the edge it shares with Canon: North's bottom edge, East's right, South's top, West's left; ARM_W wide at the edge, as on Canon, reaching ARM_REACH[side] in"""
+    L = ARM_REACH[side] * S + 0.1 * S
+    if side == 'north':
+        return rbox(cx, S + 0.1 * S, ARM_W, L, 0.04 * S)
+    if side == 'south':
+        return rbox(cx, -0.1 * S, ARM_W, L, 0.04 * S)
+    if side == 'east':
+        return rbox(S + 0.1 * S, cy, L, ARM_W, 0.04 * S)
+    return rbox(-0.1 * S, cy, L, ARM_W, 0.04 * S)
+
+
+def wob(seed):
+    return (fbm(seed) - 0.5) * 2 * SIDE_WOBBLE * edge_calm()
+
+
+def design_side(side):
+    """the land of one of the four sides from Ruby's sketch: returns the signed distance and the place to gather the relief (or None)"""
+    d = arm_onto(side)
+    if side == 'north':
+        d = np.minimum(d, ellipse(*NORTH_LAND))
+        d = np.minimum(d, disc(*NORTH_ISLAND))
+        return d + wob(SEED + 21), (NORTH_ISLAND[0] * S, NORTH_ISLAND[1] * S)
+    if side == 'east':
+        d = np.minimum(d, ellipse(*EAST_NF))
+        d = np.minimum(d, ellipse(*EAST_SF))
+        d = np.minimum(d, band(*EAST_BAND))
+        return d + wob(SEED + 23), None
+    if side == 'south':
+        d = np.minimum(d, ellipse(*SOUTH_EF))
+        return d + wob(SEED + 25), None
+    d = np.minimum(d, disc(*WEST_ISLAND))
+    return d + wob(SEED + 27), (WEST_ISLAND[0] * S, WEST_ISLAND[1] * S)
+
+
+def render_side(side, seed):
+    d, hub = design_side(side)
+    land = d < 0
+    tex = painted(d, seed, hub_at=hub, hub_r=0.12 if hub else 0.21)
+    if side == 'west':   # the dark mark at the island's middle, as drawn; what it is, is unwritten
+        r = np.hypot(xx - WEST_ISLAND[0] * S, yy - WEST_ISLAND[1] * S)
+        pit = np.clip(1 - (r - WEST_PIT * S) / (0.25 * WEST_PIT * S), 0, 1)[..., None]
+        tex = tex * (1 - 0.85 * pit) + pit * np.array([22, 16, 18], np.float32) * 0.85
+    return np.clip(tex, 0, 255).astype(np.uint8), land
 
 
 TRI = np.ones((S, S), bool)                           # a square face: the whole texture is the face
@@ -155,14 +240,10 @@ def render_far():
     return np.clip(tex, 0, 255).astype(np.uint8), land, hole
 
 
-def render_blank(with_hole=False, with_tongue=False):
+def render_blank(with_hole=False):
     tex = np.zeros((S, S, 3), np.float32)
     slate = np.array([64, 68, 80], np.float32)
     tex[:] = slate * (0.86 + 0.28 * fbm(SEED + 31)[..., None])
-    if with_tongue:   # the arm's land painted like the Canon side, its sea fading into the uncharted slate away from the coast
-        d = tongue(); img = painted(d, SEED + 7)
-        keep = np.clip(1 - (d - 24.0) / 40.0, 0, 1)[..., None]
-        tex = img * keep + tex * (1 - keep)
     if with_hole:
         r = np.hypot(xx - cx, yy - cy)
         tex *= (1 - 0.45 * np.clip(1 - (r - HOLE_R) / (HOLE_R * 1.6), 0, 1))[..., None]
@@ -183,11 +264,14 @@ def main():
         assert land[py, px], f'an arm does not reach the side at ({px},{py})'
     q = int(0.25 * S)
     assert not land[0, :q].any() and not land[0, -q:].any() and not land[-1, :q].any() and not land[-1, -q:].any(), 'land at a corner edge'
-    # the land agrees across the four edges: Canon's edge rows against the tongue's top row (the tongue texture is rotated per side)
-    t = tongue() < 0
-    for canon_edge in (land[0, :], land[-1, :], land[:, 0], land[:, -1]):
-        agree = (canon_edge == t[0, :]).mean()
-        assert agree > 0.985, f'edge agreement {agree:.3f}'
+    # the four sides from the sketches; the land agrees with Canon across the four shared edges (the arm is ARM_W wide at the edge on both)
+    sides = {}
+    for side, seed in (('north', SEED + 2), ('east', SEED + 3), ('south', SEED + 4), ('west', SEED + 5)):
+        sides[side] = render_side(side, seed)
+    for side, canon_edge, side_edge in (('north', land[0, :], sides['north'][1][-1, :]), ('south', land[-1, :], sides['south'][1][0, :]),
+                                        ('east', land[:, 0], sides['east'][1][:, -1]), ('west', land[:, -1], sides['west'][1][:, 0])):
+        agree = (canon_edge == side_edge).mean()
+        assert agree > 0.985, f'edge agreement Canon/{side} {agree:.3f}'
     for px, py in ((int(0.2 * S), int(0.2 * S)), (int(0.8 * S), int(0.2 * S)), (int(0.2 * S), int(0.8 * S)), (int(0.8 * S), int(0.8 * S))):
         assert not land[py, px], f'the corner at ({px},{py}) is land'
     assert hole[S // 2, S // 2] and land[S // 2, S // 2 + int(HOLE_R) + 8]
@@ -202,11 +286,33 @@ def main():
     assert not far_land_mask[0, 0] and not far_land_mask[S - 1, 0], 'land on a west corner of the Far side'
     assert far_hole[S // 2, S // 2] and far_land_mask[VOLCANO[1], VOLCANO[0]]
     anchors = {'canon': {'island': [S // 2, int(0.30 * S)], 'hole': [S // 2, S // 2]},
-               'far': {'hole-far': [S // 2, S // 2], 'far-island': [S // 2, int(0.68 * S)], 'volcano': list(VOLCANO), 'far-ne': [int(0.90 * S), int(0.10 * S)], 'far-se': [int(0.90 * S), int(0.90 * S)]}}
+               'far': {'hole-far': [S // 2, S // 2], 'far-island': [S // 2, int(0.68 * S)], 'volcano': list(VOLCANO), 'far-ne': [int(0.90 * S), int(0.10 * S)], 'far-se': [int(0.90 * S), int(0.90 * S)]},
+               'north': {'arm-north': [S // 2, int(S - 0.5 * ARM_REACH['north'] * S)], 'north-land': [int(0.15 * S), int(0.40 * S)], 'north-spiral': [int(NORTH_ISLAND[0] * S), int(NORTH_ISLAND[1] * S)]},
+               'east': {'arm-east': [int(S - 0.5 * ARM_REACH['east'] * S), S // 2], 'east-nf': [int(0.18 * S), int(0.15 * S)], 'east-crescent': [int(0.49 * S), int(0.78 * S)], 'east-sf': [int(0.06 * S), int(0.85 * S)]},
+               'south': {'arm-south': [S // 2, int(0.5 * ARM_REACH['south'] * S)], 'south-ef': [int(0.10 * S), int(0.92 * S)]},
+               'west': {'arm-west': [int(0.5 * ARM_REACH['west'] * S), S // 2], 'west-island': [int((WEST_ISLAND[0] + 0.07) * S), int(WEST_ISLAND[1] * S)]}}
     ax, ay = anchors['canon']['island']; assert land[ay, ax] and not hole[ay, ax]
     for k, (px, py) in anchors['far'].items():
         if k != 'hole-far':
             assert far_land_mask[py, px] and not far_hole[py, px], f'the Far side marker {k} is not on land'
+    n_east, _ = cv2.connectedComponents(sides['east'][1].astype(np.uint8))
+    assert n_east == 5, f'the East side has {n_east - 1} pieces of land, not four (the arm, two corner lands, the crescent)'
+    n_north, _ = cv2.connectedComponents(sides['north'][1].astype(np.uint8))
+    assert n_north == 4, f'the North side has {n_north - 1} pieces of land, not three (the arm, the large land, the island)'
+    # the edges between the drawn sides agree too (the wobble dies at the edges, so these are the designed shapes meeting): North's left column runs Far to Canon like East's top row; East's bottom row (Far to Canon) meets South's left column (Canon to Far) reversed; North's top row (East to West) meets Far's top row (West to East) reversed; East's left column meets Far's right column (both North to South); South's bottom row (East to West) meets Far's bottom row (West to East) reversed
+    N, E, So, Wst = sides['north'][1], sides['east'][1], sides['south'][1], sides['west'][1]
+    for name, a, b in (('North/East', N[:, 0], E[0, :]), ('East/South', E[-1, :], So[:, 0][::-1]), ('North/Far', N[0, :], far_land_mask[0, :][::-1]),
+                       ('East/Far', E[:, -1 - 0][:, ] if False else E[:, 0], far_land_mask[:, -1]), ('South/Far', So[-1, :], far_land_mask[-1, :][::-1]),
+                       ('North/West', N[:, -1], Wst[0, :][::-1]), ('South/West', So[:, -1], Wst[-1, :])):
+        agree = (a == b).mean()
+        print(f'edge {name} agreement {agree:.3f}')
+        assert agree > 0.975, f'edge agreement {name} {agree:.3f}'
+    water_sides = {}
+    for side in ('north', 'east', 'south', 'west'):
+        for k, (px, py) in anchors[side].items():
+            assert sides[side][1][py, px], f'the {side} marker {k} is not on land'
+        water_sides[side] = round(float(1 - sides[side][1].mean()), 4)
+    assert not sides['west'][1][int(WEST_ISLAND[1] * S), 0] and not sides['west'][1][5, int(WEST_ISLAND[0] * S)], 'the West side has land where the sketch has water'
     os.chdir(HERE)
     write_jpg('map_canon.jpg', canon)
     write_jpg('map_far.jpg', far)
@@ -215,19 +321,19 @@ def main():
         cv2.circle(prev_far, (px, py), 9, (40, 220, 255), 2)
     cv2.imwrite(os.path.join(HERE, 'map_far_prev.png'), prev_far)
     write_jpg('map_blank.jpg', render_blank())
-    # the neighbouring sides, tongue at the edge they share with Canon: East's right edge, West's left, North's bottom, South's top
-    base = render_blank(with_tongue=True)                  # tongue at the top edge
-    write_jpg('map_south.jpg', base)
-    write_jpg('map_north.jpg', np.ascontiguousarray(np.rot90(base, 2)))
-    write_jpg('map_east.jpg', np.ascontiguousarray(np.rot90(base, -1)))    # top -> right
-    write_jpg('map_west.jpg', np.ascontiguousarray(np.rot90(base, 1)))     # top -> left
+    for side in ('north', 'east', 'south', 'west'):
+        write_jpg(f'map_{side}.jpg', sides[side][0])
+        prev_s = cv2.cvtColor(sides[side][0], cv2.COLOR_RGB2BGR).copy()
+        for (px, py) in anchors[side].values():
+            cv2.circle(prev_s, (px, py), 9, (40, 220, 255), 2)
+        cv2.imwrite(os.path.join(HERE, f'map_{side}_prev.png'), prev_s)
     prev = cv2.cvtColor(canon, cv2.COLOR_RGB2BGR).copy()
     for (px, py) in anchors['canon'].values():
         cv2.circle(prev, (px, py), 9, (40, 220, 255), 2)
     cv2.imwrite(os.path.join(HERE, 'map_canon_prev.png'), prev)
-    json.dump({'anchors': anchors, 'water_canon': round(float(water), 4), 'water_far': round(float(far_water), 4), 'hole_radius_px': HOLE_R, 'size': S},
+    json.dump({'anchors': anchors, 'water_canon': round(float(water), 4), 'water_far': round(float(far_water), 4), 'water_sides': water_sides, 'arm_reach': ARM_REACH, 'hole_radius_px': HOLE_R, 'size': S},
               open(os.path.join(HERE, 'anchors.json'), 'w'), indent=1)
-    print(f'canon: water {water:.3f}, land one piece reaching all four sides, hole radius {HOLE_R:.0f}px; far: water {far_water:.3f}, the island and two corner lands, the volcano at {VOLCANO}; wrote map_canon.jpg, map_east/west/north/south.jpg, map_far.jpg, map_blank.jpg, anchors.json')
+    print(f'canon: water {water:.3f}, land one piece reaching all four sides, hole radius {HOLE_R:.0f}px; far: water {far_water:.3f}, the island and two corner lands, the volcano at {VOLCANO}; the four sides from the sketches, water {water_sides}; wrote map_canon.jpg, map_north/east/south/west.jpg, map_far.jpg, map_blank.jpg, anchors.json')
 
 
 if __name__ == '__main__':

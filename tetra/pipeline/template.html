@@ -321,12 +321,12 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Key events</p>
-          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 1. The words are hers, in her spelling, as read from the photos; (?) marks a word that was hard to read. The small line under each is what the panel shows.</p>
+          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 50. The words are hers, in her spelling, as read from the photos; (?) marks a word that was hard to read. The small line under each is what the panel shows.</p>
           <ul class="timeline" id="timeline"></ul>
         </div>
         <div class="sect">
           <p class="eyebrow">Still unwritten</p>
-          <ul class="unwritten-list"><li>The key events after year 1 (Ruby’s comics continue)</li><li>More places and names on every face</li></ul>
+          <ul class="unwritten-list"><li>The key events after year 50 (Ruby’s comics continue)</li><li>More places and names on every face</li></ul>
           <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
         </div>
       </section>
@@ -439,12 +439,12 @@ const WORLD = {
              {name:'Amethyst the explorer', desc:'Charted the South Face: tropical at the top, the southern continent with Snowia, Coldland and Beria, and Wetia.'},
              {name:'Obsidian the explorer', desc:'Charted the Far Face: Mount Celestial, Wetia, and the nations Warmia, Ehia and Tree Land.'},
              {name:'Opal the explorer', desc:'Went back over the West, South and Far faces and drew the complete maps from the other explorers\u2019 charts. Opal\u2019s maps are the ones on the world now.'}],
-  worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},{id:'cuba',name:'Cuba',desc:'The cube planet, six square sides, farther from the star. Its Canon and Far sides are drawn; the Cuba button under the title switches to it.'}],
+  worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},{id:'cuba',name:'Cuba',desc:'The cube planet, six square sides, farther from the star. All six of its sides are drawn now, the last four from Ruby’s sketches of the explorers’ maps; the Cuba button under the title switches to it.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
   moon:{name:'A d3 moon', shape:'a fair three-sided die, not the cube kind: a rounded three-sided rod with pointed ends, so it can only come to rest on one of its three sides; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
   size:{miles:20000, from:'the corner of Spikia', to:'the base of Mount Celestial', path:'straight through the world'},
   years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
-  timeline:[      /* Ruby's comics of the key events (2026-10-03), two pages so far; said = her words as read from the photos */
+  timeline:[      /* Ruby's comics of the key events: two pages of 2026-10-03 (years -2000 to 1) and two of 2026-10-06 (years 2 to 50); said = her words as read from the photos, shows = what the panel draws, a reading */
     {year:'-2000', said:'estar una tetragon', shows:'green hills and a figure'},
     {year:'-1000', said:'Dote', shows:'a figure on a green hill'},
     {year:'-500', said:'runder tetragon?', shows:'a figure, and a die with dots'},
@@ -456,7 +456,25 @@ const WORLD = {
     {year:'-1', said:'its hot! \u00b7 Ughia \u00b7 rainyia?', shows:'four name bubbles over a green hill, with question marks all around; the fourth name is not important right now, Ruby says'},
     {year:'-0', said:'0-0?!', shows:'they set off to find a rumoured central island (as Ruby explained)'},
     {year:'0', said:'posibly central island located \u00b7 yay!', shows:'people cheering: the central island is found'},
-    {year:'1', said:'ISLANDIA!', shows:'they name it Islandia (as Ruby explained)'}
+    {year:'1', said:'ISLANDIA!', shows:'they name it Islandia (as Ruby explained)'},
+    {year:'2', said:'bye \u00b7 islandia', shows:'a figure on Islandia waves goodbye to a boat setting out'},
+    {year:'3', said:'', shows:'the boat, and a long land ahead; no words'},
+    {year:'4', said:'head lands', shows:'the Headlands drawn as a head-shaped land with the name written in it and a dark scribble at its foot (a spiral?)'},
+    {year:'5', said:'neak (?) \u00b7 fethers (?) \u00b7 llama land \u00b7 footia', shows:'the chicken island with its regions written on it and figures at its feet; the top word is read as neck (Neckia), the second as the Feathers'},
+    {year:'10', said:'', shows:'a bird, and a dotted path leading away down the page; no words'},
+    {year:'15', said:'', shows:'a great hand again, a figure standing on it; no words'},
+    {year:'20', said:'', shows:'a triangle face rising over the waves, a boat with a mast below it'},
+    {year:'25', said:'spikia!', shows:'Spikia written at the top of the triangle, dots below it'},
+    {year:'30', said:'The Canon Face!', shows:'the triangle with figures on it: the Canon Face named'},
+    {year:'35', said:'Cannon sea', shows:'a boat on a sea coloured blue, with a dark storm scribbled beside it'},
+    {year:'40', said:'Western sea', shows:'a dark scribble, a boat and a figure with a dark head'},
+    {year:'45', said:'tropica', shows:'a round island with a figure, named Tropica here; the West chart spells it Tropicia'},
+    {year:'45', said:'', shows:'a second panel for the year: another round island, with a small flag'},
+    {year:'46', said:'', shows:'a coastline with a boat under it; no words'},
+    {year:'47', said:'swampland \u00b7 marshia \u00b7 bauland (?) \u00b7 greeneria', shows:'the central island with four of its nations written on it and a figure at the top; the third name is Baiuland on the chart'},
+    {year:'48', said:'spikia \u00b7 my bag', shows:'the Spikia triangle with dots and a flag, and \u201cmy bag\u201d written under it'},
+    {year:'49', said:'wetia', shows:'a triangle face with round lands on it and a figure: Wetia'},
+    {year:'50', said:'Western face', shows:'a triangle face with round lands on it and a figure: the Western Face'}
   ],
   fields:[{id:'magical',name:'Magical field',effect:'slows light; turns the star\u2019s purple light to sunlight',extent:'all the way around',quote:'Here, the morning moves slower. And light flows like gold.'},
           {id:'magnetic',name:'Magnetic field',effect:'guides worlds',extent:'all the way around'}],
@@ -768,14 +786,17 @@ function drawRain(dt,amount){if(amount<=0)return;const a=spinAngle();fc.strokeSt
 /* ============================== CUBA IN THE SKY ============================== */
 // Ruby (2026-10-04): "you shuld be able to see tetra from cuba and vice versa". Cuba lies farther from the star, so it stands away from the star here, a little to one side and above; where exactly is a reading.
 const OTHER_DIR=norm(add(rotAxis(mulS(SUN0,-1),[0,1,0],-0.5),[0,0.08,0])),OTHER_DIST=38,OTHER_SIZE=0.75;let lastOther=null;
+function capsule(p1,p2,r){const th=Math.atan2(p2.y-p1.y,p2.x-p1.x);fc.moveTo(p1.x+r*Math.cos(th+Math.PI/2),p1.y+r*Math.sin(th+Math.PI/2));fc.arc(p1.x,p1.y,r,th+Math.PI/2,th+3*Math.PI/2,false);fc.arc(p2.x,p2.y,r,th-Math.PI/2,th+Math.PI/2,false);fc.closePath()}
 function inTri2(s,t){if(t.some(p=>!p))return false;const [a,b,c]=t;const d=(b.y-c.y)*(a.x-c.x)+(c.x-b.x)*(a.y-c.y);const u=((b.y-c.y)*(s.x-c.x)+(c.x-b.x)*(s.y-c.y))/d,v=((c.y-a.y)*(s.x-c.x)+(a.x-c.x)*(s.y-c.y))/d;return u>=0&&v>=0&&u+v<=1}
 function drawOtherWorld(){const c=mulS(OTHER_DIR,OTHER_DIST);const sp=project(cam.vp,c);if(!sp){lastOther=null;return}
-  if(worldFaces.some(wf=>facing(wf)>0&&inTri2(sp,wf.tri.map(p=>project(cam.vp,p))))){lastOther=null;return}   // hidden only where Tetra itself stands in front of it
+  if(worldFaces.some(wf=>facing(wf)>0&&inTri2(sp,wf.tri.map(p=>project(cam.vp,p))))){lastOther=null;return}   // hidden where Tetra itself stands in front of it; clipped out of the moon's disc below
   lastOther=sp;if(sp.x<-40||sp.x>W+40||sp.y<-40||sp.y>H+40)return;
+  const rodAxis=norm(cross(MOON.axis,MOON.dir)),mp=project(cam.vp,MOON.pos),mq=mp&&project(cam.vp,add(MOON.pos,mulS(cam.u,MOON_SIDE/Math.sqrt(3)*1.15))),m1=project(cam.vp,add(MOON.pos,mulS(rodAxis,MOON_HALF))),m2=project(cam.vp,sub(MOON.pos,mulS(rodAxis,MOON_HALF)));const mr=mp&&mq?Math.hypot(mq.x-mp.x,mq.y-mp.y):0;
+  fc.save();if(mp&&m1&&m2&&mr>0){fc.beginPath();fc.rect(-20,-20,W+40,H+40);capsule(m1,m2,mr);fc.clip('evenodd')}
   const a=spinAngle();const corners=[];for(const x of[-1,1])for(const y of[-1,1])for(const z of[-1,1])corners.push(add(c,mulS(rotYv(a,[x,y,z]),OTHER_SIZE)));
   const quads=[[0,1,3,2,[-1,0,0]],[4,6,7,5,[1,0,0]],[0,4,5,1,[0,-1,0]],[2,3,7,6,[0,1,0]],[0,2,6,4,[0,0,-1]],[1,5,7,3,[0,0,1]]];const toEye=norm(sub(cam.eye,c));
   for(const [i,j,k,l,n0] of quads){const n=rotYv(a,n0);if(dot(n,toEye)<=0)continue;const pts=[i,j,k,l].map(q=>project(cam.vp,corners[q]));if(pts.some(p=>!p))continue;const lit=Math.max(0,dot(n,SUN0));const g=Math.round(60+150*lit);fc.fillStyle=`rgb(${Math.round(g*0.72)},${Math.round(g*0.8)},${Math.round(g*0.95)})`;fc.beginPath();pts.forEach((p,m)=>m?fc.lineTo(p.x,p.y):fc.moveTo(p.x,p.y));fc.closePath();fc.fill()}
-  fc.fillStyle='rgba(185,173,150,.9)';fc.font='500 10px IBM Plex Sans, system-ui, sans-serif';fc.textAlign='center';fc.fillText('CUBA',sp.x,sp.y+24)}
+  fc.fillStyle='rgba(185,173,150,.9)';fc.font='500 10px IBM Plex Sans, system-ui, sans-serif';fc.textAlign='center';fc.fillText('CUBA',sp.x,sp.y+24);fc.restore()}
 
 /* ============================== MARKERS ============================== */
 const markerEls=new Map();

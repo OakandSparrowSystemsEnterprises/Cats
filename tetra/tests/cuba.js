@@ -64,13 +64,13 @@ const PAGE = require('./_page');
     if (!phone) {
       await page.click('#ctabSides'); await page.waitForTimeout(300);
       const regions = await page.evaluate(() => document.getElementById('csideList').innerText.replace(/\n+/g, ' | '));
-      if (!/The Canon Side[\s\S]*The Plus Continent[\s\S]*The Canyon/.test(regions) || !/Nothing charted here yet/.test(regions)) fails.push('the Regions tab does not list the places under their sides: ' + regions.slice(0, 200));
+      if (!/The Canon Side[\s\S]*The Plus Continent[\s\S]*The Canyon/.test(regions) || /Nothing charted here yet/.test(regions) || !/The West Side[\s\S]*The island with the dark mark/.test(regions)) fails.push('the Regions tab does not list the places under their sides: ' + regions.slice(0, 200));
       await page.screenshot({ path: PAGE.out('cuba_regions.png') });
       await page.click('#ctabWorld'); await page.waitForTimeout(200);
       const strip = await page.evaluate(() => [...document.querySelectorAll('#cyearStrip .m')].map(e => e.textContent).join(' '));
       if (strip !== 'Mar Apr May Jun Jul Aug Sep Oct Nov Dec R Jan Amb Feb Tre') fails.push('Cuba strip order is ' + strip);
       const world = (await page.evaluate(() => document.getElementById('cpaneWorld').innerText)).toLowerCase();
-      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'pointed ends', 'montezuma', '1 mile high', 'east side of cuba', 'quarter of the sise', 'volcano', 'shoots lava', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
+      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'pointed ends', 'montezuma', '1 mile high', 'east side of cuba', 'quarter of the sise', 'volcano', 'shoots lava', 'aquamarine', 'axinite', 'benitoite', 'chrysoberyl', 'earth planets grow all over', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
       await page.screenshot({ path: PAGE.out('cuba_world_tab.png') });
     }
     // the d5 moon: an eclipse at the deepest moment of the 14th of January, every place reading Eclipse, and none the day after
@@ -92,6 +92,19 @@ const PAGE = require('./_page');
     const erupt = await page.evaluate(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)); cuba.setDay(392.6); cuba.face('far', false); await wait(600); const a = cuba.volcano(); const dateA = cuba.date(); cuba.setDay(10); cuba.face('far', false); for (let i = 0; i < 200 && cuba.volcano().sparks > 0; i++) await new Promise(r => requestAnimationFrame(r)); const b = cuba.volcano(); return { a, dateA, b }; });   // sparks age in frame time (dt capped at 0.05 s), so wait in frames, not seconds
     if (!erupt.a.erupting || erupt.a.sparks < 5 || erupt.dateA.mi !== -1 || erupt.b.erupting || erupt.b.sparks > 0) fails.push(`${width}: the volcano does not erupt on the Restart Day only ${JSON.stringify(erupt)}`);
     await page.evaluate(() => { cuba.setDay(392.7); cuba.face('far', false); }); await page.waitForTimeout(700); await page.screenshot({ path: PAGE.out(phone ? 'cuba_volcano_phone.png' : 'cuba_volcano.png') }); await page.evaluate(() => { cuba.setDay(0); cuba.state.dist = 4.6; cuba.face('far', false); });
+    // the four other sides, from Ruby's sketches of the explorers' maps (2026-10-06): every place has its marker, and on desktop every marker sits on painted land (East and West are looked at in their daylight; the top and bottom sides only get the ambient light, so they are only asked not to be sea)
+    const SIDES = { north: ['arm-north', 'north-land', 'north-spiral'], east: ['arm-east', 'east-nf', 'east-crescent', 'east-sf'], south: ['arm-south', 'south-ef'], west: ['arm-west', 'west-island'] };
+    const NAMES = { north: ['The north arm', 'The large land of the North side', 'The island with the spiral'], east: ['The east arm', 'The North-Far corner land', 'The crescent land', 'The South-Far corner land'], south: ['The south arm', 'The East-Far corner land'], west: ['The west arm', 'The island with the dark mark'] };
+    const LIT = { north: 0, east: 0, south: 0, west: 0.5 };
+    const notSea = c => c && !(c[2] > c[1] * 1.3 && c[0] < c[2] * 0.5) && c[0] + c[1] + c[2] > 60;   // sea is blue with little red; the painted mountains are purple, so the Canon test's rule would call them sea
+    for (const side of Object.keys(SIDES)) {
+      const r = await page.evaluate(async ([side, ids, lit, phone]) => { cuba.setDay(lit); cuba.state.dist = phone ? 6.5 : 4.6; cuba.face(side, false); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); return { markers: cuba.markers(), px: ids.map(id => [id, cuba.sample(id)]) }; }, [side, SIDES[side], LIT[side], phone]);
+      console.log(width, side, JSON.stringify(r));
+      for (const need of NAMES[side]) if (!r.markers.includes(need)) fails.push(`${width}: the ${side} side lacks the marker ${need}`);
+      if (!phone) for (const [id, px] of r.px) if (!notSea(px && px.rgb)) fails.push(`${width}: ${id} on the ${side} side is not on painted land ${JSON.stringify(px)}`);
+      if (!phone) { await settle(page); await page.screenshot({ path: PAGE.out(`cuba_${side}.png`) }); }
+    }
+    await page.evaluate(() => { cuba.setDay(0); cuba.state.dist = 4.6; cuba.face('canon', false); });
     if (phone) {
       const closed = await page.evaluate(() => document.getElementById('ccodex').classList.contains('closed'));
       await page.tap('#capp [data-face="canon"]'); await page.waitForTimeout(1500);

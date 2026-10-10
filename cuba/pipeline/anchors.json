@@ -41,8 +41,8 @@
     153,
     409
    ],
-   "north-spiral": [
-    716,
+   "north-portal": [
+    798,
     399
    ]
   },
@@ -54,10 +54,6 @@
    "east-nf": [
     184,
     153
-   ],
-   "east-crescent": [
-    501,
-    798
    ],
    "east-sf": [
     61,
@@ -79,8 +75,8 @@
     158,
     512
    ],
-   "west-island": [
-    563,
+   "west-portal": [
+    581,
     655
    ]
   }
@@ -88,16 +84,28 @@
  "water_canon": 0.5963,
  "water_far": 0.5036,
  "water_sides": {
-  "north": 0.6061,
-  "east": 0.5364,
+  "north": 0.6611,
+  "east": 0.6434,
   "south": 0.8984,
-  "west": 0.8648
+  "west": 0.9364
  },
  "arm_reach": {
   "north": 0.34,
   "east": 0.23,
   "south": 0.22,
   "west": 0.31
+ },
+ "portals": {
+  "north": [
+   0.7,
+   0.39,
+   0.1
+  ],
+  "west": [
+   0.48,
+   0.64,
+   0.11
+  ]
  },
  "hole_radius_px": 22.528,
  "size": 1024

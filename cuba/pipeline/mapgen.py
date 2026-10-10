@@ -20,9 +20,11 @@ Aquamarine, the East side discovered by Axinite, the South side by Benitoite, th
 the texture's own orientation (row 0 the top): North has Far at the top, Canon at the bottom, East on the left and West on the right;
 East has North at the top, Far on the left, Canon on the right; South has Canon at the top, Far at the bottom, East on the left (her
 sketch is turned a quarter, with Canon on its right); West has North at the top, Canon on the left, Far on the right. The Plus
-Continent's arm reaches onto each side as far as the sketch shows (ARM_REACH), the land shapes follow the sketches as ellipses, discs and
-a band (readings of rough drawings), the spiral on the North side and the ringed blob with a dark dot on the West side are read as islands
-with a high middle (the West one with a dark pit), and where two sketches disagree about a shared edge the constants were set by hand so
+Continent's arm reaches onto each side as far as the sketch shows (ARM_REACH), the land shapes follow the sketches as ellipses (readings of
+rough drawings); the spiral on the North side and the ringed blob with a dark dot on the West side are portals standing in
+open sea (Ruby, 2026-10-10: "The rings that were drawn as “islands” were actualy portals. No crescent land, bouth spiral islands are
+portals in the ocean"), painted as purple swirls on the water (purple is the colour of magic in her comics: a reading), and the crescent
+that was first read on the East sketch is gone; where two sketches disagree about a shared edge the constants were set by hand so
 the two textures meet (asserted in main for every edge between two drawn sides, as for Canon's). Nothing on them is named.
 
 Ruby (2026-10-04): "make cuba look sort of like tetra as far as how landmasses are desighnd": the land is painted with Tetra's own
@@ -64,13 +66,12 @@ VOLCANO = (S // 2, int(0.34 * S))     # north of the Canyon's other end, on the 
 VOLCANO_R = 0.055 * S                 # the dark rock around the vent on the texture; the cone itself is a mesh in the page (a reading)
 # the four sides from the sketches (fractions of the side; readings of rough drawings, see the module docstring)
 NORTH_LAND = (-0.05, 0.26, 0.49, 0.46)   # ellipse centre x, y and radii: the big land on the East (left) edge, reaching the Far (top) edge; set so its edges meet the Far side's corner land (0.355 along the top) and the East side's land (about 0.71 down the left)
-NORTH_ISLAND = (0.70, 0.39, 0.13)        # the island with the spiral: centre and radius
+NORTH_PORTAL = (0.70, 0.39, 0.10)        # the spiral she drew: a portal in the sea, centre and the swirl's radius
 EAST_NF = (-0.10, -0.10, 0.82, 0.55)     # the land in the North-Far (top left) corner; rx set so its top edge reaches about 0.70, where the North side's land meets it
 EAST_SF = (-0.12, 1.05, 0.369, 0.52)     # the land in the South-Far (bottom left) corner; rx set so its bottom edge meets the South side's corner land (0.247 along it)
-EAST_BAND = ((0.26, 0.52), (0.45, 0.98), (0.80, 0.73), 0.065)   # the crescent across the lower middle: a quadratic curve and its half-width, a separate land clear of the corner land and the arm, as drawn
 SOUTH_EF = (-0.05, 1.08, 0.40, 0.33)     # the land in the East-Far (bottom left) corner
-WEST_ISLAND = (0.48, 0.64, 0.15)         # the ringed island with the dark dot: centre and radius
-WEST_PIT = 0.035                         # the dark mark at its middle, as Chrysoberyl drew it
+WEST_PORTAL = (0.48, 0.64, 0.11)         # the ringed blob with the dark dot on Chrysoberyl's map: a portal in the sea, centre and the swirl's radius
+PORTALS = {'north': NORTH_PORTAL, 'west': WEST_PORTAL}
 SIDE_WOBBLE = 0.6 * WOBBLE
 
 
@@ -124,21 +125,6 @@ def ellipse(x0, y0, rx, ry):
     return (e - 1) * min(rx, ry) * S
 
 
-def disc(x0, y0, r):
-    return np.hypot(xx - x0 * S, yy - y0 * S) - r * S
-
-
-def band(p0, p1, p2, hw, n=48):
-    """a curved band: the distance to a quadratic curve (sampled) less its half-width (fractions of S)"""
-    d = np.full((S, S), np.inf, np.float32)
-    for i in range(n + 1):
-        t = i / n
-        px = ((1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0]) * S
-        py = ((1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1]) * S
-        d = np.minimum(d, np.hypot(xx - px, yy - py))
-    return d - hw * S
-
-
 def arm_onto(side):
     """the Plus Continent's arm crossing onto a side from the edge it shares with Canon: North's bottom edge, East's right, South's top, West's left; ARM_W wide at the edge, as on Canon, reaching ARM_REACH[side] in"""
     L = ARM_REACH[side] * S + 0.1 * S
@@ -160,28 +146,41 @@ def design_side(side):
     d = arm_onto(side)
     if side == 'north':
         d = np.minimum(d, ellipse(*NORTH_LAND))
-        d = np.minimum(d, disc(*NORTH_ISLAND))
-        return d + wob(SEED + 21), (NORTH_ISLAND[0] * S, NORTH_ISLAND[1] * S)
+        return d + wob(SEED + 21), None
     if side == 'east':
         d = np.minimum(d, ellipse(*EAST_NF))
         d = np.minimum(d, ellipse(*EAST_SF))
-        d = np.minimum(d, band(*EAST_BAND))
         return d + wob(SEED + 23), None
     if side == 'south':
         d = np.minimum(d, ellipse(*SOUTH_EF))
         return d + wob(SEED + 25), None
-    d = np.minimum(d, disc(*WEST_ISLAND))
-    return d + wob(SEED + 27), (WEST_ISLAND[0] * S, WEST_ISLAND[1] * S)
+    return d + wob(SEED + 27), None
+
+
+def portal(tex, x0, y0, r0):
+    """a portal in the sea: a purple swirl, bright on its rings and dark at its middle (what a portal looks like is unwritten; this is a reading)"""
+    dx, dy = xx - x0 * S, yy - y0 * S
+    r = np.hypot(dx, dy) / (r0 * S)
+    th = np.arctan2(dy, dx)
+    swirl = 0.5 + 0.5 * np.cos(2 * np.pi * (r * 2.5) - th)       # two and a half turns of a spiral
+    body = np.clip(1 - (r - 0.85) / 0.15, 0, 1) * (r < 1.0)
+    eye = np.clip(1 - r / 0.18, 0, 1)
+    glow = np.clip(1 - (r - 1.0) / 0.35, 0, 1) * (r >= 1.0)
+    k = (body * (0.35 + 0.55 * swirl) + 0.25 * glow)[..., None]
+    violet = np.array([150, 70, 215], np.float32)
+    tex = tex * (1 - 0.8 * k) + violet * (0.8 * k)
+    tex = tex * (1 - 0.9 * eye[..., None]) + np.array([20, 8, 30], np.float32) * (0.9 * eye[..., None])
+    return tex
 
 
 def render_side(side, seed):
     d, hub = design_side(side)
     land = d < 0
     tex = painted(d, seed, hub_at=hub, hub_r=0.12 if hub else 0.21)
-    if side == 'west':   # the dark mark at the island's middle, as drawn; what it is, is unwritten
-        r = np.hypot(xx - WEST_ISLAND[0] * S, yy - WEST_ISLAND[1] * S)
-        pit = np.clip(1 - (r - WEST_PIT * S) / (0.25 * WEST_PIT * S), 0, 1)[..., None]
-        tex = tex * (1 - 0.85 * pit) + pit * np.array([22, 16, 18], np.float32) * 0.85
+    if side in PORTALS:
+        px, py, pr = PORTALS[side]
+        assert not land[int(py * S), int(px * S)], f'the {side} portal is not in the sea'
+        tex = portal(tex, px, py, pr)
     return np.clip(tex, 0, 255).astype(np.uint8), land
 
 
@@ -287,18 +286,20 @@ def main():
     assert far_hole[S // 2, S // 2] and far_land_mask[VOLCANO[1], VOLCANO[0]]
     anchors = {'canon': {'island': [S // 2, int(0.30 * S)], 'hole': [S // 2, S // 2]},
                'far': {'hole-far': [S // 2, S // 2], 'far-island': [S // 2, int(0.68 * S)], 'volcano': list(VOLCANO), 'far-ne': [int(0.90 * S), int(0.10 * S)], 'far-se': [int(0.90 * S), int(0.90 * S)]},
-               'north': {'arm-north': [S // 2, int(S - 0.5 * ARM_REACH['north'] * S)], 'north-land': [int(0.15 * S), int(0.40 * S)], 'north-spiral': [int(NORTH_ISLAND[0] * S), int(NORTH_ISLAND[1] * S)]},
-               'east': {'arm-east': [int(S - 0.5 * ARM_REACH['east'] * S), S // 2], 'east-nf': [int(0.18 * S), int(0.15 * S)], 'east-crescent': [int(0.49 * S), int(0.78 * S)], 'east-sf': [int(0.06 * S), int(0.85 * S)]},
+               'north': {'arm-north': [S // 2, int(S - 0.5 * ARM_REACH['north'] * S)], 'north-land': [int(0.15 * S), int(0.40 * S)], 'north-portal': [int((NORTH_PORTAL[0] + 0.8 * NORTH_PORTAL[2]) * S), int(NORTH_PORTAL[1] * S)]},
+               'east': {'arm-east': [int(S - 0.5 * ARM_REACH['east'] * S), S // 2], 'east-nf': [int(0.18 * S), int(0.15 * S)], 'east-sf': [int(0.06 * S), int(0.85 * S)]},
                'south': {'arm-south': [S // 2, int(0.5 * ARM_REACH['south'] * S)], 'south-ef': [int(0.10 * S), int(0.92 * S)]},
-               'west': {'arm-west': [int(0.5 * ARM_REACH['west'] * S), S // 2], 'west-island': [int((WEST_ISLAND[0] + 0.07) * S), int(WEST_ISLAND[1] * S)]}}
+               'west': {'arm-west': [int(0.5 * ARM_REACH['west'] * S), S // 2], 'west-portal': [int((WEST_PORTAL[0] + 0.8 * WEST_PORTAL[2]) * S), int(WEST_PORTAL[1] * S)]}}
     ax, ay = anchors['canon']['island']; assert land[ay, ax] and not hole[ay, ax]
     for k, (px, py) in anchors['far'].items():
         if k != 'hole-far':
             assert far_land_mask[py, px] and not far_hole[py, px], f'the Far side marker {k} is not on land'
     n_east, _ = cv2.connectedComponents(sides['east'][1].astype(np.uint8))
-    assert n_east == 5, f'the East side has {n_east - 1} pieces of land, not four (the arm, two corner lands, the crescent)'
+    assert n_east == 4, f'the East side has {n_east - 1} pieces of land, not three (the arm, two corner lands)'
     n_north, _ = cv2.connectedComponents(sides['north'][1].astype(np.uint8))
-    assert n_north == 4, f'the North side has {n_north - 1} pieces of land, not three (the arm, the large land, the island)'
+    assert n_north == 3, f'the North side has {n_north - 1} pieces of land, not two (the arm, the large land)'
+    n_west, _ = cv2.connectedComponents(sides['west'][1].astype(np.uint8))
+    assert n_west == 2, f'the West side has {n_west - 1} pieces of land, not one (the arm)'
     # the edges between the drawn sides agree too (the wobble dies at the edges, so these are the designed shapes meeting): North's left column runs Far to Canon like East's top row; East's bottom row (Far to Canon) meets South's left column (Canon to Far) reversed; North's top row (East to West) meets Far's top row (West to East) reversed; East's left column meets Far's right column (both North to South); South's bottom row (East to West) meets Far's bottom row (West to East) reversed
     N, E, So, Wst = sides['north'][1], sides['east'][1], sides['south'][1], sides['west'][1]
     for name, a, b in (('North/East', N[:, 0], E[0, :]), ('East/South', E[-1, :], So[:, 0][::-1]), ('North/Far', N[0, :], far_land_mask[0, :][::-1]),
@@ -310,9 +311,12 @@ def main():
     water_sides = {}
     for side in ('north', 'east', 'south', 'west'):
         for k, (px, py) in anchors[side].items():
-            assert sides[side][1][py, px], f'the {side} marker {k} is not on land'
+            if k.endswith('-portal'):   # the marker sits on a bright band of the swirl, four fifths of a radius east of the eye
+                assert not sides[side][1][py, px], f'the {side} portal marker is on land'
+            else:
+                assert sides[side][1][py, px], f'the {side} marker {k} is not on land'
         water_sides[side] = round(float(1 - sides[side][1].mean()), 4)
-    assert not sides['west'][1][int(WEST_ISLAND[1] * S), 0] and not sides['west'][1][5, int(WEST_ISLAND[0] * S)], 'the West side has land where the sketch has water'
+    assert not sides['west'][1][int(WEST_PORTAL[1] * S), 0] and not sides['west'][1][5, int(WEST_PORTAL[0] * S)], 'the West side has land where the sketch has water'
     os.chdir(HERE)
     write_jpg('map_canon.jpg', canon)
     write_jpg('map_far.jpg', far)
@@ -331,7 +335,7 @@ def main():
     for (px, py) in anchors['canon'].values():
         cv2.circle(prev, (px, py), 9, (40, 220, 255), 2)
     cv2.imwrite(os.path.join(HERE, 'map_canon_prev.png'), prev)
-    json.dump({'anchors': anchors, 'water_canon': round(float(water), 4), 'water_far': round(float(far_water), 4), 'water_sides': water_sides, 'arm_reach': ARM_REACH, 'hole_radius_px': HOLE_R, 'size': S},
+    json.dump({'anchors': anchors, 'water_canon': round(float(water), 4), 'water_far': round(float(far_water), 4), 'water_sides': water_sides, 'arm_reach': ARM_REACH, 'portals': PORTALS, 'hole_radius_px': HOLE_R, 'size': S},
               open(os.path.join(HERE, 'anchors.json'), 'w'), indent=1)
     print(f'canon: water {water:.3f}, land one piece reaching all four sides, hole radius {HOLE_R:.0f}px; far: water {far_water:.3f}, the island and two corner lands, the volcano at {VOLCANO}; the four sides from the sketches, water {water_sides}; wrote map_canon.jpg, map_north/east/south/west.jpg, map_far.jpg, map_blank.jpg, anchors.json')
 

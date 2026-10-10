@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const PAGE = require('./_page');
-// Cuba, the cube planet, shares this page with Tetra (Ruby, 2026-10-04: "it neends to be in the same file as tetra"). Checks: the page opens on Tetra;
-// the Cuba button shows Cuba with its six sides in Ruby's arrangement; the Plus Continent and the Canyon are drawn where their markers sit; the star
+// Hexa, the cube planet (Cuba until 2026-10-10; the ids and hooks keep that name), shares this page with Tetra (Ruby, 2026-10-04: "it neends to be in the same file as tetra"). Checks: the page opens on Tetra;
+// the Hexa button (data-world cuba) shows Hexa with its six sides in Ruby's arrangement; the Plus Continent and the Canyon are drawn where their markers sit; the star
 // stays put and is not held in the frame (it is off screen when you face the lit Canon side, and on screen when you turn toward it); the world turns
 // leftward; the 14-month calendar with Amberary reads right; the d5 moon eclipses on the 14th; the Far side carries the Canyon's other end; switching
 // back shows Tetra; on a phone a tap on a side opens Cuba's Codex. A second run fakes the artifact's hot-reload hook: both worlds must start from one snapshot.
@@ -30,7 +30,7 @@ const PAGE = require('./_page');
     if (!info.markers.includes('The Canyon · to the Far side') || !info.markers.includes('The Plus Continent')) fails.push(`${width}: markers ${JSON.stringify(info.markers)}`);
     if (!land(info.island && info.island.rgb)) fails.push(`${width}: the Plus Continent marker is not over land (${info.island && info.island.rgb})`);
     if (!dark(info.hole && info.hole.rgb)) fails.push(`${width}: the Canyon is not dark (${info.hole && info.hole.rgb})`);
-    if (info.date !== 'Starday · 1 January | Year 50 of Cuba · Rain season · day 1 of 393½') fails.push(`${width}: first day reads "${info.date}"`);
+    if (info.date !== 'Starday · 1 January | Year 50 of Hexa · Rain season · day 1 of 393½') fails.push(`${width}: first day reads "${info.date}"`);
     // the star: facing the lit Canon side it is behind the viewer and off the frame (Ruby: it must not be held in the frame); turned toward it, the glow is there and purple
     if (info.starPx) fails.push(`${width}: the star glow is on screen while facing the lit side (${JSON.stringify(info.star)})`);
     const starYaw = await page.evaluate(() => { const s = cuba.sunDir(); return Math.atan2(s[0], s[2]) + Math.PI; });   // the eye opposite the star looks straight at it
@@ -64,13 +64,13 @@ const PAGE = require('./_page');
     if (!phone) {
       await page.click('#ctabSides'); await page.waitForTimeout(300);
       const regions = await page.evaluate(() => document.getElementById('csideList').innerText.replace(/\n+/g, ' | '));
-      if (!/The Canon Side[\s\S]*The Plus Continent[\s\S]*The Canyon/.test(regions) || /Nothing charted here yet/.test(regions) || !/The West Side[\s\S]*The island with the dark mark/.test(regions)) fails.push('the Regions tab does not list the places under their sides: ' + regions.slice(0, 200));
+      if (!/The Canon Side[\s\S]*The Plus Continent[\s\S]*The Canyon/.test(regions) || /Nothing charted here yet/.test(regions) || !/The West Side[\s\S]*The portal on the West side/.test(regions)) fails.push('the Regions tab does not list the places under their sides: ' + regions.slice(0, 200));
       await page.screenshot({ path: PAGE.out('cuba_regions.png') });
       await page.click('#ctabWorld'); await page.waitForTimeout(200);
       const strip = await page.evaluate(() => [...document.querySelectorAll('#cyearStrip .m')].map(e => e.textContent).join(' '));
       if (strip !== 'Mar Apr May Jun Jul Aug Sep Oct Nov Dec R Jan Amb Feb Tre') fails.push('Cuba strip order is ' + strip);
       const world = (await page.evaluate(() => document.getElementById('cpaneWorld').innerText)).toLowerCase();
-      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'pointed ends', 'montezuma', '1 mile high', 'east side of cuba', 'quarter of the sise', 'volcano', 'shoots lava', 'aquamarine', 'axinite', 'benitoite', 'chrysoberyl', 'earth planets grow all over', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
+      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'pointed ends', 'montezuma', '1 mile high', 'east side of cuba', 'quarter of the sise', 'volcano', 'shoots lava', 'aquamarine', 'axinite', 'benitoite', 'chrysoberyl', 'earth planets grow all over', 'hexahedron', 'portals in the ocean', 'triaconta', 'dwarf planets', 'amberary', 'boom, cut off', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
       await page.screenshot({ path: PAGE.out('cuba_world_tab.png') });
     }
     // the d5 moon: an eclipse at the deepest moment of the 14th of January, every place reading Eclipse, and none the day after
@@ -93,15 +93,18 @@ const PAGE = require('./_page');
     if (!erupt.a.erupting || erupt.a.sparks < 5 || erupt.dateA.mi !== -1 || erupt.b.erupting || erupt.b.sparks > 0) fails.push(`${width}: the volcano does not erupt on the Restart Day only ${JSON.stringify(erupt)}`);
     await page.evaluate(() => { cuba.setDay(392.7); cuba.face('far', false); }); await page.waitForTimeout(700); await page.screenshot({ path: PAGE.out(phone ? 'cuba_volcano_phone.png' : 'cuba_volcano.png') }); await page.evaluate(() => { cuba.setDay(0); cuba.state.dist = 4.6; cuba.face('far', false); });
     // the four other sides, from Ruby's sketches of the explorers' maps (2026-10-06): every place has its marker, and on desktop every marker sits on painted land (East and West are looked at in their daylight; the top and bottom sides only get the ambient light, so they are only asked not to be sea)
-    const SIDES = { north: ['arm-north', 'north-land', 'north-spiral'], east: ['arm-east', 'east-nf', 'east-crescent', 'east-sf'], south: ['arm-south', 'south-ef'], west: ['arm-west', 'west-island'] };
-    const NAMES = { north: ['The north arm', 'The large land of the North side', 'The island with the spiral'], east: ['The east arm', 'The North-Far corner land', 'The crescent land', 'The South-Far corner land'], south: ['The south arm', 'The East-Far corner land'], west: ['The west arm', 'The island with the dark mark'] };
+    const SIDES = { north: ['arm-north', 'north-land'], east: ['arm-east', 'east-nf', 'east-sf'], south: ['arm-south', 'south-ef'], west: ['arm-west'] };   // the two portals are checked apart: they stand in the sea
+    const NAMES = { north: ['The north arm', 'The large land of the North side', 'The portal on the North side'], east: ['The east arm', 'The North-Far corner land', 'The South-Far corner land'], south: ['The south arm', 'The East-Far corner land'], west: ['The west arm', 'The portal on the West side'] };
+    const PORTALS = { north: 'north-portal', west: 'west-portal' };
+    const portalPurple = c => c && c[2] > c[1] + 15 && c[0] >= c[1];   // the portal's swirl: violet on blue sea (the top and bottom sides get only the ambient light, so the margin is small)
     const LIT = { north: 0, east: 0, south: 0, west: 0.5 };
     const notSea = c => c && !(c[2] > c[1] * 1.3 && c[0] < c[2] * 0.5) && c[0] + c[1] + c[2] > 60;   // sea is blue with little red; the painted mountains are purple, so the Canon test's rule would call them sea
     for (const side of Object.keys(SIDES)) {
-      const r = await page.evaluate(async ([side, ids, lit, phone]) => { cuba.setDay(lit); cuba.state.dist = phone ? 6.5 : 4.6; cuba.face(side, false); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); return { markers: cuba.markers(), px: ids.map(id => [id, cuba.sample(id)]) }; }, [side, SIDES[side], LIT[side], phone]);
+      const r = await page.evaluate(async ([side, ids, lit, phone, portal]) => { cuba.setDay(lit); cuba.state.dist = phone ? 6.5 : 4.6; cuba.face(side, false); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); return { markers: cuba.markers(), px: ids.map(id => [id, cuba.sample(id)]), portal: portal ? cuba.sample(portal) : null }; }, [side, SIDES[side], LIT[side], phone, PORTALS[side] || null]);
       console.log(width, side, JSON.stringify(r));
       for (const need of NAMES[side]) if (!r.markers.includes(need)) fails.push(`${width}: the ${side} side lacks the marker ${need}`);
       if (!phone) for (const [id, px] of r.px) if (!notSea(px && px.rgb)) fails.push(`${width}: ${id} on the ${side} side is not on painted land ${JSON.stringify(px)}`);
+      if (!phone && PORTALS[side] && !portalPurple(r.portal && r.portal.rgb)) fails.push(`${width}: the ${side} portal is not a purple swirl on the sea ${JSON.stringify(r.portal)}`);
       if (!phone) { await settle(page); await page.screenshot({ path: PAGE.out(`cuba_${side}.png`) }); }
     }
     await page.evaluate(() => { cuba.setDay(0); cuba.state.dist = 4.6; cuba.face('canon', false); });

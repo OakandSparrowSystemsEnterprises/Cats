@@ -240,6 +240,7 @@
   #diceWorlds button{background:rgba(8,11,20,.7);border:1px solid var(--line-2);border-radius:999px;color:var(--muted);font:600 11px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
   #diceWorlds button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold-soft);background:rgba(245,182,79,.14)}
   .worlds i.cuba{background:var(--stone)}
+.worlds i.octo,.worlds i.deca,.worlds i.dodeca,.worlds i.icoso,.worlds i.icosotetra,.worlds i.triaconta,.worlds i.dwarfs,.worlds i.asteroids{background:none;border-style:dashed;opacity:.6}
   @media (max-width:819px){#diceWorlds{top:calc(92px + env(safe-area-inset-top,0px));left:14px}#diceWorlds span{display:none}}
 </style>
 
@@ -301,14 +302,14 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The Dice System</p>
-          <p>Worlds beyond chance. Tetra is the four-sided world and Cuba the cube planet; they share this page, and the buttons under the title switch between them.</p>
+          <p>Worlds beyond chance. Tetra is the four-sided world and Hexa the cube planet; they share this page, and the buttons under the title switch between them.</p>
           <ul class="worlds" id="worlds"></ul>
           <p class="q" style="margin-top:12px">Different worlds. Same imagination.</p>
         </div>
         <div class="sect">
           <p class="eyebrow">Life of Tetra</p>
-          <div class="flora"><img id="zinniaImg" alt="Line drawing of the Umbrella Tree Zinnia: a tall stem with a wide crown of petals and small blossoms hanging from its rim" src="{{ZINNIA}}"><div><b>The Umbrella Tree Zinnia</b><p>A single tall stem that is not wood, crowned with a wide umbrella of broad petals. Small blossoms hang on threads from the rim of the crown.</p><p class="q">It grows in magical places with a lot of water, most of all in Wetia and on the West Face.</p><p>There are more of them on Cuba than here, since there is more magic there (Ruby).</p></div></div>
-          <p class="note" style="margin-top:12px">Ruby: “add most of the recognizable plants from the real world to bouth”. So most of the plants you would know from Earth grow on Tetra too, for example oaks, pines, birches, maples, willows, palms, bamboo, cactuses, ferns, mosses, grasses, clover, dandelions, daisies, roses, sunflowers, lilies, lotuses, wheat, corn, rice, apple trees, cherry trees, orange trees and strawberries. Which grows where is unwritten. Ruby: “anything that grows on tetra also grows on cuba”, so all of these grow on Cuba too.</p>
+          <div class="flora"><img id="zinniaImg" alt="Line drawing of the Umbrella Tree Zinnia: a tall stem with a wide crown of petals and small blossoms hanging from its rim" src="{{ZINNIA}}"><div><b>The Umbrella Tree Zinnia</b><p>A single tall stem that is not wood, crowned with a wide umbrella of broad petals. Small blossoms hang on threads from the rim of the crown.</p><p class="q">It grows in magical places with a lot of water, most of all in Wetia and on the West Face.</p><p>There are more of them on Hexa than here, since there is more magic there (Ruby).</p></div></div>
+          <p class="note" style="margin-top:12px">Ruby: “add most of the recognizable plants from the real world to bouth”. So most of the plants you would know from Earth grow on Tetra too, for example oaks, pines, birches, maples, willows, palms, bamboo, cactuses, ferns, mosses, grasses, clover, dandelions, daisies, roses, sunflowers, lilies, lotuses, wheat, corn, rice, apple trees, cherry trees, orange trees and strawberries. Which grows where is unwritten. Ruby: “anything that grows on tetra also grows on cuba”, so all of these grow on Hexa too.</p>
         </div>
         <div class="sect">
           <p class="eyebrow">Nations</p>
@@ -321,12 +322,12 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Key events</p>
-          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 50. The words are hers, in her spelling, as read from the photos; (?) marks a word that was hard to read. The small line under each is what the panel shows.</p>
+          <p class="note" style="margin:0 0 6px">From Ruby’s comics of the key events, drawn so far up to year 1700 (eight pages). The words are hers, in her spelling, as read from the photos; (?) marks a word that was hard to read. The small line under each is what the panel shows.</p>
           <ul class="timeline" id="timeline"></ul>
         </div>
         <div class="sect">
           <p class="eyebrow">Still unwritten</p>
-          <ul class="unwritten-list"><li>The key events after year 50 (Ruby’s comics continue)</li><li>More places and names on every face</li></ul>
+          <ul class="unwritten-list"><li>The key events after year 1700 (Ruby’s comics continue), and what her year 1700 panel, “NO”, means</li><li>More places and names on every face</li></ul>
           <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
         </div>
       </section>
@@ -381,7 +382,7 @@ window.dice={time,ready(key,fn){starters[key]=fn;if(booted)startAll(data)},snaps
     try{if(hot&&hot.ready)hot.ready(d=>{startAll(d);if(d&&d.world==='cuba'||d&&d.world==='tetra')show(d.world)});else startAll(hot&&hot.data||{})}catch(e){startAll({})}}}})();
 </script>
 {{CUBA}}
-<nav id="diceWorlds" aria-label="The worlds of the Dice System"><span>The Dice System</span><button type="button" data-world="tetra" aria-pressed="true">Tetra</button><button type="button" data-world="cuba" aria-pressed="false">Cuba</button></nav>
+<nav id="diceWorlds" aria-label="The worlds of the Dice System"><span>The Dice System</span><button type="button" data-world="tetra" aria-pressed="true">Tetra</button><button type="button" data-world="cuba" aria-pressed="false">Hexa</button></nav>
 
 <script>
 (()=>{
@@ -439,12 +440,12 @@ const WORLD = {
              {name:'Amethyst the explorer', desc:'Charted the South Face: tropical at the top, the southern continent with Snowia, Coldland and Beria, and Wetia.'},
              {name:'Obsidian the explorer', desc:'Charted the Far Face: Mount Celestial, Wetia, and the nations Warmia, Ehia and Tree Land.'},
              {name:'Opal the explorer', desc:'Went back over the West, South and Far faces and drew the complete maps from the other explorers\u2019 charts. Opal\u2019s maps are the ones on the world now.'}],
-  worlds:[{id:'tetra',name:'Tetra',desc:'The four-sided world. This one.'},{id:'cuba',name:'Cuba',desc:'The cube planet, six square sides, farther from the star. All six of its sides are drawn now, the last four from Ruby’s sketches of the explorers’ maps; the Cuba button under the title switches to it.'}],
+  worlds:[{id:'tetra',name:'Tetra',desc:'The d4. The four-sided world. This one.'},{id:'cuba',name:'Hexa',desc:'The d6. The cube planet, six square sides, farther from the star; called Cuba until 2026-10-10 (Ruby: “the hedron name for a cube was a hexahedron So Cuba should be called hexa”). All six of its sides are drawn; the Hexa button under the title switches to it.'},{id:'octo',name:'Octo',desc:'The d8. Not yet built (Ruby, 2026-10-10).'},{id:'deca',name:'Deca',desc:'The d10. Not yet built.'},{id:'dodeca',name:'Dodeca',desc:'The d12. Not yet built.'},{id:'icoso',name:'Icoso',desc:'The d20. Not yet built.'},{id:'icosotetra',name:'Icosotetra',desc:'The d24. Not yet built.'},{id:'triaconta',name:'Triaconta',desc:'The d30. Not yet built.'},{id:'dwarfs',name:'Two dwarf planets',desc:'The d2 and the d1: “probably”, Ruby says. Unnamed, not built.'},{id:'asteroids',name:'Asteroids',desc:'The d0.5, and a belt: her question (“Maby make some d0.5’s for asteroids And make a belt?”). Not built.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
   moon:{name:'A d3 moon', shape:'a fair three-sided die, not the cube kind: a rounded three-sided rod with pointed ends, so it can only come to rest on one of its three sides; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
   size:{miles:20000, from:'the corner of Spikia', to:'the base of Mount Celestial', path:'straight through the world'},
   years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
-  timeline:[      /* Ruby's comics of the key events: two pages of 2026-10-03 (years -2000 to 1) and two of 2026-10-06 (years 2 to 50); said = her words as read from the photos, shows = what the panel draws, a reading */
+  timeline:[      /* Ruby's comics of the key events: two pages of 2026-10-03 (years -2000 to 1), two of 2026-10-06 (years 2 to 50) and four of 2026-10-10 (years 51 to 1700; Amber's flight and the C years are on Hexa's World tab); said = her words as read from the photos, shows = what the panel draws, a reading */
     {year:'-2000', said:'estar una tetragon', shows:'green hills and a figure'},
     {year:'-1000', said:'Dote', shows:'a figure on a green hill'},
     {year:'-500', said:'runder tetragon?', shows:'a figure, and a die with dots'},
@@ -474,7 +475,21 @@ const WORLD = {
     {year:'47', said:'swampland \u00b7 marshia \u00b7 bauland (?) \u00b7 greeneria', shows:'the central island with four of its nations written on it and a figure at the top; the third name is Baiuland on the chart'},
     {year:'48', said:'spikia \u00b7 my bag', shows:'the Spikia triangle with dots and a flag, and \u201cmy bag\u201d written under it'},
     {year:'49', said:'wetia', shows:'a triangle face with round lands on it and a figure: Wetia'},
-    {year:'50', said:'Western face', shows:'a triangle face with round lands on it and a figure: the Western Face'}
+    {year:'50', said:'Western face', shows:'a triangle face with round lands on it and a figure: the Western Face'},
+    {year:'51', said:'', shows:'a triangle face with two round lands and a figure; no words'},
+    {year:'80', said:'?', shows:'two faces side by side, one with a figure and a round land, the other with a question mark and a small round land'},
+    {year:'81', said:'', shows:'a face with figures, a flag (?) in its middle and three round lands in a corner; no words'},
+    {year:'82', said:'Snowia \u00b7 berria (?) \u00b7 (unreadable)', shows:'a tall curved land with Snowia along its top and two more names down its sides (Beria and Coldland of the South Face, as read)'},
+    {year:'83', said:'?', shows:'a face seen from below with figures at its corners and a round land; dotted lines run off below to a question mark'},
+    {year:'100', said:'Warmia (?) / ehia', shows:'a face with two round lands and a figure; under it a bar with the two names, an arrow pointing up at it and a trunk going down (the Far Face: Warmia, Ehia and Tree Land, as read)'},
+    {year:'100', said:'', shows:'a second panel for the year: a face with a dark scribbled mass and writing too small to read'},
+    {year:'1000', said:'', shows:'two figures, one holding something purple, under a purple triangle (purple is magic in her comics, by the T1690 labels)'},
+    {year:'1500', said:'', shows:'a figure leading something on a purple line toward purple tents, small writing by the tents, a dark creature above'},
+    {year:'1650', said:'', shows:'a figure inside a hollowed tree with purple fire under it (the chamber of her 2026-10-04 line)'},
+    {year:'1650', said:'', shows:'Tetra with the chamber at its foot'},
+    {year:'1650', said:'', shows:'a purple ball; Amber\u2019s flight and Hexa\u2019s years continue on Hexa\u2019s World tab'},
+    {year:'1690', said:'wind \u00b7 magic \u00b7 electricity (?)', shows:'a windmill (?) under a cloud, a purple blob for magic, a yellow bolt'},
+    {year:'1700', said:'NO', shows:'NO in red on a blue page, over a triangle'}
   ],
   fields:[{id:'magical',name:'Magical field',effect:'slows light; turns the star\u2019s purple light to sunlight',extent:'all the way around',quote:'Here, the morning moves slower. And light flows like gold.'},
           {id:'magnetic',name:'Magnetic field',effect:'guides worlds',extent:'all the way around'}],
@@ -568,7 +583,7 @@ function seasonLight(day){const doy=((day%YEAR)+YEAR)%YEAR;const n=seasonCenters
 function rainAmount(day){let x=((day%YEAR)+YEAR)%YEAR;const a=RESTART_AT,b=RESTART_AT+RESTART+DPM;if(x<a-1)x+=YEAR;if(x>b)return 0;return clamp(Math.min(x-(a-1),b-x),0,1)}   // the Restart Day and the January after it, with a day's ramp either side
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const state={day:0, playing:!reduceMotion, speed:1, baseYaw:0, pitch:0.36, dist:4.5, follow:false, selected:null, selectedFace:null, fly:null, tab:'tabWorld'};
-if(window.dice&&window.dice.time){const T=window.dice.time;if(reduceMotion)T.playing=false;for(const k of['day','playing','speed'])Object.defineProperty(state,k,{get:()=>T[k],set:v=>{T[k]=v},enumerable:true})}   // one clock with Cuba (Ruby, 2026-10-04)
+if(window.dice&&window.dice.time){const T=window.dice.time;if(reduceMotion)T.playing=false;for(const k of['day','playing','speed'])Object.defineProperty(state,k,{get:()=>T[k],set:v=>{T[k]=v},enumerable:true})}   // one clock with Hexa (Ruby, 2026-10-04)
 const SUN0=norm([-0.75,0,0.66]);
 function sunDir(day){const e=SUN_LIFT+SUN_TILT*Math.cos(TAU*(day-SUMMER_MID)/YEAR);return norm([SUN0[0]*Math.cos(e),Math.sin(e),SUN0[2]*Math.cos(e)])}
 const spinAngle=()=>-TAU*state.day;
@@ -784,7 +799,7 @@ function drawRain(dt,amount){if(amount<=0)return;const a=spinAngle();fc.strokeSt
   fc.stroke();fc.globalAlpha=1}
 
 /* ============================== CUBA IN THE SKY ============================== */
-// Ruby (2026-10-04): "you shuld be able to see tetra from cuba and vice versa". Cuba lies farther from the star, so it stands away from the star here, a little to one side and above; where exactly is a reading.
+// Ruby (2026-10-04): "you shuld be able to see tetra from cuba and vice versa". Hexa (Cuba then) lies farther from the star, so it stands away from the star here, a little to one side and above; where exactly is a reading.
 const OTHER_DIR=norm(add(rotAxis(mulS(SUN0,-1),[0,1,0],-0.5),[0,0.08,0])),OTHER_DIST=38,OTHER_SIZE=0.75;let lastOther=null;
 function capsule(p1,p2,r){const th=Math.atan2(p2.y-p1.y,p2.x-p1.x);fc.moveTo(p1.x+r*Math.cos(th+Math.PI/2),p1.y+r*Math.sin(th+Math.PI/2));fc.arc(p1.x,p1.y,r,th+Math.PI/2,th+3*Math.PI/2,false);fc.arc(p2.x,p2.y,r,th-Math.PI/2,th+Math.PI/2,false);fc.closePath()}
 function inTri2(s,t){if(t.some(p=>!p))return false;const [a,b,c]=t;const d=(b.y-c.y)*(a.x-c.x)+(c.x-b.x)*(a.y-c.y);const u=((b.y-c.y)*(s.x-c.x)+(c.x-b.x)*(s.y-c.y))/d,v=((c.y-a.y)*(s.x-c.x)+(a.x-c.x)*(s.y-c.y))/d;return u>=0&&v>=0&&u+v<=1}
@@ -796,7 +811,7 @@ function drawOtherWorld(){const c=mulS(OTHER_DIR,OTHER_DIST);const sp=project(ca
   const a=spinAngle();const corners=[];for(const x of[-1,1])for(const y of[-1,1])for(const z of[-1,1])corners.push(add(c,mulS(rotYv(a,[x,y,z]),OTHER_SIZE)));
   const quads=[[0,1,3,2,[-1,0,0]],[4,6,7,5,[1,0,0]],[0,4,5,1,[0,-1,0]],[2,3,7,6,[0,1,0]],[0,2,6,4,[0,0,-1]],[1,5,7,3,[0,0,1]]];const toEye=norm(sub(cam.eye,c));
   for(const [i,j,k,l,n0] of quads){const n=rotYv(a,n0);if(dot(n,toEye)<=0)continue;const pts=[i,j,k,l].map(q=>project(cam.vp,corners[q]));if(pts.some(p=>!p))continue;const lit=Math.max(0,dot(n,SUN0));const g=Math.round(60+150*lit);fc.fillStyle=`rgb(${Math.round(g*0.72)},${Math.round(g*0.8)},${Math.round(g*0.95)})`;fc.beginPath();pts.forEach((p,m)=>m?fc.lineTo(p.x,p.y):fc.moveTo(p.x,p.y));fc.closePath();fc.fill()}
-  fc.fillStyle='rgba(185,173,150,.9)';fc.font='500 10px IBM Plex Sans, system-ui, sans-serif';fc.textAlign='center';fc.fillText('CUBA',sp.x,sp.y+24);fc.restore()}
+  fc.fillStyle='rgba(185,173,150,.9)';fc.font='500 10px IBM Plex Sans, system-ui, sans-serif';fc.textAlign='center';fc.fillText('HEXA',sp.x,sp.y+24);fc.restore()}
 
 /* ============================== MARKERS ============================== */
 const markerEls=new Map();
@@ -816,7 +831,7 @@ const loreOf=id=>(loreEdits[id]??WORLD.lore[id]??'');
 function renderFaceList(){facelist.innerHTML='';FACE_ORDER.forEach(id=>{const f=WORLD.faces[id],n=REGIONS.filter(r=>r.face===id).length;const li=document.createElement('li');const b=document.createElement('button');b.type='button';b.innerHTML=`<i style="background:${f.color};color:${f.color}"></i><span><b></b><br><small class="tl"></small></span><small></small>`;b.querySelector('b').textContent=f.name;b.querySelector('.tl').textContent=f.tagline;b.lastElementChild.textContent=f.exploring?`${n} places · ${f.explorerShort}`:n?`${n} regions`:'still unwritten';b.addEventListener('click',()=>selectFace(id,true));li.appendChild(b);facelist.appendChild(li)})}
 const phaseCache=new Map();
 function renderRegionGroups(){reggroups.innerHTML='';FACE_ORDER.forEach(id=>{const rs=REGIONS.filter(r=>r.face===id);const f=WORLD.faces[id];if(!rs.length){const g=document.createElement('div');g.className='group';g.innerHTML=`<h3><span></span><button type="button" class="ghost">Turn to face</button></h3><p class="note" style="margin-top:0"></p>`;g.querySelector('span').textContent=f.name;g.querySelector('p').textContent=f.tagline+'. No places written yet.';g.querySelector('button').addEventListener('click',()=>selectFace(id,true));reggroups.appendChild(g);return}const g=document.createElement('div');g.className='group';g.innerHTML=`<h3><span></span><button type="button" class="ghost">Turn to face</button></h3>${f.exploring?'<p class="sub"></p>':''}<ul class="reglist"></ul>`;g.querySelector('span').textContent=f.name;if(f.exploring)g.querySelector('.sub').textContent='Charted by '+f.explorer;g.querySelector('button').addEventListener('click',()=>selectFace(id,true));const ul=g.querySelector('ul');rs.forEach(r=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';b.dataset.id=r.id;b.innerHTML=`<i style="background:${f.color};color:${f.color}"></i><span></span><small><i></i><em></em></small>`;b.querySelector('span').textContent=r.name;if(r.unsure){const u=document.createElement('i');u.className='unsure';u.textContent='spelling?';b.querySelector('span').appendChild(u)}b.querySelector('em').style.fontStyle='normal';b.addEventListener('click',()=>selectRegion(r.id));li.appendChild(b);ul.appendChild(li)});reggroups.appendChild(g)})}
-function renderWorlds(){const ul=$('worlds');ul.innerHTML='';WORLD.worlds.forEach(w=>{const li=document.createElement('li');li.innerHTML=`<i class="${w.id}"></i><div><b></b><span></span></div>`;li.querySelector('b').textContent=w.name;li.querySelector('span').textContent=w.desc;ul.appendChild(li)})}
+function renderWorlds(){const ul=$('worlds');ul.innerHTML='';WORLD.worlds.forEach(w=>{const li=document.createElement('li');li.innerHTML=`<i class="${w.id||''}"></i><div><b></b><span></span></div>`;li.querySelector('b').textContent=w.name;li.querySelector('span').textContent=w.desc;ul.appendChild(li)})}
 function renderNations(){const ul=$('nations');ul.innerHTML='';WORLD.nations.forEach(gr=>{const hd=document.createElement('li');hd.className='hd';hd.textContent=gr.group;ul.appendChild(hd);gr.items.forEach(n=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';const first=REGIONS.find(r=>r.id===n.places[0]);const col=first?WORLD.faces[first.face].color:'#f5b64f';b.innerHTML='<i></i><div><b></b><span></span></div>';b.querySelector('i').style.setProperty('--c',col);b.querySelector('b').textContent=n.name;if(n.unsure){const u=document.createElement('i');u.className='unsure';u.textContent='spelling?';b.querySelector('b').appendChild(u)}b.querySelector('span').textContent=[n.where,n.note].filter(Boolean).join(' \u00b7 ');b.addEventListener('click',()=>selectRegion(n.places[0]));li.appendChild(b);ul.appendChild(li)})})}
 function renderExplorers(){const ul=$('explorers');ul.innerHTML='';WORLD.explorers.forEach(e=>{const li=document.createElement('li');li.innerHTML='<i class="sapphire"></i><div><b></b><span></span></div>';li.querySelector('b').textContent=e.name;li.querySelector('span').textContent=e.desc;ul.appendChild(li)})}
 const ordinal=n=>n+(n%10===1&&n!==11?'st':n%10===2&&n!==12?'nd':n%10===3&&n!==13?'rd':'th');
@@ -901,7 +916,7 @@ const btnPlay=$('btnPlay'),rngSpin=$('rngSpin'),rngDay=$('rngDay'),spinOut=$('sp
 function togglePlay(){state.playing=!state.playing;btnPlay.textContent=state.playing?'Pause':'Play'}
 btnPlay.addEventListener('click',togglePlay);
 rngSpin.addEventListener('input',()=>{state.speed=Number(rngSpin.value)||0;spinOut.textContent=state.speed.toFixed(1)+'×'});
-addEventListener('dice:show',()=>{btnPlay.textContent=state.playing?'Pause':'Play';rngSpin.value=String(state.speed);spinOut.textContent=state.speed.toFixed(1)+'×'});   // the clock is shared with Cuba; pick up what changed while this world slept
+addEventListener('dice:show',()=>{btnPlay.textContent=state.playing?'Pause':'Play';rngSpin.value=String(state.speed);spinOut.textContent=state.speed.toFixed(1)+'×'});   // the clock is shared with Hexa; pick up what changed while this world slept
 let scrubbing=false;rngDay.addEventListener('pointerdown',()=>scrubbing=true);addEventListener('pointerup',()=>scrubbing=false);
 rngDay.addEventListener('input',()=>{const y=Math.floor(state.day/YEAR);state.day=y*YEAR+doyStart(Number(rngDay.value)-1)+((state.day%1)+1)%1});
 // Ruby (2026-10-03): "there is no way to go backwards in years!!!": step the years either way; the count runs below zero her way (0, then -0, then -1)
@@ -912,7 +927,7 @@ function updateDate(){const {y,doy,mi,dom,season,wd}=dateParts(state.day);const 
 
 /* ============================== LOOP ============================== */
 let last=performance.now(),uiTick=0;
-function frame(t){if(app.classList.contains('away')){last=t;requestAnimationFrame(frame);return}   // asleep while Cuba is shown
+function frame(t){if(app.classList.contains('away')){last=t;requestAnimationFrame(frame);return}   // asleep while Hexa is shown
   const dt=Math.min(0.05,(t-last)/1000);last=t;
   if(state.playing)state.day+=dt*state.speed/DAY_SECONDS;
   if(state.fly){const k=1-Math.pow(0.0008,dt);const dy=wrapPi(state.fly.yaw-state.baseYaw);state.baseYaw+=dy*k;state.pitch+=(state.fly.pitch-state.pitch)*k;if(Math.abs(dy)<0.003&&Math.abs(state.fly.pitch-state.pitch)<0.003)state.fly=null}

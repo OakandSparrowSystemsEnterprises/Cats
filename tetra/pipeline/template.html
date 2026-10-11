@@ -294,7 +294,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The moon</p>
-          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind: one crater on its one side, two craters on its two side, three craters on its three side. It is a fair die (Ruby: “a fair d3 for tetra”): a rounded three-sided rod whose ends come to points, so it can only ever come to rest on one of its three sides. It is a third of the size of Tetra, circles a little farther out than the magical field, and rolls slowly so every side comes round. Every ordinary day it sits on the opposite side from the star, drifting gently about that spot. Every month, in the middle of the month, is the new moon: the die swings round in front of the star and the world goes dark, a solar eclipse. Its light waxes and wanes through the month like our own moon’s, full when the month turns, and the Restart Day is never a new moon. While the die covers the star, every place on Tetra reads “Eclipse”, day side and night side alike.</span></div></div>
+          <div class="field m"><i></i><div><b>A d3 moon</b><span>Tetra’s moon is a three-sided die, a d3, and not the cube kind: one crater on its one side, two craters on its two side, three craters on its three side. It is a fair die (Ruby: “a fair d3 for tetra”) and not a barrel (Ruby, 2026-10-11: “Remake the moons without the “barrel” method”): a chunky rounded three-sided pebble, as long as it is wide, with domed ends, so it can only ever come to rest on one of its three sides. Which non-barrel shape to use was a reading. It is a third of the size of Tetra, circles a little farther out than the magical field, and rolls slowly so every side comes round. Every ordinary day it sits on the opposite side from the star, drifting gently about that spot. Every month, in the middle of the month, is the new moon: the die swings round in front of the star and the world goes dark, a solar eclipse. Its light waxes and wanes through the month like our own moon’s, full when the month turns, and the Restart Day is never a new moon. While the die covers the star, every place on Tetra reads “Eclipse”, day side and night side alike.</span></div></div>
         </div>
         <div class="sect">
           <p class="eyebrow">The four faces</p>
@@ -327,7 +327,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">Still unwritten</p>
-          <ul class="unwritten-list"><li>The key events after year 1700 (Ruby’s comics continue), and what her year 1700 panel, “NO”, means</li><li>More places and names on every face</li></ul>
+          <ul class="unwritten-list"><li>The key events after year 1700 (Ruby’s comics continue)</li><li>More places and names on every face</li></ul>
           <p class="note">Everything above comes from the map and the notes. Region lore is a first-pass draft, editable from each place's page.</p>
         </div>
       </section>
@@ -442,7 +442,7 @@ const WORLD = {
              {name:'Opal the explorer', desc:'Went back over the West, South and Far faces and drew the complete maps from the other explorers\u2019 charts. Opal\u2019s maps are the ones on the world now.'}],
   worlds:[{id:'tetra',name:'Tetra',desc:'The d4. The four-sided world. This one.'},{id:'cuba',name:'Hexa',desc:'The d6. The cube planet, six square sides, farther from the star; called Cuba until 2026-10-10 (Ruby: “the hedron name for a cube was a hexahedron So Cuba should be called hexa”). All six of its sides are drawn; the Hexa button under the title switches to it.'},{id:'octo',name:'Octo',desc:'The d8. Not yet built (Ruby, 2026-10-10).'},{id:'deca',name:'Deca',desc:'The d10. Not yet built.'},{id:'dodeca',name:'Dodeca',desc:'The d12. Not yet built.'},{id:'icoso',name:'Icoso',desc:'The d20. Not yet built.'},{id:'icosotetra',name:'Icosotetra',desc:'The d24. Not yet built.'},{id:'triaconta',name:'Triaconta',desc:'The d30. Not yet built.'},{id:'dwarfs',name:'Two dwarf planets',desc:'The d2 and the d1: “probably”, Ruby says. Unnamed, not built.'},{id:'asteroids',name:'Asteroids',desc:'The d0.5, and a belt: her question (“Maby make some d0.5’s for asteroids And make a belt?”). Not built.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
-  moon:{name:'A d3 moon', shape:'a fair three-sided die, not the cube kind: a rounded three-sided rod with pointed ends, so it can only come to rest on one of its three sides; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
+  moon:{name:'A d3 moon', shape:'a fair three-sided die, not the cube kind and not a barrel: a chunky rounded three-sided pebble, as long as it is wide, with domed ends, so it can only come to rest on one of its three sides; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
   size:{miles:20000, from:'the corner of Spikia', to:'the base of Mount Celestial', path:'straight through the world'},
   years:{count:'Counted from year 0. There is a year -0 as well, and it is not the same year as 0. Negative years run backwards, as BCE does on Earth.', now:1700, tech:'about Earth\u2019s 1750'},
   timeline:[      /* Ruby's comics of the key events: two pages of 2026-10-03 (years -2000 to 1), two of 2026-10-06 (years 2 to 50) and four of 2026-10-10 (years 51 to 1700; Amber's flight and the C years are on Hexa's World tab); said = her words as read from the photos, shows = what the panel draws, a reading */
@@ -461,7 +461,7 @@ const WORLD = {
     {year:'2', said:'bye \u00b7 islandia', shows:'a figure on Islandia waves goodbye to a boat setting out'},
     {year:'3', said:'', shows:'the boat, and a long land ahead; no words'},
     {year:'4', said:'head lands', shows:'the Headlands drawn as a head-shaped land with the name written in it and a dark scribble at its foot (a spiral?)'},
-    {year:'5', said:'neak (?) \u00b7 fethers (?) \u00b7 llama land \u00b7 footia', shows:'the chicken island with its regions written on it and figures at its feet; the top word is read as neck (Neckia), the second as the Feathers'},
+    {year:'5', said:'neak (?) \u00b7 fethers (?) \u00b7 llama land \u00b7 footia', shows:'the chicken island with its regions written on it and figures at its feet; the top word is read as neck (Neckia), the second as the Feathers. Ruby: “naming the rest of chicken islands nations”'},
     {year:'10', said:'', shows:'a bird, and a dotted path leading away down the page; no words'},
     {year:'15', said:'', shows:'a great hand again, a figure standing on it; no words'},
     {year:'20', said:'', shows:'a triangle face rising over the waves, a boat with a mast below it'},
@@ -472,24 +472,24 @@ const WORLD = {
     {year:'45', said:'tropica', shows:'a round island with a figure, named Tropica here; the West chart spells it Tropicia'},
     {year:'45', said:'', shows:'a second panel for the year: another round island, with a small flag'},
     {year:'46', said:'', shows:'a coastline with a boat under it; no words'},
-    {year:'47', said:'swampland \u00b7 marshia \u00b7 bauland (?) \u00b7 greeneria', shows:'the central island with four of its nations written on it and a figure at the top; the third name is Baiuland on the chart'},
+    {year:'47', said:'swampland \u00b7 marshia \u00b7 bauland (?) \u00b7 greeneria', shows:'the central island with four of its nations written on it and a figure at the top; the third name is Baiuland on the chart. Ruby: “naming central islands nations naming”'},
     {year:'48', said:'spikia \u00b7 my bag', shows:'the Spikia triangle with dots and a flag, and \u201cmy bag\u201d written under it'},
     {year:'49', said:'wetia', shows:'a triangle face with round lands on it and a figure: Wetia'},
     {year:'50', said:'Western face', shows:'a triangle face with round lands on it and a figure: the Western Face'},
     {year:'51', said:'', shows:'a triangle face with two round lands and a figure; no words'},
     {year:'80', said:'?', shows:'two faces side by side, one with a figure and a round land, the other with a question mark and a small round land'},
     {year:'81', said:'', shows:'a face with figures, a flag (?) in its middle and three round lands in a corner; no words'},
-    {year:'82', said:'Snowia \u00b7 berria (?) \u00b7 (unreadable)', shows:'a tall curved land with Snowia along its top and two more names down its sides (Beria and Coldland of the South Face, as read)'},
+    {year:'82', said:'Snowia \u00b7 berria (?) \u00b7 (unreadable)', shows:'a tall curved land with Snowia along its top and two more names down its sides (Beria and Coldland of the South Face, as read). Ruby: “naming the south continent\u2019s nations”'},
     {year:'83', said:'?', shows:'a face seen from below with figures at its corners and a round land; dotted lines run off below to a question mark'},
-    {year:'100', said:'Warmia (?) / ehia', shows:'a face with two round lands and a figure; under it a bar with the two names, an arrow pointing up at it and a trunk going down (the Far Face: Warmia, Ehia and Tree Land, as read)'},
+    {year:'100', said:'Warmia (?) / ehia', shows:'a face with two round lands and a figure; under it a bar with the two names, an arrow pointing up at it and a trunk going down (the Far Face: Warmia, Ehia and Tree Land, as read). Ruby: “naming of the far face countries”'},
     {year:'100', said:'', shows:'a second panel for the year: a face with a dark scribbled mass and writing too small to read'},
-    {year:'1000', said:'', shows:'two figures, one holding something purple, under a purple triangle (purple is magic in her comics, by the T1690 labels)'},
-    {year:'1500', said:'', shows:'a figure leading something on a purple line toward purple tents, small writing by the tents, a dark creature above'},
-    {year:'1650', said:'', shows:'a figure inside a hollowed tree with purple fire under it (the chamber of her 2026-10-04 line)'},
+    {year:'1000', said:'', shows:'two figures, one holding something purple, under a purple triangle (purple is magic in her comics, by the windmill panel\u2019s labels). Ruby: “1000 and 1500: learning magic”'},
+    {year:'1500', said:'', shows:'a figure leading something on a purple line toward purple tents, small writing by the tents, a dark creature above. Ruby: “1000 and 1500: learning magic”'},
+    {year:'1650', said:'', shows:'a figure inside a hollowed tree with purple fire under it (the dead tree trunk of her windmill, or the chamber of her 2026-10-04 line: a reading)'},
     {year:'1650', said:'', shows:'Tetra with the chamber at its foot'},
     {year:'1650', said:'', shows:'a purple ball; Amber\u2019s flight and Hexa\u2019s years continue on Hexa\u2019s World tab'},
-    {year:'1690', said:'wind \u00b7 magic \u00b7 electricity (?)', shows:'a windmill (?) under a cloud, a purple blob for magic, a yellow bolt'},
-    {year:'1700', said:'NO', shows:'NO in red on a blue page, over a triangle'}
+    {year:'1650', said:'wind \u00b7 magic \u00b7 electricity (?)', shows:'a windmill under a cloud, a purple blob for magic, a yellow bolt; the panel\u2019s header was first read as 1690. Ruby: “this world\u2019s edition of windmill, involves a dead tree trunk, put magic and wind in, electricity out”'},
+    {year:'1700', said:'NO', shows:'NO in red on a blue page, over a triangle. Ruby: “rejecting a line of transport locally avalible to go to Cuba and back” (Hexa, called Cuba then)'}
   ],
   fields:[{id:'magical',name:'Magical field',effect:'slows light; turns the star\u2019s purple light to sunlight',extent:'all the way around',quote:'Here, the morning moves slower. And light flows like gold.'},
           {id:'magnetic',name:'Magnetic field',effect:'guides worlds',extent:'all the way around'}],
@@ -688,13 +688,14 @@ function drawStars(t,sun){sc.setTransform(DPR,0,0,DPR,0,0);sc.clearRect(0,0,W,H)
 // "the middle of the month is the new moon"; "make shure the earth moon cycle still hapens (the fazes only)"; "make shure the reset
 // day is not a new moon"; "it feels wierd that the moon just stops in place".
 // So: a real three-sided rolling die in the scene, a third of Tetra's edge long, orbiting just outside the outermost gold ring.
-// 2026-10-04, "a fair d3 for tetra": its two ends come to points (cap, Lf in buildMoon), so it can only come to rest on one of its three sides.
+// 2026-10-04, "a fair d3 for tetra", and 2026-10-11, "Remake the moons without the \"barrel\" method": a chunky three-sided pebble, as long as it is wide, its ends domed (DOME rings over MOON_CAP), so it can only come to rest on one of its three sides and is no barrel. The shape among non-barrel fair dice is a reading.
+const DOME=4;
 // On ordinary days it sits opposite the star, drifting a little about that spot and rolling slowly so all three sides come round; on
 // the new moon (day 14 of each month) it swings once round the orbit, through the line to the star at midday, and the world darkens.
 // Its light waxes and wanes on a 28-day cycle, new at mid-month and full when the month turns; the Restart Day counts as full.
 // Readings: "the size of Tetra" = the length of an edge; "a little bit farther than the magical field" = 0.3 beyond the last gold ring;
 // "the middle of the month" = day 14; one roll per day; the drift is a small daily loop.
-const EDGE=len(sub(V[1],V[2])),MOON_LEN=EDGE/3,MOON_HALF=MOON_LEN/2,MOON_SIDE=MOON_LEN/2.1,MOON_ORBIT=2.18+0.3,NEW_MOON_DOM=14,ROLLS_PER_DAY=1,MOON_BOB=0.14;
+const EDGE=len(sub(V[1],V[2])),MOON_LEN=EDGE/3,MOON_HALF=MOON_LEN/2,MOON_SIDE=MOON_LEN*0.8,MOON_CAP=0.14*MOON_LEN,MOON_FLAT=MOON_HALF-0.14*MOON_LEN,MOON_ORBIT=2.18+0.3,NEW_MOON_DOM=14,ROLLS_PER_DAY=1,MOON_BOB=0.14;
 let MOON_ROLL0=-2.777;      // measured so the three-crater side faces the viewer in the starting view (Ruby: "make shure the 3 side is visable")
 // Ruby: "remove extreem mountains and render mount celestial as a moon at least half the length of the moon high": a peak at the exact
 // centre of the Far Face, 0.6 of the moon's length tall, turning with the world
@@ -715,8 +716,8 @@ function moonState(day,sun){const {mi,dom}=dateParts(day);const newMoon=mi>=0&&d
   return{dir,pos:mulS(dir,MOON_ORBIT),theta,eclipse,newMoon,phase,light,roll:MOON_ROLL0+TAU*day*ROLLS_PER_DAY,axis}}
 function moonScreen(){const mp=project(cam.vp,MOON.pos);if(!mp)return null;const up=project(cam.vp,add(MOON.pos,mulS(cam.u,MOON_HALF)));
   const half=up?Math.hypot(up.x-mp.x,up.y-mp.y):0;const front=len(sub(MOON.pos,cam.eye))<len(sub(TARGET,cam.eye));return{x:mp.x,y:mp.y,half,front}}
-// the die: a rounded triangular prism along X whose ends come to points (cap, Lf), three flat faces (0, 1, 2), rounded corners and the pointed ends (3)
-function buildMoon(){const L=MOON_HALF,sd=MOON_SIDE,Rc=sd/Math.sqrt(3),rc=0.22*Rc,d=rc/Math.tan(Math.PI/6),cap=0.32*Rc,Lf=L-cap;const pts=[];
+// the die: a rounded triangular pebble along X, its flats from -MOON_FLAT to MOON_FLAT and domed ends over MOON_CAP, three flat faces (0, 1, 2), rounded corners and the domes (3)
+function buildMoon(){const sd=MOON_SIDE,Rc=sd/Math.sqrt(3),rc=0.22*Rc,d=rc/Math.tan(Math.PI/6),cap=MOON_CAP,Lf=MOON_FLAT;const pts=[];
   const corners=[0,1,2].map(k=>{const a=Math.PI/2+k*TAU/3;return[Rc*Math.cos(a),Rc*Math.sin(a)]});
   for(let k=0;k<3;k++){const A=corners[k],B=corners[(k+1)%3],Bn=corners[(k+2)%3];const ex=B[0]-A[0],ey=B[1]-A[1],el=Math.hypot(ex,ey);const ux=ex/el,uy=ey/el;const n=[uy,-ux];
     const P0=[A[0]+ux*d,A[1]+uy*d],P1=[B[0]-ux*d,B[1]-uy*d],flat=el-2*d;
@@ -728,9 +729,9 @@ function buildMoon(){const L=MOON_HALF,sd=MOON_SIDE,Rc=sd/Math.sqrt(3),rc=0.22*R
   for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];
     push(-Lf,a.y,a.z,0,a.ny,a.nz,a.f,-uu,a.v);push(Lf,a.y,a.z,0,a.ny,a.nz,a.f,uu,a.v);push(Lf,b.y,b.z,0,b.ny,b.nz,b.f,uu,b.v);
     push(-Lf,a.y,a.z,0,a.ny,a.nz,a.f,-uu,a.v);push(Lf,b.y,b.z,0,b.ny,b.nz,b.f,uu,b.v);push(-Lf,b.y,b.z,0,b.ny,b.nz,b.f,-uu,b.v);
-    for(const sgn of[-1,1]){const apex=[sgn*L,0,0],Pa=[sgn*Lf,a.y,a.z],Pb=[sgn*Lf,b.y,b.z];let nn=norm(cross(sub(Pb,Pa),sub(apex,Pa)));if(dot(nn,[sgn,(a.y+b.y)/2,(a.z+b.z)/2])<0)nn=mulS(nn,-1);
-      push(apex[0],0,0,nn[0],nn[1],nn[2],3,0,0);push(Pa[0],Pa[1],Pa[2],nn[0],nn[1],nn[2],3,0,0);push(Pb[0],Pb[1],Pb[2],nn[0],nn[1],nn[2],3,0,0)}}
-  return{pb:buf(P),nb:buf(N),fb:buf(F),count:P.length/3,sides:3,tip:L,flat:Lf}}
+    for(const sgn of[-1,1])for(let k=0;k<DOME;k++){const s0=Math.cos(Math.PI/2*k/DOME),s1=Math.cos(Math.PI/2*(k+1)/DOME),x0=sgn*(Lf+cap*Math.sin(Math.PI/2*k/DOME)),x1=sgn*(Lf+cap*Math.sin(Math.PI/2*(k+1)/DOME));
+      const A=[x0,s0*a.y,s0*a.z],B=[x0,s0*b.y,s0*b.z],C=[x1,s1*a.y,s1*a.z],D=[x1,s1*b.y,s1*b.z];const tri=(p,q,r)=>{let nn=norm(cross(sub(q,p),sub(r,p)));const out=[sgn,(p[1]+q[1]+r[1])/3,(p[2]+q[2]+r[2])/3];if(len(cross(sub(q,p),sub(r,p)))<1e-9)nn=norm(out);else if(dot(nn,out)<0)nn=mulS(nn,-1);for(const v of [p,q,r])push(v[0],v[1],v[2],nn[0],nn[1],nn[2],3,0,0)};tri(A,B,C);tri(B,D,C)}}
+  return{pb:buf(P),nb:buf(N),fb:buf(F),count:P.length/3,sides:3,tip:Lf+cap,flat:Lf}}
 // Mount Celestial: a faceted peak on the Far Face's centre, in the world's own (unspun) frame
 function buildPeak(){const f=faceById.far,c=f.center,nrm=norm(f.normal);const t1=norm(cross(nrm,Math.abs(nrm[1])<.9?[0,1,0]:[1,0,0])),t2=cross(nrm,t1);
   const ring=(h,r,jit)=>Array.from({length:18},(_,i)=>{const a=TAU*i/18,rr=r*(1+jit*Math.sin(i*2.7+1.3));return add(add(c,mulS(nrm,h)),add(mulS(t1,rr*Math.cos(a)),mulS(t2,rr*Math.sin(a))))});
@@ -746,8 +747,8 @@ float rim(vec2 p,vec2 c,float r){float d=length(p-c);return smoothstep(r*0.85,r,
 void main(){vec3 n=normalize(vN);float nl=dot(n,normalize(uLight));vec3 col;
   if(uKind<0.5){float fid=vF.x;vec2 p=vec2(vF.y,vF.z);float f=floor(fid+0.5);float onFace=step(abs(fid-f),0.02);float dark=0.0,ring=0.0;
     if(f<0.5){dark+=crater(p,vec2(0.0,0.0),0.42);ring+=rim(p,vec2(0.0,0.0),0.42);}
-    else if(f<1.5){dark+=crater(p,vec2(-0.95,0.0),0.36)+crater(p,vec2(0.95,0.0),0.36);ring+=rim(p,vec2(-0.95,0.0),0.36)+rim(p,vec2(0.95,0.0),0.36);}
-    else if(f<2.5){dark+=crater(p,vec2(-1.3,0.0),0.32)+crater(p,vec2(0.0,0.0),0.32)+crater(p,vec2(1.3,0.0),0.32);ring+=rim(p,vec2(-1.3,0.0),0.32)+rim(p,vec2(0.0,0.0),0.32)+rim(p,vec2(1.3,0.0),0.32);}
+    else if(f<1.5){dark+=crater(p,vec2(-0.45,-0.22),0.3)+crater(p,vec2(0.45,0.22),0.3);ring+=rim(p,vec2(-0.45,-0.22),0.3)+rim(p,vec2(0.45,0.22),0.3);}
+    else if(f<2.5){dark+=crater(p,vec2(-0.55,-0.25),0.26)+crater(p,vec2(0.0,0.0),0.26)+crater(p,vec2(0.55,0.25),0.26);ring+=rim(p,vec2(-0.55,-0.25),0.26)+rim(p,vec2(0.0,0.0),0.26)+rim(p,vec2(0.55,0.25),0.26);}
     dark*=onFace;ring*=onFace;float lit=uAmb+(1.0-uAmb)*smoothstep(-0.2,0.45,nl);
     col=uCol*lit*(1.0-0.5*clamp(dark,0.0,1.0))*(1.0+0.2*clamp(ring,0.0,1.0))+vec3(0.07,0.04,0.11)*(1.0-lit);}
   else{float h=vF.y;vec3 rock=mix(uCol,uCol2,smoothstep(0.55,0.85,h));float lit=uAmb+(1.0-uAmb)*clamp(nl*0.5+0.5,0.0,1.0);col=rock*lit;}

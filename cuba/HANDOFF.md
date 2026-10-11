@@ -1,9 +1,10 @@
 # Handoff: Hexa, the cube planet (Cuba from 2026-10-04 until 2026-10-10)
 
-Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra (see `../tetra/`, read its `CLAUDE.md` for the ground rules, which hold here too: canon comes from Ruby by chat, relayed by Joshua; never invent canon; no em dashes anywhere; test before shipping). Eight drafts are built and ship inside Tetra's page (section 1). This file holds her words as they arrive, the readings taken, and the open questions, in the same shape as `../tetra/HANDOFF.md`.
+Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra (see `../tetra/`, read its `CLAUDE.md` for the ground rules, which hold here too: canon comes from Ruby by chat, relayed by Joshua; never invent canon; no em dashes anywhere; test before shipping). Nine drafts are built and ship inside Tetra's page (section 1). This file holds her words as they arrive, the readings taken, and the open questions, in the same shape as `../tetra/HANDOFF.md`.
 
 ## 1. State
 
+- **Draft 9 (2026-10-11)**: the moons remade without the barrel (Hexa's d5 a five-faced prism), her watery-planet line on the World tab with the water shares as drawn. See the eighth round in section 2.
 - **Draft 8 (2026-10-10)**: the world is Hexa (Ruby: the hedron name for a cube); the two ring features are portals in the ocean, the East crescent is gone; the eight planets of the Dice System with the dwarf planets and the asteroid question; Hexa's key events from her comics. See the seventh round in section 2.
 - **Draft 7 (2026-10-06)**: all six sides drawn: the North, East, South and West sides from Ruby's sketches of the explorers' maps (Aquamarine, Axinite, Benitoite, Chrysoberyl), the Plus Continent's arms reaching in as far as the sketches show; her answers to the Still unwritten list (colours and seasons the same as Tetra's, Earth's plants all over); each small world clipped out of the moon's disc on both pages. See the sixth round in section 2.
 - **Draft 6 (2026-10-05)**: the Far side drawn from Ruby's words: the main island a quarter of the side about the Canyon's other end, land on the north-east and south-east corners, half water, and the active volcano north of the Canyon that shoots lava every Restart Day (a cone mesh, a glowing crater, sparks on the overlay). See the fifth round in section 2.
@@ -96,6 +97,11 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 - 2026-10-10, Ruby: "We have for planets: a d4 a d6 a d8 a d10 a d12 a d20 a d24 a d30. So 8 planets. Maby make some d0.5’s for asteroids And make a belt? So to recap, tetra, hexa, octo, deca, dodeca, icoso, icosotetra, and triaconta are our planets." and "Also probably shuld add the d2 and d1 as dwarf planets" (the Dice System on both World tabs lists the eight planets with their dice: Tetra d4, Hexa d6, Octo d8, Deca d10, Dodeca d12, Icoso d20, Icosotetra d24, Triaconta d30, the last six not built; the d2 and the d1 as dwarf planets, "probably", unnamed; the d0.5 asteroids and a belt as her question, not built. Where the planets sit, in which fields, is unwritten: open question 22.)
 - 2026-10-10, Ruby: "My comics.", four pages, saved as `../tetra/reference/ruby/comics/key_events_p5.jpg` to `p8.jpg`: Tetra's years 51 to 1700 (p5, p6 and the T panels of p8) are in `../tetra/HANDOFF.md`; Amber's flight (panels 1650.0001, 1650.0101 (?), 1650.10, 1651) and Hexa's own years (C1 to C7, C10) on p7 and p8 are Hexa's key events, a new section on the World tab (`WORLD.timeline`), her words as read: 1650.0001, Tetra with the chamber above it; 1650.0101 (?), "boom, cut off" (?) over a boxy shape with scribbles and "x2y" (?) under it; 1650.10 (?), "the canon face" (?) in a square (the header's slash read as a 1, the words as read); 1651, a dark ball and a figure flung past it; C1, "amberary" on a tall tree coloured blue and green with a figure at its foot; C2, a side of Hexa with a narrow slit down it; C3, "Far", the Far side with the volcano erupting orange and the Canyon's other end, an arrow pointing on; C4, a side with a narrow slit again; C5, two figures, one handing the other a paper with a dot (a map); C6, "E", "S", "N", three sides drawn small with their land; C7, "W", the West side with its ring; C10, the whole of Hexa as a cube. What the slit, the handed paper and the tree stand for is unwritten; the C numbers are read as years of Hexa, as her T numbers are Tetra's.)
 
+### The eighth round, 2026-10-11: a watery planet, the moons without the barrel
+
+- 2026-10-11, Ruby (relayed by Joshua from her messages): "Hexa is a very very very watery planet" (on the World tab in her words, with the water share of each side as drawn, worked out from the maps: Canon 0.60, Far 0.50, North 0.63, East 0.55, South 0.90, West 0.86. Nothing redrawn: the lands come from her sketches and her Far side words; whether they should shrink to match this line is open question 23.)
+- 2026-10-11, Ruby: "Remake the moons without the \"barrel\" method" (the d5 is a short five-faced prism now (`moonMesh`, `MOON_PRISM`): a triangle a third of an edge on a side, three oblong sides a little over half as long as that (0.54), two triangle ends; the length picked so each face takes a fifth of the view from the middle (the solid-angle rule, a reading: the real world's five-sided die is tuned by trials). Sides 0 to 2 carry one to three craters, the ends four and five (`FS2`). It still rolls about its length once a day. Tetra's d3 is in `../tetra/HANDOFF.md`.)
+
 ## 3. Open questions for Ruby (do not guess these)
 
 1. (Joshua) The photo itself: please put it in `reference/ruby/canon_side.jpg` or send it in chat, so the island can be checked against it.
@@ -120,6 +126,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 20. (2026-10-10: answered in kind, "portals in the ocean". Still open: where the two portals lead, and what they look like (drawn as purple swirls on the sea, a reading).)
 21. (2026-10-06) Names for everything on the five sides beyond Canon (Ruby: "i don't know yet"), and whether the four sides should be redrawn when the explorers' maps are finished (Chrysoberyl is resting).
 22. (2026-10-10) The eight planets: where Octo, Deca, Dodeca, Icoso, Icosotetra and Triaconta sit (in which fields, how far from the star), what they look like, whether any is to be built next; the d2 and d1 dwarf planets' names and places; whether the d0.5 asteroids and a belt are wanted (her "Maby" and "?").
+23. (2026-10-11) "Hexa is a very very very watery planet": the sides as drawn are three fifths to nine tenths water. Should the lands of her sketches shrink, or the Far side's half-water island, to match? Nothing changed until she says.
 
 ## 4. Where it lives
 
@@ -127,6 +134,7 @@ The page is Tetra's (`../tetra/pipeline/template.html`, one file for both worlds
 
 ## 5. Publishing
 
+- Draft 9, 2026-10-11: republished to Tetra's artifact with the label "v11 No barrel moons, the comic explained, a watery Hexa".
 - Draft 8, 2026-10-10: republished to Tetra's artifact with the label "v11 Hexa, the portals, eight planets, the comics".
 - Draft 7, 2026-10-06: republished to Tetra's artifact with the label "v11 All six sides of Cuba, the comic to year 50".
 - Draft 6, 2026-10-05: republished to Tetra's artifact with the label "v11 The Far side: the main island, the corner lands, the volcano".

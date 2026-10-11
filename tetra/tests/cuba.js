@@ -45,10 +45,10 @@ const PAGE = require('./_page');
       for (const y of [0.6, -0.6, 0.3, -0.3, 0.18, -0.18, 0].flatMap(o => [phi + Math.PI + o, phi + o])) { cuba.setYaw(y); await frames(); const o = cuba.otherWorld(); if (o && o.x > (phone ? 0 : 40) && o.x < innerWidth - (phone ? 0 : 400) && o.y > (phone ? 0 : 40) && o.y < innerHeight * (phone ? 1 : 0.78)) return o; } return cuba.otherWorld(); }, phone);
     if (!otherC || otherC.x < 0 || otherC.x > width || otherC.y < 0 || otherC.y > height) fails.push(`${width}: Tetra is not in Cuba's sky when turned toward it (${JSON.stringify(otherC)})`);
     if (!phone) await page.screenshot({ path: PAGE.out('cuba_tetra_sky.png') });
-    // the dice: a fair d3 on Tetra (three sides, pointed ends: 33 strip segments, 6 vertices each, and 33 cap triangles at each end) and a fair d5 on Cuba (five sides and ten cap triangles)
+    // the dice, no barrels (Ruby, 2026-10-11): a fair d3 on Tetra (three flat sides, domed ends that reach past the flats) and a fair d5 on Hexa (a five-faced prism: three oblong sides and two triangle ends, 24 vertices)
     const dice = await page.evaluate(() => ({ t: tetra.moonDie(), c: cuba.moonDie() }));
-    if (!dice.t || dice.t.sides !== 3 || dice.t.count !== 396 || !(dice.t.tip > dice.t.flat)) fails.push(`${width}: Tetra's moon is not the fair d3 rod (${JSON.stringify(dice.t)})`);
-    if (!dice.c || dice.c.sides !== 5 || dice.c.count !== 60 || !(dice.c.tip > dice.c.flat)) fails.push(`${width}: Cuba's moon is not the fair d5 rod (${JSON.stringify(dice.c)})`);
+    if (!dice.t || dice.t.sides !== 3 || dice.t.count % 3 !== 0 || dice.t.count < 198 || !(dice.t.tip > dice.t.flat)) fails.push(`${width}: Tetra's moon is not the fair d3 pebble (${JSON.stringify(dice.t)})`);
+    if (!dice.c || dice.c.sides !== 5 || dice.c.count !== 24 || !(dice.c.tip >= dice.c.flat)) fails.push(`${width}: Hexa's moon is not the five-faced prism (${JSON.stringify(dice.c)})`);
     await page.evaluate(() => { cuba.setDay(0); cuba.state.pitch = 0.22; cuba.state.dist = 4.6; cuba.face('canon', false); }); await settle(page);
     // the turn: leftward like Tetra. Facing Canon, a point on the Canon side moves toward the viewer's left as the day advances
     const turn = await page.evaluate(() => { const a = cuba.sample('hole').x; cuba.setDay(0.04); const b = cuba.sample('hole').x; cuba.setDay(0); return { a, b }; });
@@ -70,7 +70,7 @@ const PAGE = require('./_page');
       const strip = await page.evaluate(() => [...document.querySelectorAll('#cyearStrip .m')].map(e => e.textContent).join(' '));
       if (strip !== 'Mar Apr May Jun Jul Aug Sep Oct Nov Dec R Jan Amb Feb Tre') fails.push('Cuba strip order is ' + strip);
       const world = (await page.evaluate(() => document.getElementById('cpaneWorld').innerText)).toLowerCase();
-      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'pointed ends', 'montezuma', '1 mile high', 'east side of cuba', 'quarter of the sise', 'volcano', 'shoots lava', 'aquamarine', 'axinite', 'benitoite', 'chrysoberyl', 'earth planets grow all over', 'hexahedron', 'portals in the ocean', 'triaconta', 'dwarf planets', 'amberary', 'boom, cut off', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
+      for (const need of ['still unwritten', 'north is the top', 'the plus continent', 'the canyon', 'amberary', 'd5', 'square piramid', 'fair d5', 'five-faced', 'montezuma', '1 mile high', 'east side of cuba', 'quarter of the sise', 'volcano', 'shoots lava', 'aquamarine', 'axinite', 'benitoite', 'chrysoberyl', 'earth planets grow all over', 'hexahedron', 'portals in the ocean', 'triaconta', 'dwarf planets', 'amberary', 'boom, cut off', 'barrel', 'watery planet', 'anything that grows on tetra', 'drawn a map', 'one magical and one magnetic', '8: far side', 'ammolite', 'chrysoberyl', 'year 50', 'oaks', 'umbrella tree zinnia', 'starday']) if (!world.includes(need)) fails.push(`Cuba's world tab lacks "${need}"`);
       await page.screenshot({ path: PAGE.out('cuba_world_tab.png') });
     }
     // the d5 moon: an eclipse at the deepest moment of the 14th of January, every place reading Eclipse, and none the day after

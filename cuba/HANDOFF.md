@@ -99,8 +99,8 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 
 ### The eighth round, 2026-10-11: a watery planet, the moons without the barrel
 
-- 2026-10-11, Ruby (relayed by Joshua from her messages): "Hexa is a very very very watery planet" (on the World tab in her words, with the water share of each side as drawn, worked out from the maps: Canon 0.60, Far 0.50, North 0.63, East 0.55, South 0.90, West 0.86. Nothing redrawn: the lands come from her sketches and her Far side words; whether they should shrink to match this line is open question 23.)
-- 2026-10-11, Ruby: "Remake the moons without the \"barrel\" method" (the d5 is a short five-faced prism now (`moonMesh`, `MOON_PRISM`): a triangle a third of an edge on a side, three oblong sides a little over half as long as that (0.54), two triangle ends; the length picked so each face takes a fifth of the view from the middle (the solid-angle rule, a reading: the real world's five-sided die is tuned by trials). Sides 0 to 2 carry one to three craters, the ends four and five (`FS2`). It still rolls about its length once a day. Tetra's d3 is in `../tetra/HANDOFF.md`.)
+- 2026-10-11, Ruby (relayed by Joshua from her messages): "Hexa is a very very very watery planet" (on the World tab in her words, with the water share of each side as drawn, measured on the maps (`water_sides` in `pipeline/anchors.json`, and the canon and far figures `make maps` prints): Canon 0.60, Far 0.50, North 0.66, East 0.64, South 0.90, West 0.94. Nothing redrawn: the lands come from her sketches and her Far side words; whether they should shrink to match this line is open question 23.)
+- 2026-10-11, Ruby: "Remake the moons without the \"barrel\" method" (the d5 is a short five-faced prism now (`moonMesh`, `MOON_PRISM`): a triangle a third of an edge on a side, three oblong sides a little over half as long as that (0.54), two triangle ends; the length picked so each face takes a fifth of the view from the middle (the solid-angle rule, a reading: the real world's five-sided die is tuned by trials). Sides 0 to 2 carry one to three craters, the ends four and five (`FS2`). It still rolls about its length once a day, and the small Tetra in the sky is clipped out of the prism's true outline (`moonHull`). Tetra's d3 is in `../tetra/HANDOFF.md`.)
 
 ## 3. Open questions for Ruby (do not guess these)
 
@@ -113,7 +113,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 7. (Answered 2026-10-04, with her "probably" kept: about 20,000 miles from one end of the Canyon to the other; it turns like Tetra, leftward, a day as long as Tetra's; a year one month longer than Tetra's.)
 8. (2026-10-04) Her numbers 2, 3 and 7 are "dont know yet": how far the arms go on the four sides, what the other sides hold, colours and what grows. Open. (2026-10-05: the Far side is answered, see the fifth round; the other sides stay open.) (Answered 2026-10-06: colours "same as tetra"; what grows, "I've already told you"; where, "i don't know yet (earth planets grow all over)".)
 9. (Answered 2026-10-04: "the fourteenth month is called amberary and is before march".)
-10. (Answered 2026-10-04: "a fair d5 for cuba". Drawn as a five-sided long die, a pentagonal rod with pointed ends; that it is a rod rather than another fair five-sided die is a reading.)
+10. (Answered 2026-10-04: "a fair d5 for cuba", and 2026-10-11: "Remake the moons without the \"barrel\" method". Drawn as a short five-faced prism since 2026-10-11 (a pentagonal rod with pointed ends before that); the prism and its proportion are readings.)
 11. (2026-10-04) "cuba is way too buggy": the blank Tetra, the leaking styles, the label overflow and the tab mix-up are fixed. What else did she see?
 12. (Answered 2026-10-04 by placing Amberary between January and February: the rain season is one piece and February begins spring.)
 13. (Answered 2026-10-04: year one at Amber's landing, year 50 now.)
@@ -126,7 +126,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 20. (2026-10-10: answered in kind, "portals in the ocean". Still open: where the two portals lead, and what they look like (drawn as purple swirls on the sea, a reading).)
 21. (2026-10-06) Names for everything on the five sides beyond Canon (Ruby: "i don't know yet"), and whether the four sides should be redrawn when the explorers' maps are finished (Chrysoberyl is resting).
 22. (2026-10-10) The eight planets: where Octo, Deca, Dodeca, Icoso, Icosotetra and Triaconta sit (in which fields, how far from the star), what they look like, whether any is to be built next; the d2 and d1 dwarf planets' names and places; whether the d0.5 asteroids and a belt are wanted (her "Maby" and "?").
-23. (2026-10-11) "Hexa is a very very very watery planet": the sides as drawn are three fifths to nine tenths water. Should the lands of her sketches shrink, or the Far side's half-water island, to match? Nothing changed until she says.
+23. (2026-10-11) "Hexa is a very very very watery planet": the sides as drawn are half (Far) to more than nine tenths (West) water. Should the lands of her sketches shrink, or the Far side's half-water island, to match? Nothing changed until she says.
 
 ## 4. Where it lives
 

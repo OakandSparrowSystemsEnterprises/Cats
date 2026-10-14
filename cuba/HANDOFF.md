@@ -109,7 +109,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
   - 1, the arms' reach: "their fine" (the arms stay as drawn from the explorers' sketches; open questions 2 and 8 answered).
   - 2, names: "humands didn't develop there, they don't have any" (Hexa's places have no names of their own; the page says so in a Names row and keeps its descriptive labels; open question 21 answered; where the portals lead stays open, question 20).
   - 3, which plants grow where: "tetras and the giant tree" (Hexa's plants are Tetra's plants and the Montezuma; open question 15 answered; whether the Montezuma is one tree or a kind, question 16, stays open).
-  - 4, Mount Celestial's height: "half the night of tetras moon (the the tree was estimating first time, now it's set)" ("night" read as height: Mount Celestial is half the length of Tetra's moon, set in Tetra's page, `PEAK_H` 0.5 of `MOON_LEN`; about 4,100 miles worked out from Tetra's size, not her number; the Montezuma's fifteenth was her first estimate and the tree keeps her mile; open question 18 answered).
+  - 4, Mount Celestial's height: "half the night of tetras moon (the the tree was estimating first time, now it's set)" ("night" read as height, and the moon's height taken as its length, after her 2026-10-03 "at least half the length of the moon high", two readings: Mount Celestial is half the length of Tetra's moon, set in Tetra's page, `PEAK_H` 0.5 of `MOON_LEN`; about 4,100 miles worked out from Tetra's size, not her number; the Montezuma's fifteenth was her first estimate and the tree keeps her mile; open question 18 answered).
   - 5, Ammolite's map: "yes" (it is the Far side as drawn here; open question 17 answered).
 
 ## 3. Open questions for Ruby (do not guess these)

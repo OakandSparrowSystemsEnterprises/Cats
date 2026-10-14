@@ -2,7 +2,7 @@
 
 Hexa is Ruby's cube planet, the second world of The Dice System after Tetra. It was called Cuba from 2026-10-04 until 2026-10-10 (Ruby: "the hedron name for a cube was a hexahedron So Cuba should be called hexa"); the folder, the test file, the hook `window.cuba`, the ids beginning with c and the `{{CUBA_*}}` placeholders keep the old name, every shown name is Hexa. Read `../tetra/CLAUDE.md` first: its ground rules are the rules here too (canon comes from Ruby by chat, relayed by Joshua; never invent canon, mark every reading as a reading; no em dashes anywhere, `make audit` fails on them; test before shipping; Ruby's spellings exactly). Then read `HANDOFF.md` here (state, the canon ledger, the open questions). Joshua is the client; Ruby is the author.
 
-## What exists (draft 9, 2026-10-11)
+## What exists (draft 10, 2026-10-14)
 
 Hexa is a second world inside Tetra's page (Ruby: "it neends to be in the same file as tetra"): `../tetra/pipeline/template.html` carries a Tetra/Hexa switch under the title (`#diceWorlds`, remembered in `localStorage` as `dice.world`) and inserts Hexa's fragment at `{{CUBA}}`. The world not shown sleeps (class `away`: hidden, its frame loop idle). Hexa shares Tetra's dark purple star (the same direction `SUN0`, drawn a little smaller: it is farther out).
 

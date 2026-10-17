@@ -27,6 +27,17 @@ portals in the ocean"), painted as purple swirls on the water (purple is the col
 that was first read on the East sketch is gone; where two sketches disagree about a shared edge the constants were set by hand so
 the two textures meet (asserted in main for every edge between two drawn sides, as for Canon's). Nothing on them is named.
 
+Ruby (2026-10-17), asked whether the lands should shrink because "Hexa is a very very very watery planet" (her words of 2026-10-11): "yes but
+dont change the shape, just shrink them". So every land shape on every side is drawn SHRINK times the size it was read at, keeping its shape
+(the factor 0.7 is a reading, not her number): rectangles, boxes and ellipses about their own centres; the corner lands (the Far side's two,
+and the lands on the North, East and South sides that continue across the edges onto them) about the corner they sit in, so they stay in the
+corner and still meet across the shared edge; the Far side's main island about the hole. The Plus Continent keeps its cross, and its arms
+still reach the four edges and connect onto the four sides (Ruby: "the arms connect to the north south east and west faces"; of their
+reach, 2026-10-14, "their fine"): its centre and arms are SHRINK as wide as before and the arms as long, and the arm stubs on the four
+sides keep ARM_REACH at the same shrunken width, so the land agrees across every edge. The Canyon keeps its size, the two portals are not
+land and do not change, the volcano stays on the main island north of the hole (its offset from the island's centre is scaled with the
+island, so its foot stays on it), and the Far side is no longer half water: its measured share is asserted in main and printed.
+
 Ruby (2026-10-04): "make cuba look sort of like tetra as far as how landmasses are desighnd": the land is painted with Tetra's own
 painter (../../tetra/pipeline: heights, render_painted, texsynth patches from Ruby's Canon painting), so the Plus Continent carries the
 same painted hills, forests, shores and rivers as Tetra's faces. Which plants and colours belong where is still unwritten; the zones
@@ -47,24 +58,41 @@ S = 1024
 SEED = 7
 yy, xx = np.mgrid[0:S, 0:S].astype(np.float32)
 cx = cy = S / 2
+SHRINK = 0.7           # every land shape is drawn this many times the size it was read at, keeping its shape (Ruby, 2026-10-17: "yes but dont change the shape, just shrink them"); the factor is a reading, not her number
+MIDDLE = (0.5, 0.5)    # the hole, which the Far side's main island shrinks about
+
+
+def toward(fx, fy, about):
+    """a point of a face (fractions of S) moved with the land it sits on: SHRINK of the way out from the point that land shrinks about (the hole for the Far island, a corner for a corner land)"""
+    kx, ky = about
+    return kx + SHRINK * (fx - kx), ky + SHRINK * (fy - ky)
+
+
+def pt(fx, fy):
+    """a point of a face, fractions of S to pixels"""
+    return [int(fx * S), int(fy * S)]
+
 
 # the island, in face pixels (the face is S by S, north at the top)
-CENTRE = 0.19 * S      # half-width of the broad centre
-ARM_W = 0.105 * S      # half-width of an arm
-ARM_LEN = 0.56 * S     # the arms run past the sides, so the land crosses the edges (Ruby: the arms connect to the four faces)
-ARM_REACH = {'north': 0.34, 'east': 0.23, 'south': 0.22, 'west': 0.31}   # how far the arm runs onto each side, as a fraction of the side, measured on Ruby's sketches of 2026-10-06 (she says she does not know yet; this is what the explorers drew)
+CENTRE = SHRINK * 0.19 * S     # half-width of the broad centre (0.19 of the face as read; shrunk)
+ARM_W = SHRINK * 0.105 * S     # half-width of an arm (0.105 as read; shrunk, on Canon and on the arm stubs of the four sides alike, so the edges agree)
+ARM_LEN = 0.56 * S     # the arms run past the sides, so the land crosses the edges (Ruby: the arms connect to the four faces); not shrunk, the arms still reach the edges
+ARM_REACH = {'north': 0.34, 'east': 0.23, 'south': 0.22, 'west': 0.31}   # how far the arm runs onto each side, as a fraction of the side, measured on Ruby's sketches of 2026-10-06 (she says she does not know yet; this is what the explorers drew; of the reach, 2026-10-14, "their fine"); not shrunk
 EDGE_CALM = 48         # px over which the wobble dies out toward an edge, so both sides of an edge agree
-FILLET = 0.07 * S      # the rounded bends where the arms meet the centre
-WOBBLE = 0.030 * S     # a hand-drawn coast
-HOLE_R = 0.022 * S     # the small hole at the centre
-# the Far side (Ruby, 2026-10-05)
-FAR_R = S * (0.25 / np.pi) ** 0.5     # a round main island of a quarter of the face's area, about the hole (its roundness is a reading)
-FAR_CORNER_A = 0.355 * S              # the corner lands: quarter ellipses on the north-east and south-east corners, an eighth of the face each
-FAR_CORNER_B = 0.45 * S               # (A along the top or bottom edge, B down the east edge; the wedge shape is a reading)
+FILLET = SHRINK * 0.07 * S     # the rounded bends where the arms meet the centre (0.07 as read; shrunk with the body, so the cross keeps its shape)
+CENTRE_R = SHRINK * 0.05 * S   # the rounding of the centre's corners (0.05 as read; shrunk)
+ARM_R = SHRINK * 0.04 * S      # the rounding of an arm's corners, on Canon and on the arm stubs of the four sides (0.04 as read; shrunk)
+WOBBLE = 0.030 * S     # a hand-drawn coast (not shrunk: the pen, not a shape)
+HOLE_R = 0.022 * S     # the small hole at the centre (not shrunk: the Canyon keeps its size)
+# the Far side (Ruby, 2026-10-05); since 2026-10-17 every land on it is SHRINK times the size it was read at
+FAR_R = SHRINK * S * (0.25 / np.pi) ** 0.5     # a round main island about the hole, a quarter of the face's area as read, shrunk about the hole (its roundness is a reading)
+FAR_CORNER_A = SHRINK * 0.355 * S              # the corner lands: quarter ellipses on the north-east and south-east corners, an eighth of the face each as read, shrunk about their corner
+FAR_CORNER_B = SHRINK * 0.45 * S               # (A along the top or bottom edge, B down the east edge; the wedge shape is a reading)
+FAR_WATER = 0.758                              # the Far side's water share, measured after the shrink (half before it, as Ruby said on 2026-10-05); main asserts it and prints the measured value
 FAR_WOBBLE = 0.6 * WOBBLE             # a calmer coast, so the straits between the island and the corner lands stay open
-VOLCANO = (S // 2, int(0.34 * S))     # north of the Canyon's other end, on the main island (how far north is a reading)
-VOLCANO_R = 0.055 * S                 # the dark rock around the vent on the texture; the cone itself is a mesh in the page (a reading)
-# the four sides from the sketches (fractions of the side; readings of rough drawings, see the module docstring)
+VOLCANO = tuple(pt(*toward(0.5, 0.34, MIDDLE)))     # north of the Canyon's other end, on the main island (how far north is a reading: 0.34 down the face as read, moved with the island so the volcano's foot stays on it)
+VOLCANO_R = 0.055 * S                 # the dark rock around the vent on the texture; the cone itself is a mesh in the page (a reading; neither is shrunk)
+# the four sides from the sketches (fractions of the side; readings of rough drawings, see the module docstring); design_side draws each land SHRINK times this size about the corner it sits in (shrunk, below)
 NORTH_LAND = (-0.05, 0.26, 0.49, 0.46)   # ellipse centre x, y and radii: the big land on the East (left) edge, reaching the Far (top) edge; set so its edges meet the Far side's corner land (0.355 along the top) and the East side's land (about 0.71 down the left)
 NORTH_PORTAL = (0.70, 0.39, 0.10)        # the spiral she drew: a portal in the sea, centre and the swirl's radius
 EAST_NF = (-0.10, -0.10, 0.82, 0.55)     # the land in the North-Far (top left) corner; rx set so its top edge reaches about 0.70, where the North side's land meets it
@@ -106,8 +134,8 @@ def edge_calm():
 
 
 def island():
-    d = smin(rrect(CENTRE, CENTRE, 0.05 * S), rrect(ARM_LEN, ARM_W, 0.04 * S), FILLET)
-    d = smin(d, rrect(ARM_W, ARM_LEN, 0.04 * S), FILLET)
+    d = smin(rrect(CENTRE, CENTRE, CENTRE_R), rrect(ARM_LEN, ARM_W, ARM_R), FILLET)
+    d = smin(d, rrect(ARM_W, ARM_LEN, ARM_R), FILLET)
     d = d + (fbm(SEED) - 0.5) * 2 * WOBBLE * edge_calm()
     return d
 
@@ -125,16 +153,22 @@ def ellipse(x0, y0, rx, ry):
     return (e - 1) * min(rx, ry) * S
 
 
+def shrunk(land, corner):
+    """an ellipse of the sketches (centre x, y and radii, fractions of the side) drawn SHRINK times its size about the corner it sits in, so it stays in the corner and still meets the neighbouring side's land across the shared edge"""
+    x0, y0, rx, ry = land
+    return (*toward(x0, y0, corner), SHRINK * rx, SHRINK * ry)
+
+
 def arm_onto(side):
-    """the Plus Continent's arm crossing onto a side from the edge it shares with Canon: North's bottom edge, East's right, South's top, West's left; ARM_W wide at the edge, as on Canon, reaching ARM_REACH[side] in"""
+    """the Plus Continent's arm crossing onto a side from the edge it shares with Canon: North's bottom edge, East's right, South's top, West's left; ARM_W wide at the edge, as on Canon (both shrunk alike), reaching ARM_REACH[side] in (not shrunk)"""
     L = ARM_REACH[side] * S + 0.1 * S
     if side == 'north':
-        return rbox(cx, S + 0.1 * S, ARM_W, L, 0.04 * S)
+        return rbox(cx, S + 0.1 * S, ARM_W, L, ARM_R)
     if side == 'south':
-        return rbox(cx, -0.1 * S, ARM_W, L, 0.04 * S)
+        return rbox(cx, -0.1 * S, ARM_W, L, ARM_R)
     if side == 'east':
-        return rbox(S + 0.1 * S, cy, L, ARM_W, 0.04 * S)
-    return rbox(-0.1 * S, cy, L, ARM_W, 0.04 * S)
+        return rbox(S + 0.1 * S, cy, L, ARM_W, ARM_R)
+    return rbox(-0.1 * S, cy, L, ARM_W, ARM_R)
 
 
 def wob(seed):
@@ -145,14 +179,14 @@ def design_side(side):
     """the land of one of the four sides from Ruby's sketch: returns the signed distance and the place to gather the relief (or None)"""
     d = arm_onto(side)
     if side == 'north':
-        d = np.minimum(d, ellipse(*NORTH_LAND))
+        d = np.minimum(d, ellipse(*shrunk(NORTH_LAND, (0, 0))))
         return d + wob(SEED + 21), None
     if side == 'east':
-        d = np.minimum(d, ellipse(*EAST_NF))
-        d = np.minimum(d, ellipse(*EAST_SF))
+        d = np.minimum(d, ellipse(*shrunk(EAST_NF, (0, 0))))
+        d = np.minimum(d, ellipse(*shrunk(EAST_SF, (0, 1))))
         return d + wob(SEED + 23), None
     if side == 'south':
-        d = np.minimum(d, ellipse(*SOUTH_EF))
+        d = np.minimum(d, ellipse(*shrunk(SOUTH_EF, (0, 1))))
         return d + wob(SEED + 25), None
     return d + wob(SEED + 27), None
 
@@ -188,7 +222,7 @@ TRI = np.ones((S, S), bool)                           # a square face: the whole
 
 
 def far_land():
-    """the Far side's land as a signed distance: the round main island about the hole, and the two corner lands"""
+    """the Far side's land as a signed distance: the round main island about the hole, and the two corner lands (FAR_R and FAR_CORNER_A/B carry the shrink; the corner lands are centred on their corner, so they shrink about it)"""
     d = np.hypot(xx - cx, yy - cy) - FAR_R
     for corner_y in (0.0, S - 1.0):                    # the north-east and the south-east corner; the texture's right is East on this side
         e = np.hypot((S - 1 - xx) / FAR_CORNER_A, (yy - corner_y) / FAR_CORNER_B)
@@ -228,7 +262,7 @@ def render_far():
     land = d < 0
     r_hole = np.hypot(xx - cx, yy - cy)
     hole = r_hole < HOLE_R
-    tex = painted(d, SEED + 13, rivers=[(int(0.40 * S), int(0.56 * S)), (int(0.62 * S), int(0.61 * S))], hub_at=VOLCANO, hub_r=0.13)
+    tex = painted(d, SEED + 13, rivers=[tuple(pt(*toward(0.40, 0.56, MIDDLE))), tuple(pt(*toward(0.62, 0.61, MIDDLE)))], hub_at=VOLCANO, hub_r=0.13)
     tex *= (1 - 0.45 * np.clip(1 - (r_hole - HOLE_R) / (HOLE_R * 1.6), 0, 1))[..., None]
     tex[hole] = np.array([14, 12, 20], np.float32)
     # the volcano's foot: dark rock around the vent (the cone is a mesh in the page)
@@ -275,20 +309,22 @@ def main():
         assert not land[py, px], f'the corner at ({px},{py}) is land'
     assert hole[S // 2, S // 2] and land[S // 2, S // 2 + int(HOLE_R) + 8]
     water = 1 - land.mean()
-    # the Far side: half water, three pieces of land (the island and the two corner lands), the hole in the island, the volcano on it
+    # the Far side: its water share as measured after the shrink (half before it, Ruby 2026-10-05), three pieces of land (the island and the two corner lands), the hole in the island, the volcano on it
     far, far_land_mask, far_hole = render_far()
     far_water = 1 - far_land_mask.mean()
-    assert 0.46 < far_water < 0.54, f'the Far side is {far_water:.3f} water, not half'
+    print(f'far water share {far_water:.4f} (FAR_WATER {FAR_WATER}; half before the lands shrank by SHRINK {SHRINK})')
+    assert abs(far_water - FAR_WATER) < 0.02, f'the Far side is {far_water:.3f} water, not about {FAR_WATER} as measured after the shrink'
     n_far, _ = cv2.connectedComponents(far_land_mask.astype(np.uint8))
     assert n_far == 4, f'the Far side has {n_far - 1} pieces of land, not three'
     assert far_land_mask[0, S - 1] and far_land_mask[S - 1, S - 1], 'no land on the north-east or the south-east corner'
     assert not far_land_mask[0, 0] and not far_land_mask[S - 1, 0], 'land on a west corner of the Far side'
     assert far_hole[S // 2, S // 2] and far_land_mask[VOLCANO[1], VOLCANO[0]]
+    # the markers on the shrunken lands move with them (toward the point their land shrinks about), so each sits where it sat on its land; the arm, hole and portal markers stay
     anchors = {'canon': {'island': [S // 2, int(0.30 * S)], 'hole': [S // 2, S // 2]},
-               'far': {'hole-far': [S // 2, S // 2], 'far-island': [S // 2, int(0.68 * S)], 'volcano': list(VOLCANO), 'far-ne': [int(0.90 * S), int(0.10 * S)], 'far-se': [int(0.90 * S), int(0.90 * S)]},
-               'north': {'arm-north': [S // 2, int(S - 0.5 * ARM_REACH['north'] * S)], 'north-land': [int(0.15 * S), int(0.40 * S)], 'north-portal': [int((NORTH_PORTAL[0] + 0.8 * NORTH_PORTAL[2]) * S), int(NORTH_PORTAL[1] * S)]},
-               'east': {'arm-east': [int(S - 0.5 * ARM_REACH['east'] * S), S // 2], 'east-nf': [int(0.18 * S), int(0.15 * S)], 'east-sf': [int(0.06 * S), int(0.85 * S)]},
-               'south': {'arm-south': [S // 2, int(0.5 * ARM_REACH['south'] * S)], 'south-ef': [int(0.10 * S), int(0.92 * S)]},
+               'far': {'hole-far': [S // 2, S // 2], 'far-island': pt(*toward(0.5, 0.68, MIDDLE)), 'volcano': list(VOLCANO), 'far-ne': pt(*toward(0.90, 0.10, (1, 0))), 'far-se': pt(*toward(0.90, 0.90, (1, 1)))},
+               'north': {'arm-north': [S // 2, int(S - 0.5 * ARM_REACH['north'] * S)], 'north-land': pt(*toward(0.15, 0.40, (0, 0))), 'north-portal': [int((NORTH_PORTAL[0] + 0.8 * NORTH_PORTAL[2]) * S), int(NORTH_PORTAL[1] * S)]},
+               'east': {'arm-east': [int(S - 0.5 * ARM_REACH['east'] * S), S // 2], 'east-nf': pt(*toward(0.18, 0.15, (0, 0))), 'east-sf': pt(*toward(0.06, 0.85, (0, 1)))},
+               'south': {'arm-south': [S // 2, int(0.5 * ARM_REACH['south'] * S)], 'south-ef': pt(*toward(0.10, 0.92, (0, 1)))},
                'west': {'arm-west': [int(0.5 * ARM_REACH['west'] * S), S // 2], 'west-portal': [int((WEST_PORTAL[0] + 0.8 * WEST_PORTAL[2]) * S), int(WEST_PORTAL[1] * S)]}}
     ax, ay = anchors['canon']['island']; assert land[ay, ax] and not hole[ay, ax]
     for k, (px, py) in anchors['far'].items():
@@ -335,9 +371,9 @@ def main():
     for (px, py) in anchors['canon'].values():
         cv2.circle(prev, (px, py), 9, (40, 220, 255), 2)
     cv2.imwrite(os.path.join(HERE, 'map_canon_prev.png'), prev)
-    json.dump({'anchors': anchors, 'water_canon': round(float(water), 4), 'water_far': round(float(far_water), 4), 'water_sides': water_sides, 'arm_reach': ARM_REACH, 'portals': PORTALS, 'hole_radius_px': HOLE_R, 'size': S},
+    json.dump({'anchors': anchors, 'water_canon': round(float(water), 4), 'water_far': round(float(far_water), 4), 'water_sides': water_sides, 'arm_reach': ARM_REACH, 'portals': PORTALS, 'hole_radius_px': HOLE_R, 'shrink': SHRINK, 'size': S},
               open(os.path.join(HERE, 'anchors.json'), 'w'), indent=1)
-    print(f'canon: water {water:.3f}, land one piece reaching all four sides, hole radius {HOLE_R:.0f}px; far: water {far_water:.3f}, the island and two corner lands, the volcano at {VOLCANO}; the four sides from the sketches, water {water_sides}; wrote map_canon.jpg, map_north/east/south/west.jpg, map_far.jpg, map_blank.jpg, anchors.json')
+    print(f'every land SHRINK {SHRINK} times its size as read (Ruby, 2026-10-17: "yes but dont change the shape, just shrink them"; the factor a reading); canon: water {water:.3f}, land one piece reaching all four sides, hole radius {HOLE_R:.0f}px; far: water {far_water:.3f}, the island and two corner lands, the volcano at {VOLCANO}; the four sides from the sketches, water {water_sides}; wrote map_canon.jpg, map_north/east/south/west.jpg, map_far.jpg, map_blank.jpg, anchors.json')
 
 
 if __name__ == '__main__':

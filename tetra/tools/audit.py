@@ -10,7 +10,9 @@ files = (glob.glob(os.path.join(ROOT, 'pipeline', '*.py')) + glob.glob(os.path.j
          # em dashes only, in the rest of the text: legacy scripts, archived tests, tools, the reference notes, the Makefile and manifests
          glob.glob(os.path.join(ROOT, 'pipeline', 'legacy', '*.py')) + glob.glob(os.path.join(ROOT, 'tests', 'archive', '*.js')) +
          glob.glob(os.path.join(ROOT, 'tools', '*.py')) + glob.glob(os.path.join(ROOT, 'reference', '*.md')) +
-         [os.path.join(ROOT, f) for f in ('Makefile', 'package.json', 'requirements.txt', '.gitignore')])
+         [os.path.join(ROOT, f) for f in ('Makefile', 'package.json', 'requirements.txt', '.gitignore')] +
+         # Octa's fragment feeds the shipped page too (since 2026-10-17), and its notes follow the same rule
+         glob.glob(os.path.join(ROOT, '..', 'octa', 'pipeline', '*.html')) + glob.glob(os.path.join(ROOT, '..', 'octa', '*.md')))
 bad = 0
 for f in sorted(files):
     txt = open(f, encoding='utf-8').read()
@@ -21,7 +23,7 @@ for f in sorted(files):
         bad += 1; print(f'{rel}: {n} em dash(es)')
     if '{{' in txt and rel.startswith('dist'):
         bad += 1; print(f'{rel}: unreplaced placeholder')
-    live = rel.startswith('dist') or rel.startswith('tests') or os.path.basename(rel) in ('template.html', 'build.py', 'nations.py', 'mapgen2.py')
+    live = rel.startswith('dist') or rel.startswith('tests') or os.path.basename(rel) in ('template.html', 'world.html', 'build.py', 'nations.py', 'mapgen2.py')
     for name in RETIRED:            # only the files that feed the shipped page; mapgen.py's superseded designer keeps its old labels
         if live and name in txt:
             bad += 1; print(f'{rel}: retired name {name!r}')

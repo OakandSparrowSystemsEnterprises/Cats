@@ -40,7 +40,10 @@ for key, name in (('TEX_CANON', 'map_canon.jpg'), ('TEX_EAST', 'map_east.jpg'), 
     cuba = cuba.replace('{{CUBA_' + key + '}}', cb64(name))
 cuba = cuba.replace('{{CUBA_ANCHORS}}', json.dumps(json.load(open(os.path.join(cuba_dir, 'anchors.json'))), separators=(',', ':')))
 assert '{{' not in cuba, 'a Cuba placeholder was left unreplaced'
-page = (tpl.replace('{{CUBA}}', cuba)
+# Octa, the eight-sided planet (Ruby, 2026-10-17), is the third world in the page: its fragment draws its blank sides itself, so it has no textures to inline
+octa = open(os.path.normpath(os.path.join(here, '..', '..', 'octa', 'pipeline', 'world.html')), encoding='utf-8').read()
+assert '{{' not in octa, 'an Octa placeholder was left unreplaced'
+page = (tpl.replace('{{CUBA}}', cuba).replace('{{OCTA}}', octa)
            .replace('{{TEX_CANON}}', b64('map_canon.jpg'))
            .replace('{{TEX_WEST}}', b64('map_west.jpg'))
            .replace('{{TEX_SOUTH}}', b64('map_south.jpg'))

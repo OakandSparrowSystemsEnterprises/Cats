@@ -1,0 +1,233 @@
+<style>#oapp *{all:revert;box-sizing:border-box}#oapp *::before,#oapp *::after{box-sizing:border-box}
+#oapp{--void:#04060d;--deep:#070b16;--ink:#f2e8d3;--muted:#b9ad96;--dim:#7f765f;--gold:#f5b64f;--gold-soft:#ffdea3;--blue:#5aa5ff;--blue-soft:#a9d1ff;--stone:#9aa0ad;--panel:rgba(8,11,20,.76);--panel-2:rgba(12,16,27,.94);--line:rgba(242,232,211,.14);--line-2:rgba(242,232,211,.28);--focus:#ffd98a;--display:'Cinzel','Times New Roman',Georgia,serif;--serif:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Georgia,serif;--ui:'IBM Plex Sans','Segoe UI',Roboto,system-ui,sans-serif;position:fixed;inset:0;overflow:hidden;color:var(--ink);font:14px/1.4 var(--ui);background:radial-gradient(ellipse at 30% 40%,rgba(90,110,170,.16),transparent 38%),radial-gradient(ellipse at 80% 70%,rgba(150,70,220,.12),transparent 36%),linear-gradient(#03040a,#060a17 55%,#04060d)}
+#oapp canvas{position:absolute;inset:0;width:100%;height:100%;display:block}#oapp #ostars{z-index:0}#oapp #ogl{z-index:1;touch-action:none;cursor:grab}
+#oapp .brand{position:absolute;left:20px;top:14px;z-index:3;pointer-events:none}
+#oapp .brand h1{margin:0;font:400 44px/1 var(--display);letter-spacing:.28em;color:var(--gold-soft)}#oapp .brand p{margin:6px 0 0 2px;font:400 11px/1.3 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+#oapp .system{position:absolute;right:20px;top:14px;z-index:3;text-align:right;pointer-events:none}
+#oapp .system b{display:block;font:600 16px/1.2 var(--display);letter-spacing:.2em}#oapp .system span{display:block;font:400 10px/1.3 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:4px}#oapp .system i{display:block;margin-top:14px;font:italic 400 15px/1.35 var(--serif);color:var(--muted)}
+#oapp .facing{position:absolute;left:50%;top:16px;translate:-50% 0;z-index:3;font:400 11px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+#oapp #ocodex{position:absolute;top:calc(118px + env(safe-area-inset-top,0px));right:14px;bottom:170px;width:372px;z-index:4;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(14px);transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .3s}
+#oapp #ocodex.closed{transform:translateX(420px);opacity:0;pointer-events:none}
+#oapp .tabs{display:flex;border-bottom:1px solid var(--line)}#oapp .tabs button{flex:1;background:none;border:0;color:var(--muted);font:400 11px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;padding:14px 6px;cursor:pointer;border-bottom:2px solid transparent}
+#oapp .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+#oapp .tabs .close{flex:0 0 auto;display:none;font:600 13px var(--ui);text-transform:none;letter-spacing:0;padding:0 16px}
+#oapp .body{flex:1;overflow:auto;padding:14px 18px 20px;scrollbar-width:thin}#oapp .pane[hidden]{display:none}
+#oapp .eyebrow{margin:0 0 6px;font:400 11px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+#oapp .sect{padding:14px 0;border-bottom:1px solid var(--line)}#oapp .sect:last-child{border-bottom:0}
+#oapp h2{margin:0;font:400 26px/1.1 var(--display);letter-spacing:.14em}#oapp h2 small{display:block;font:400 10px/1.4 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+#oapp .tagline{margin:8px 0 0;font:italic 400 17px/1.35 var(--serif);color:var(--ink)}#oapp .q{margin:8px 0 0;font:italic 400 15px/1.4 var(--serif);color:var(--muted)}
+#oapp .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0 0;font:400 13px/1.45 var(--ui)}#oapp .kv dt{color:var(--muted)}#oapp .kv dd{margin:0}
+#oapp .note{margin:8px 0 0;font:400 12px/1.45 var(--ui);color:var(--muted)}
+#oapp ul.plain{margin:8px 0 0;padding-left:18px;font:400 13px/1.45 var(--ui)}#oapp ul.plain li{margin:3px 0}#oapp ul.plain li b{color:var(--ink)}
+#oapp .votes{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px;font:400 13px/1.45 var(--ui)}#oapp .votes li{display:grid;grid-template-columns:78px 1fr;gap:10px}#oapp .votes li b{color:var(--gold-soft);font-weight:600}
+#oapp .side{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 0;color:var(--ink);font:400 14px/1.3 var(--ui);cursor:pointer}
+#oapp .side:first-child{border-top:0}#oapp .side i.sw{width:12px;height:12px;border-radius:3px;margin-top:4px;background:var(--c,#555);border:1px dashed var(--line-2)}#oapp .side b{display:block;font:600 14px/1.3 var(--ui)}#oapp .side span{display:block;font:400 12px/1.4 var(--ui);color:var(--muted)}
+#oapp .side em{font:400 11px/1.3 var(--ui);color:var(--muted);white-space:nowrap;margin-top:3px}
+#oapp .card .kind{font:400 10px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}#oapp .card h2{margin-top:6px}
+#oapp .pill{display:inline-block;margin-top:12px;border:1px dashed var(--line-2);border-radius:999px;padding:5px 10px;font:600 10px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+#oapp .dock{position:absolute;left:50%;bottom:16px;translate:-50% 0;z-index:5;width:min(900px,calc(100% - 28px));background:var(--panel-2);border:1px solid var(--line);border-radius:18px;padding:12px 14px;display:grid;gap:10px;backdrop-filter:blur(14px)}
+#oapp .time{display:grid;grid-template-columns:auto 1fr auto;gap:8px 14px;align-items:center}
+#oapp .date{display:grid;gap:3px;width:272px;min-width:0;overflow:hidden}#oapp .date strong{font:600 14px/1.2 var(--ui);color:var(--gold-soft);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#oapp .date span{font:italic 400 12px/1.3 var(--serif);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#oapp .sliders{display:grid;gap:6px}#oapp .sliders label{display:grid;grid-template-columns:38px 1fr 44px;gap:8px;align-items:center;font:600 10px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+#oapp .sliders input[type=range]{width:100%;accent-color:var(--gold);margin:0}#oapp .sliders output{font:600 12px/1 var(--ui);color:var(--ink);text-align:right}
+#oapp .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+#oapp .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#oapp .dock button{background:rgba(242,232,211,.05);border:1px solid var(--line-2);border-radius:10px;color:var(--ink);font:600 12px/1 var(--ui);padding:11px 14px;cursor:pointer;letter-spacing:.04em}
+#oapp .dock button[aria-pressed="true"]{border-color:var(--gold);background:rgba(245,182,79,.12);color:var(--gold-soft)}
+#oapp .faces{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;flex:1}#oapp .faces button{display:flex;gap:8px;align-items:center;justify-content:center}#oapp .faces button i{width:7px;height:7px;border-radius:50%;background:var(--stone);border:1px dashed var(--line-2)}
+#oapp .dock .hint{font:italic 400 13px/1.3 var(--serif);color:var(--muted)}#oapp .dock .hint-short{display:none}
+#oapp button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width:819px){
+  #oapp .brand h1{font-size:30px}#oapp .system{display:none}#oapp .facing{top:92px;left:auto;right:14px;translate:0;font-size:10px}
+  #oapp #ocodex{top:auto;left:0;right:0;bottom:0;width:auto;height:58%;border-radius:18px 18px 0 0;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+  #oapp #ocodex.closed{transform:translateY(110%);opacity:1}#oapp .tabs .close{display:block}
+  #oapp .dock{bottom:10px;padding:10px;gap:8px}#oapp .time{grid-template-columns:1fr auto}#oapp .sliders{grid-column:1/-1}#oapp .date{min-width:0;width:auto}
+  #oapp .faces{grid-template-columns:repeat(4,1fr)}#oapp .dock button{padding:10px 8px;font-size:11px}#oapp .dock .hint{display:none}#oapp .dock .hint-short{display:inline}
+  #oapp #ocodex.open ~ .dock{opacity:0;pointer-events:none}
+}
+</style>
+<div id="oapp" class="away">
+  <canvas id="ostars"></canvas><canvas id="ogl"></canvas>
+  <header class="brand"><h1>OCTA</h1><p>The eight-sided planet</p></header>
+  <div class="system"><b>THE DICE SYSTEM</b><span>Worlds beyond chance</span><i>Different worlds.<br>Same imagination.</i></div>
+  <div class="facing" id="ofacing">Facing · Side 1</div>
+  <aside id="ocodex" class="open" aria-label="Codex of Octa">
+    <div class="tabs" role="tablist"><button role="tab" id="otabWorld" aria-selected="true" aria-controls="opaneWorld">World</button><button role="tab" id="otabSides" aria-selected="false" aria-controls="opaneSides">Sides</button><button role="tab" id="otabPlace" aria-selected="false" aria-controls="opanePlace">Side</button><button type="button" class="close" id="obtnClose">Close</button></div>
+    <div class="body">
+      <section class="pane" id="opaneWorld" role="tabpanel">
+        <div class="sect"><p class="eyebrow">The world</p><h2>OCTA<small>The eight-sided planet · The Dice System</small></h2>
+          <p class="tagline">The third world of Ruby’s Dice System: the d8, eight triangular sides, and nothing on it discovered or drawn yet.</p>
+          <dl class="kv"><dt>Sides</dt><dd>Eight, named by the number on the die for now (Ruby, 2026-10-17: “the sides are just named by the number on the dice”), unless two more directions join Hexa’s six: see below. Side 1 is the first side. Opposite sides add up to 9, as on a d8, with 1, 3, 5 and 7 around the top point and 2, 4, 6 and 8 around the bottom one; how the numbers sit on the die is a reading.</dd>
+            <dt>Drawn so far</dt><dd>Nothing. Ruby: “so the first side hasent been discoverd or drawn yet”. Every side is blank until she discovers it.</dd>
+            <dt>The name</dt><dd>Octa, by a vote on 2026-10-17, two to one: see below.</dd>
+            <dt>Everything else</dt><dd>Unwritten: its size, how it turns, its star and fields, its moon, its day and its year, who went there. No star is drawn in its sky and the world does not turn on its own, because none of that is written yet. The clock in the dock is the Dice System’s shared clock, counted in days.</dd></dl></div>
+        <div class="sect"><p class="eyebrow">The name · a vote</p>
+          <p class="note">Ruby, 2026-10-17: “cool now lets add octa (or octo (whichever sounds better (dont just use the first or secont, me, daddy, and you will vote (daddy votes octa, i vote octo)))”.</p>
+          <ul class="votes"><li><b>Ruby</b><span>Octo.</span></li><li><b>Daddy</b><span>Octa.</span></li><li><b>Claude</b><span>Octa, for two reasons. It follows the rule Ruby made when she renamed Cuba: the planet takes the first half of its hedron’s name (tetrahedron, hexahedron, octahedron). And Tetra, Hexa, Octa, Deca, Dodeca sound like one family, while Octo pulls toward octopus and October.</span></li></ul>
+          <p class="note">Result: Octa, two votes to one. It is Ruby’s world, so she can overrule the vote. By the same rule the d20 would be Icosa rather than Icoso; nothing is changed there until she says.</p></div>
+        <div class="sect"><p class="eyebrow">Two more directions?</p>
+          <p class="note">Ruby: “unless you can preduce 2 more directions on top of Hexa's that fit in(give me at least 3 examples before we resort to the numberd situation)”. Hexa’s six are Canon, East, West, Far, North and South. Five pairs that could join them, none chosen; the sides stay numbered until she picks one or keeps the numbers:</p>
+          <ul class="plain" id="odirections"><li><b>Dawn and Dusk</b>: the side where the day begins and the side where it ends. It fits the slow mornings and the twilight of these worlds.</li>
+            <li><b>Zenith and Nadir</b>: straight up and straight down in the sky, the astronomer’s words. They fit the die’s two points, the top one and the bottom one.</li>
+            <li><b>Windward and Leeward</b>: the side the wind comes from and the sheltered side, the sailor’s words. They fit a system of explorers and watery worlds.</li>
+            <li><b>Over and Under</b>: the plainest pair. On Hexa, North is already the top and South the bottom, so these would have to mean the die’s two points instead.</li>
+            <li><b>Sunward and Starward</b>: toward its own star, and out toward the far stars. They fit a planet whose place among the worlds is still to be written.</li></ul>
+          <p class="note">One more way, for the record: Hexa’s six directions are the six corners of an eight-sided die (the two shapes are each other’s inside out), so every side of Octa touches three of them, and a side could be called by its corners, the North-Canon-East side. That is a reading, offered, not used.</p></div>
+        <div class="sect"><p class="eyebrow">The Dice System</p><p class="note">Ruby, 2026-10-10: “So to recap, tetra, hexa, octo, deca, dodeca, icoso, icosotetra, and triaconta are our planets.” Octa is the third of them to be built.</p><ul class="plain" id="oplanets"></ul></div>
+        <div class="sect"><p class="eyebrow">Still unwritten</p>
+          <ul class="plain"><li>Whether two more directions join Hexa’s six, and which, or the sides stay numbered.</li><li>What is on side 1, and on every other side.</li><li>Octa’s size, its turn, its star and fields, its moon, its day and year, and who goes there.</li><li>Where Octa sits among the worlds, and whether it can be seen from Tetra and Hexa.</li></ul>
+          <p class="note">Octa shares this page with Tetra and Hexa, as Ruby asked for Cuba; the buttons under the title switch between the worlds.</p></div>
+      </section>
+      <section class="pane" id="opaneSides" role="tabpanel" hidden><div class="sect"><p class="eyebrow">The eight sides</p><div id="osideList"></div></div></section>
+      <section class="pane" id="opanePlace" role="tabpanel" hidden><div class="sect card" id="oplaceBody"></div></section>
+    </div>
+  </aside>
+  <div class="dock" id="odock">
+    <div class="time">
+      <div class="date"><strong id="odateOut">Shared clock · day 1</strong><span id="odateSub">Octa’s own day, year and calendar are unwritten</span></div>
+      <div class="sliders"><label><span>Spin</span><input id="orngSpin" type="range" min="0" max="8" step="0.1" value="1" aria-label="How fast time runs"><output id="ospinOut">1.0×</output></label></div>
+      <div class="btns"><button id="obtnSpin" type="button" aria-pressed="true">Pause</button><button id="obtnReset" type="button">Reset</button></div>
+    </div>
+    <div class="row"><div class="faces" id="ofaceButtons"></div><button id="obtnCodex" type="button" aria-pressed="true" aria-controls="ocodex">Codex</button></div>
+    <div class="row"><span class="hint">Drag to turn the view · scroll to come closer · tap a side</span><span class="hint hint-short">Drag to turn the view</span></div>
+  </div>
+</div>
+<script>
+(()=>{
+'use strict';
+/* Octa, the eight-sided planet: the third world of the Dice System, added on 2026-10-17 from Ruby's line "cool now lets add octa (or octo ...)".
+   Nothing on it is discovered or drawn yet (Ruby: "so the first side hasent been discoverd or drawn yet"), so the eight sides are blank slate,
+   each carrying its number on the die, and the Codex holds the vote on the name and the question of two more directions. */
+const WORLD={
+  name:'Octa',die:'d8',
+  sides:[1,2,3,4,5,6,7,8].map(n=>({id:String(n),name:'Side '+n,state:n===1?'“the first side hasent been discoverd or drawn yet” (Ruby)':'Not discovered or drawn yet'})),
+  planets:[{name:'Tetra',die:'d4',state:'The four-sided world, built.'},{name:'Hexa',die:'d6',state:'The cube planet, built; Cuba until 2026-10-10.'},{name:'Octa',die:'d8',state:'This world: eight numbered sides, nothing discovered or drawn yet (2026-10-17).'},{name:'Deca',die:'d10',state:'Not yet built.'},{name:'Dodeca',die:'d12',state:'Not yet built.'},{name:'Icoso',die:'d20',state:'Not yet built (Icosa by the hedron rule; unchanged until Ruby says).'},{name:'Icosotetra',die:'d24',state:'Not yet built.'},{name:'Triaconta',die:'d30',state:'Not yet built.'},{name:'Two dwarf planets',die:'d2 and d1',state:'“probably”, Ruby; unnamed, not built.'},{name:'Asteroids',die:'d0.5',state:'Her question: “Maby make some d0.5’s for asteroids And make a belt?”'}]
+};
+const $=id=>document.getElementById(id);
+const TAU=Math.PI*2,clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]],mulS=(a,s)=>[a[0]*s,a[1]*s,a[2]*s];
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],len=a=>Math.hypot(a[0],a[1],a[2]),norm=a=>mulS(a,1/(len(a)||1));
+function lookAt(eye,target,up){const f=norm(sub(target,eye)),s=norm(cross(f,up)),u=cross(s,f);return[s[0],u[0],-f[0],0,s[1],u[1],-f[1],0,s[2],u[2],-f[2],0,-dot(s,eye),-dot(u,eye),dot(f,eye),1]}
+function persp(fov,asp,n,f){const t=1/Math.tan(fov/2);return[t/asp,0,0,0,0,t,0,0,0,0,(f+n)/(n-f),-1,0,0,2*f*n/(n-f),0]}
+function mul(a,b){const o=new Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];return o}
+function project(m,p){const x=m[0]*p[0]+m[4]*p[1]+m[8]*p[2]+m[12],y=m[1]*p[0]+m[5]*p[1]+m[9]*p[2]+m[13],w=m[3]*p[0]+m[7]*p[1]+m[11]*p[2]+m[15];if(w<=0)return null;return{x:(x/w*.5+.5)*W,y:(.5-y/w*.5)*H}}
+/* ---- the die: a regular octahedron, its six corners on the axes at R. The eight sides by number: 1, 3, 5 and 7 round the top corner
+   starting at the side that faces the viewer at the start, going round to the viewer's left (Hexa's East is on the left too); the bottom
+   sides are the opposites, 9 minus the top number, as on a d8. Which side carries which number is a reading. ---- */
+const R=1.45;
+const OCTANTS={1:[1,1,1],3:[-1,1,1],5:[-1,1,-1],7:[1,1,-1],8:[-1,-1,-1],6:[1,-1,-1],4:[1,-1,1],2:[-1,-1,1]};
+const FACES=[1,2,3,4,5,6,7,8].map(n=>{const [sx,sy,sz]=OCTANTS[n];const v=[[sx*R,0,0],[0,sy*R,0],[0,0,sz*R]];const nrm=norm([sx,sy,sz]);
+  const up=norm(sub([0,1,0],mulS(nrm,nrm[1])));const right=cross(up,nrm);const c=mulS(add(add(v[0],v[1]),v[2]),1/3);
+  return{id:String(n),n:nrm,up,right,c,v,opposite:String(9-n)}});
+const faceById=Object.fromEntries(FACES.map(f=>[f.id,f]));
+const sideById=Object.fromEntries(WORLD.sides.map(s=>[s.id,s]));
+/* ---- time: the Dice System's shared clock, at Tetra's rate (one day in 30 s at 1x). Octa's own day and year are unwritten, so the dock counts days. ---- */
+const DAY_SECONDS=30;
+const state={day:0,playing:true,speed:1,baseYaw:Math.PI/4,pitch:Math.atan(1/Math.SQRT2),dist:4.9,fly:null,selectedSide:null,tab:'otabWorld'};
+if(window.dice&&window.dice.time){const T=window.dice.time;for(const k of['day','playing','speed'])Object.defineProperty(state,k,{get:()=>T[k],set:v=>{T[k]=v},enumerable:true})}
+let W=1,H=1,DPR=1;
+const app=$('oapp'),gl=$('ogl'),stars=$('ostars'),codex=$('ocodex');
+const ctx=gl.getContext('webgl',{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true});
+if(!ctx){app.innerHTML='<p style="padding:40px;font:16px system-ui">This page needs WebGL.</p>';return}
+/* ---- shaders: a textured face lit from the viewer's side, since nothing is written about Octa's star ---- */
+const VS=`attribute vec3 aPos;attribute vec2 aUV;attribute vec3 aN;uniform mat4 uMVP;varying vec2 vUV;varying vec3 vN,vP;
+void main(){vUV=aUV;vN=aN;vP=aPos;gl_Position=uMVP*vec4(aPos,1.);}`;
+const FS=`precision mediump float;uniform sampler2D uTex;uniform vec3 uLight,uEye;uniform float uHi;varying vec2 vUV;varying vec3 vN,vP;
+void main(){vec3 c=texture2D(uTex,vUV).rgb;float d=max(dot(normalize(vN),normalize(uLight)),0.);vec3 v=normalize(uEye-vP);float r=pow(1.-max(dot(normalize(vN),v),0.),3.);
+c=c*(0.55+0.6*d)+vec3(0.08,0.10,0.16)*r;c+=uHi*vec3(0.22,0.16,0.05);gl_FragColor=vec4(c,1.);}`;
+function shader(t,s){const sh=ctx.createShader(t);ctx.shaderSource(sh,s);ctx.compileShader(sh);if(!ctx.getShaderParameter(sh,ctx.COMPILE_STATUS))throw new Error(ctx.getShaderInfoLog(sh));return sh}
+function program(vs,fs){const p=ctx.createProgram();ctx.attachShader(p,shader(ctx.VERTEX_SHADER,vs));ctx.attachShader(p,shader(ctx.FRAGMENT_SHADER,fs));ctx.linkProgram(p);if(!ctx.getProgramParameter(p,ctx.LINK_STATUS))throw new Error(ctx.getProgramInfoLog(p));return p}
+const prog=program(VS,FS);
+const loc={p:ctx.getAttribLocation(prog,'aPos'),uv:ctx.getAttribLocation(prog,'aUV'),n:ctx.getAttribLocation(prog,'aN'),mvp:ctx.getUniformLocation(prog,'uMVP'),light:ctx.getUniformLocation(prog,'uLight'),eye:ctx.getUniformLocation(prog,'uEye'),tex:ctx.getUniformLocation(prog,'uTex'),hi:ctx.getUniformLocation(prog,'uHi')};
+/* ---- geometry: one triangle per side, counter-clockwise from outside; its texture is the side's own flat picture, drawn below ---- */
+const TEX_PX=512,TEX_SCALE=236/(R*Math.sqrt(2/3));
+const flat=(f,p)=>{const d=sub(p,f.c);return[256+dot(d,f.right)*TEX_SCALE,256-dot(d,f.up)*TEX_SCALE]};
+const P=[],UV=[],N=[];
+for(const f of FACES){let [a,b,c]=f.v;if(dot(cross(sub(b,a),sub(c,a)),f.n)<0)[b,c]=[c,b];for(const p of[a,b,c]){P.push(...p);const q=flat(f,p);UV.push(q[0]/TEX_PX,q[1]/TEX_PX);N.push(...f.n)}}
+function buf(arr){const b=ctx.createBuffer();ctx.bindBuffer(ctx.ARRAY_BUFFER,b);ctx.bufferData(ctx.ARRAY_BUFFER,new Float32Array(arr),ctx.STATIC_DRAW);return b}
+const pb=buf(P),ub=buf(UV),nb=buf(N);
+function attrib(b,l,n){ctx.bindBuffer(ctx.ARRAY_BUFFER,b);ctx.enableVertexAttribArray(l);ctx.vertexAttribPointer(l,n,ctx.FLOAT,false,0,0)}
+/* ---- the sides' pictures: blank slate, undiscovered, with the side's number on the die. Drawn on a canvas, not shipped as files. ---- */
+const textures={};
+function sidePicture(f){const cv=document.createElement('canvas');cv.width=cv.height=TEX_PX;const g=cv.getContext('2d');
+  g.fillStyle='#1a1f2e';g.fillRect(0,0,TEX_PX,TEX_PX);
+  const tri=f.v.map(p=>flat(f,p));g.save();g.beginPath();tri.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.clip();
+  const grd=g.createRadialGradient(256,256,20,256,256,300);grd.addColorStop(0,'#262c3e');grd.addColorStop(1,'#151a28');g.fillStyle=grd;g.fillRect(0,0,TEX_PX,TEX_PX);
+  g.strokeStyle='rgba(242,232,211,0.07)';g.lineWidth=1;for(let k=-TEX_PX;k<TEX_PX*2;k+=28){g.beginPath();g.moveTo(k,0);g.lineTo(k+TEX_PX,TEX_PX);g.stroke()}
+  g.fillStyle='rgba(255,222,163,0.78)';g.font='600 170px Cinzel, "Times New Roman", Georgia, serif';g.textAlign='center';g.textBaseline='middle';g.fillText(f.id,256,236);
+  g.fillStyle='rgba(185,173,150,0.75)';g.font='500 22px "IBM Plex Sans", "Segoe UI", system-ui, sans-serif';g.fillText('not yet discovered',256,352);
+  g.restore();g.strokeStyle='rgba(242,232,211,0.28)';g.lineWidth=5;g.setLineDash([14,10]);g.beginPath();tri.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.stroke();
+  const t=ctx.createTexture();ctx.bindTexture(ctx.TEXTURE_2D,t);ctx.texImage2D(ctx.TEXTURE_2D,0,ctx.RGB,ctx.RGB,ctx.UNSIGNED_BYTE,cv);ctx.generateMipmap(ctx.TEXTURE_2D);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_MIN_FILTER,ctx.LINEAR_MIPMAP_LINEAR);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_WRAP_S,ctx.CLAMP_TO_EDGE);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_WRAP_T,ctx.CLAMP_TO_EDGE);return t}
+function makeTextures(){for(const f of FACES)textures[f.id]=sidePicture(f)}
+/* ---- sky: stars only. No star of Octa's own is drawn, because none is written. ---- */
+const sc=stars.getContext('2d');let starData=[];
+function makeStars(){starData=[];let s=23;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;for(let i=0;i<Math.round(W*H/5200);i++)starData.push({x:rnd()*W,y:rnd()*H,r:.4+rnd()*1.3,a:.25+rnd()*.7,p:rnd()*TAU,c:rnd()})}
+function drawStars(t){sc.setTransform(DPR,0,0,DPR,0,0);sc.clearRect(0,0,W,H);
+  for(const s of starData){const a=s.a*(.8+.2*Math.sin(t*.0005+s.p));sc.fillStyle=s.c<.12?`rgba(190,214,255,${a})`:s.c>.88?`rgba(255,226,180,${a})`:`rgba(232,238,255,${a})`;sc.beginPath();sc.arc(s.x,s.y,s.r,0,TAU);sc.fill()}}
+/* ---- camera: the viewer orbits a die that does not turn on its own (how Octa turns is unwritten) ---- */
+const cam={eye:[0,0,5],vp:null,mvp:null};
+function resize(){const r=app.getBoundingClientRect();W=Math.max(1,r.width);H=Math.max(1,r.height);DPR=Math.min(2,devicePixelRatio||1);for(const c of[gl,stars]){c.width=Math.round(W*DPR);c.height=Math.round(H*DPR)}ctx.viewport(0,0,gl.width,gl.height);makeStars()}
+function shift(){return codex.classList.contains('open')&&W>=820?-0.42:0}
+function updateCamera(){const yaw=state.baseYaw,cp=Math.cos(state.pitch);cam.eye=[state.dist*cp*Math.sin(yaw),state.dist*Math.sin(state.pitch),state.dist*cp*Math.cos(yaw)];
+  const target=[0,W<820?(codex.classList.contains('open')?-1.1:-0.25):0,0];const view=lookAt(cam.eye,target,[0,1,0]);const pr=persp(0.72,W/H,0.1,100);
+  const off=[1,0,0,0,0,1,0,0,0,0,1,0,shift(),0,0,1];cam.vp=mul(mul(off,pr),view);cam.mvp=cam.vp}
+function facing(){let best=null,bd=-2;for(const f of FACES){const d=dot(f.n,norm(cam.eye));if(d>bd){bd=d;best=f.id}}return best}
+function flyTo(id){const f=faceById[id];state.fly={yaw:Math.atan2(f.n[0],f.n[2]),pitch:clamp(Math.asin(f.n[1]),-1.2,1.2)}}
+/* ---- codex ---- */
+const tabs=[['otabWorld','opaneWorld'],['otabSides','opaneSides'],['otabPlace','opanePlace']];
+function showTab(id){tabs.forEach(([t,p])=>{const on=t===id;$(t).setAttribute('aria-selected',String(on));$(p).hidden=!on});state.tab=id}
+tabs.forEach(([t])=>$(t).addEventListener('click',()=>{showTab(t);openCodex(true)}));
+function openCodex(on){codex.classList.toggle('closed',!on);codex.classList.toggle('open',on);$('obtnCodex').setAttribute('aria-pressed',String(on))}
+$('obtnCodex').addEventListener('click',()=>openCodex(codex.classList.contains('closed')));$('obtnClose').addEventListener('click',()=>openCodex(false));
+function renderPlanets(){const el=$('oplanets');el.innerHTML='';for(const p of WORLD.planets){const li=document.createElement('li');li.innerHTML='<b></b> <span></span> <em></em>';li.querySelector('b').textContent=p.name;li.querySelector('span').textContent=p.die;li.querySelector('em').textContent=p.state;el.appendChild(li)}}
+function renderSides(){const el=$('osideList');el.innerHTML='';for(const s of WORLD.sides){const b=document.createElement('button');b.className='side';b.type='button';b.dataset.side=s.id;b.innerHTML='<i class="sw"></i><div><b></b><span></span></div><em></em>';
+    b.querySelector('b').textContent=s.name;b.querySelector('span').textContent=s.state;b.querySelector('em').textContent='opposite side '+faceById[s.id].opposite;b.addEventListener('click',()=>selectSide(s.id));el.appendChild(b)}}
+function renderPlace(){const el=$('oplaceBody');if(!state.selectedSide){el.innerHTML='<p class="kind">Side</p><h2>Nothing chosen</h2><p class="note">Tap a side of the die, or one of the eight buttons.</p>';return}
+  const s=sideById[state.selectedSide],f=faceById[s.id];el.innerHTML='<p class="kind">Side</p><h2></h2><p class="tagline"></p><p class="note"></p><span class="pill">Blank · nothing written</span>';
+  el.querySelector('h2').textContent=s.name;el.querySelector('.tagline').textContent=s.state;
+  el.querySelector('.note').textContent='Opposite it is side '+f.opposite+', as the numbers of a d8 add up to 9. Nothing is charted here; when Ruby discovers this side, it will be drawn.'}
+function selectSide(id,fly){state.selectedSide=id;if(fly!==false)flyTo(id);renderPlace();showTab('otabPlace');openCodex(true);syncButtons()}
+function syncButtons(){document.querySelectorAll('#oapp [data-face]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.face===(state.selectedSide||facing()))))}
+/* ---- HUD and dock ---- */
+const dateOut=$('odateOut'),rngSpin=$('orngSpin'),spinOut=$('ospinOut');
+function updateDate(){const txt='Shared clock · day '+(Math.floor(state.day)+1);if(dateOut.textContent!==txt)dateOut.textContent=txt}
+rngSpin.addEventListener('input',()=>{state.speed=Number(rngSpin.value);spinOut.textContent=state.speed.toFixed(1)+'×'});
+const fb=$('ofaceButtons');for(const s of WORLD.sides){const b=document.createElement('button');b.type='button';b.dataset.face=s.id;b.innerHTML='<i></i><span></span>';b.querySelector('span').textContent=s.id;b.setAttribute('aria-label',s.name);b.addEventListener('click',()=>selectSide(s.id));fb.appendChild(b)}
+$('obtnSpin').addEventListener('click',()=>{state.playing=!state.playing;syncTime()});
+function syncTime(){$('obtnSpin').textContent=state.playing?'Pause':'Play';$('obtnSpin').setAttribute('aria-pressed',String(state.playing));rngSpin.value=String(state.speed);spinOut.textContent=state.speed.toFixed(1)+'×'}
+addEventListener('dice:show',syncTime);
+$('obtnReset').addEventListener('click',()=>{state.day=0;state.baseYaw=Math.PI/4;state.pitch=Math.atan(1/Math.SQRT2);state.dist=4.9;state.fly=null;state.selectedSide=null;renderPlace();showTab('otabWorld');syncButtons()});
+/* ---- pointer: drag to turn the view, wheel to zoom, tap the die to choose the facing side ---- */
+let drag=null;
+app.addEventListener('pointerdown',e=>{if(e.target.closest('#ocodex,.dock'))return;drag={x:e.clientX,y:e.clientY,moved:false};state.fly=null;app.setPointerCapture(e.pointerId)});
+app.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;state.baseYaw-=dx*0.006;state.pitch=clamp(state.pitch+dy*0.005,-1.3,1.3);drag.x=e.clientX;drag.y=e.clientY});
+addEventListener('pointerup',e=>{if(drag&&!drag.moved&&!e.target.closest('#ocodex,.dock')){selectSide(facing(),false)}drag=null});
+app.addEventListener('wheel',e=>{if(e.target.closest('#ocodex'))return;e.preventDefault();state.dist=clamp(state.dist*(1+Math.sign(e.deltaY)*0.08),2.8,9)},{passive:false});
+/* ---- loop ---- */
+let last=performance.now(),tick=0;
+function frame(t){if(app.classList.contains('away')){last=t;requestAnimationFrame(frame);return}
+  const dt=Math.min(0.05,(t-last)/1000);last=t;
+  const r=app.getBoundingClientRect();if(Math.abs(r.width-W)>0.5||Math.abs(r.height-H)>0.5)resize();
+  if(state.playing)state.day+=dt*state.speed/DAY_SECONDS;
+  if(state.fly){const k=1-Math.pow(0.0008,dt);const dy=Math.atan2(Math.sin(state.fly.yaw-state.baseYaw),Math.cos(state.fly.yaw-state.baseYaw));state.baseYaw+=dy*k;state.pitch+=(state.fly.pitch-state.pitch)*k;if(Math.abs(dy)<0.002&&Math.abs(state.fly.pitch-state.pitch)<0.002)state.fly=null}
+  updateCamera();drawStars(t);
+  ctx.clearColor(0,0,0,0);ctx.clear(ctx.COLOR_BUFFER_BIT|ctx.DEPTH_BUFFER_BIT);ctx.enable(ctx.DEPTH_TEST);ctx.enable(ctx.CULL_FACE);ctx.cullFace(ctx.BACK);
+  ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));
+  const light=norm(add(norm(cam.eye),[0.35,0.5,0]));ctx.uniform3fv(loc.light,new Float32Array(light));ctx.uniform3fv(loc.eye,new Float32Array(cam.eye));ctx.uniform1i(loc.tex,0);ctx.activeTexture(ctx.TEXTURE0);
+  FACES.forEach((f,i)=>{ctx.bindTexture(ctx.TEXTURE_2D,textures[f.id]);ctx.uniform1f(loc.hi,state.selectedSide===f.id?1:0);ctx.drawArrays(ctx.TRIANGLES,i*3,3)});
+  updateDate();
+  if((tick++%10)===0){$('ofacing').textContent='Facing · '+sideById[facing()].name;if(!state.selectedSide)syncButtons()}
+  requestAnimationFrame(frame)}
+/* ---- debug hook for the tests ---- */
+window.octa={state,facing:()=>{updateCamera();return facing()},sides:()=>FACES.map(f=>f.id),opposite:id=>faceById[id]&&faceById[id].opposite,face:(id,fly)=>selectSide(id,fly),setYaw:(y,p)=>{state.baseYaw=y;if(typeof p==='number')state.pitch=p;state.fly=null;updateCamera()},
+  setSpin:on=>{state.playing=on;syncTime()},syncTime,centre:id=>{updateCamera();return project(cam.mvp,faceById[id].c)},
+  sampleAt:(fx_,fy)=>{const px=new Uint8Array(4);ctx.readPixels(Math.round(fx_*gl.width),Math.round((1-fy)*gl.height),1,1,ctx.RGBA,ctx.UNSIGNED_BYTE,px);return[px[0],px[1],px[2],px[3]]},
+  sample:id=>{const sp=window.octa.centre(id);if(!sp)return null;const px=new Uint8Array(4);ctx.readPixels(Math.round(sp.x*DPR),Math.round(gl.height-sp.y*DPR),1,1,ctx.RGBA,ctx.UNSIGNED_BYTE,px);return[px[0],px[1],px[2],px[3]]}};
+/* ---- start, through the page's bridge, so one hot reload starts every world ---- */
+function start(saved){try{if(saved&&typeof saved==='object'){for(const k of['baseYaw','pitch','dist'])if(typeof saved[k]==='number')state[k]=saved[k];if(typeof saved.selectedSide==='string'&&sideById[saved.selectedSide])state.selectedSide=saved.selectedSide}}catch(e){}
+  syncTime();resize();makeTextures();renderPlanets();renderSides();renderPlace();syncButtons();if(state.selectedSide)showTab('otabPlace');
+  window.dice?.snapshot?.('octa',()=>({baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,selectedSide:state.selectedSide}));
+  requestAnimationFrame(frame)}
+if(window.dice?.ready)window.dice.ready('octa',start);else start({});
+})();
+</script>

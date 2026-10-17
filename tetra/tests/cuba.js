@@ -154,7 +154,7 @@ const PAGE = require('./_page');
     await page.goto(PAGE.URL); await page.waitForTimeout(1200);
     const hot = await page.evaluate(() => ({ world: dice.world, tetraDay: window.tetra && tetra.state.day, cubaDay: window.cuba && cuba.state.day, playing: dice.time.playing, speed: dice.time.speed, cubaDate: document.getElementById('cdateOut').textContent, cubaPlay: document.getElementById('cbtnSpin').textContent, snap: window.claude.hot._snap ? Object.keys(window.claude.hot._snap()).sort().join(',') : null }));
     console.log('hot reload', JSON.stringify(hot));
-    if (hot.world !== 'cuba' || Math.abs(hot.tetraDay - 100) > 0.5 || Math.abs(hot.cubaDay - 100) > 0.5 || hot.playing !== false || hot.speed !== 2 || !/Tredesember/.test(hot.cubaDate) || hot.cubaPlay !== 'Play' || hot.snap !== 'cuba,tetra,time,world') fails.push('hot reload: ' + JSON.stringify(hot));
+    if (hot.world !== 'cuba' || Math.abs(hot.tetraDay - 100) > 0.5 || Math.abs(hot.cubaDay - 100) > 0.5 || hot.playing !== false || hot.speed !== 2 || !/Tredesember/.test(hot.cubaDate) || hot.cubaPlay !== 'Play' || hot.snap !== 'cuba,octa,tetra,time,world') fails.push('hot reload: ' + JSON.stringify(hot));
     await page.click('#diceWorlds [data-world="tetra"]'); await page.waitForTimeout(600);
     const tetraDate = await page.evaluate(() => document.getElementById('dateOut').textContent + ' | ' + document.getElementById('btnPlay').textContent);   // Tetra's loop wakes when it is shown and draws the shared day, its Play button showing the shared pause
     console.log('tetra after hot reload', tetraDate, 'errors', JSON.stringify(errors));

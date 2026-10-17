@@ -233,15 +233,15 @@
   }
   @media (max-width:420px){ .time .k{display:none} .time{grid-template-columns:1fr auto} }
   @media (prefers-reduced-motion:reduce){ .marker,.codex{transition:none} }
-  /* the two worlds of the Dice System share this page: one is shown, the other sleeps (class away) */
-  #app.away,#capp.away{visibility:hidden;pointer-events:none}
+  /* the worlds of the Dice System share this page: one is shown, the others sleep (class away) */
+  #app.away,#capp.away,#oapp.away{visibility:hidden;pointer-events:none}
   #diceWorlds{position:fixed;z-index:50;left:max(18px,env(safe-area-inset-left,0px));top:calc(104px + env(safe-area-inset-top,0px));display:flex;gap:6px;align-items:center}
   #diceWorlds span{font:400 10px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-right:4px}
   #diceWorlds button{background:rgba(8,11,20,.7);border:1px solid var(--line-2);border-radius:999px;color:var(--muted);font:600 11px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
   #diceWorlds button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold-soft);background:rgba(245,182,79,.14)}
   .worlds i.cuba{background:var(--stone)}
-.worlds i.octo,.worlds i.deca,.worlds i.dodeca,.worlds i.icoso,.worlds i.icosotetra,.worlds i.triaconta,.worlds i.dwarfs,.worlds i.asteroids{background:none;border-style:dashed;opacity:.6}
-  @media (max-width:819px){#diceWorlds{top:calc(92px + env(safe-area-inset-top,0px));left:14px}#diceWorlds span{display:none}}
+.worlds i.octa,.worlds i.deca,.worlds i.dodeca,.worlds i.icoso,.worlds i.icosotetra,.worlds i.triaconta,.worlds i.dwarfs,.worlds i.asteroids{background:none;border-style:dashed;opacity:.6}
+  @media (max-width:819px){#diceWorlds{top:calc(92px + env(safe-area-inset-top,0px));left:14px}#diceWorlds span{display:none}#diceWorlds button{padding:7px 10px;font-size:10px}}
 </style>
 
 <div id="app">
@@ -302,7 +302,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The Dice System</p>
-          <p>Worlds beyond chance. Tetra is the four-sided world and Hexa the cube planet; they share this page, and the buttons under the title switch between them.</p>
+          <p>Worlds beyond chance. Tetra is the four-sided world, Hexa the cube planet and Octa the eight-sided planet; they share this page, and the buttons under the title switch between them.</p>
           <ul class="worlds" id="worlds"></ul>
           <p class="q" style="margin-top:12px">Different worlds. Same imagination.</p>
         </div>
@@ -372,17 +372,18 @@
    one survived, so after a republish one world stayed blank). Snapshots are gathered the same way, one object with a slice per world and the world shown. */
 (()=>{const starters={},snaps={};let booted=false,data=null;const el=id=>document.getElementById(id);const btns=()=>[...document.querySelectorAll('#diceWorlds [data-world]')];
 const time={day:0,playing:true,speed:1};   // one clock for both worlds (Ruby, 2026-10-04: pause, spin and the day and year steps happen on both planets); the shown world advances it
-function show(id){const A=el('app'),C=el('capp');if(A)A.classList.toggle('away',id!=='tetra');if(C)C.classList.toggle('away',id!=='cuba');btns().forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===id)));try{localStorage.setItem('dice.world',id)}catch(e){}dispatchEvent(new CustomEvent('dice:show',{detail:id}))}
+function show(id){const A=el('app'),C=el('capp'),O=el('oapp');if(A)A.classList.toggle('away',id!=='tetra');if(C)C.classList.toggle('away',id!=='cuba');if(O)O.classList.toggle('away',id!=='octa');btns().forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===id)));try{localStorage.setItem('dice.world',id)}catch(e){}dispatchEvent(new CustomEvent('dice:show',{detail:id}))}
 function sliceFor(k){if(data[k]!==undefined)return data[k];return k==='tetra'&&!data.tetra&&!data.cuba?data:{}}   // older snapshots were Tetra's alone
 function startAll(d){data=d&&typeof d==='object'?d:{};for(const k in starters){if(starters[k].started)continue;starters[k].started=true;try{starters[k](sliceFor(k))}catch(e){console.error(e)}}if(data.time&&typeof data.time==='object'){for(const k of['day','playing','speed'])if(data.time[k]!==undefined)time[k]=data.time[k]}}
-window.dice={time,ready(key,fn){starters[key]=fn;if(booted)startAll(data)},snapshot(key,fn){snaps[key]=fn},show,get world(){const C=el('capp');return C&&!C.classList.contains('away')?'cuba':'tetra'},
+window.dice={time,ready(key,fn){starters[key]=fn;if(booted)startAll(data)},snapshot(key,fn){snaps[key]=fn},show,get world(){const C=el('capp'),O=el('oapp');return O&&!O.classList.contains('away')?'octa':C&&!C.classList.contains('away')?'cuba':'tetra'},
   boot(){if(booted)return;booted=true;let id='tetra';try{id=localStorage.getItem('dice.world')||'tetra'}catch(e){}show(id);btns().forEach(b=>b.addEventListener('click',()=>show(b.dataset.world)));
     const hot=window.claude&&window.claude.hot;const snap=()=>{const o={world:window.dice.world,time:{day:time.day,playing:time.playing,speed:time.speed}};for(const k in snaps){try{o[k]=snaps[k]()}catch(e){}}return o};
     try{if(hot&&hot.snapshot)hot.snapshot(snap)}catch(e){}
-    try{if(hot&&hot.ready)hot.ready(d=>{startAll(d);if(d&&d.world==='cuba'||d&&d.world==='tetra')show(d.world)});else startAll(hot&&hot.data||{})}catch(e){startAll({})}}}})();
+    try{if(hot&&hot.ready)hot.ready(d=>{startAll(d);if(d&&(d.world==='cuba'||d.world==='tetra'||d.world==='octa'))show(d.world)});else startAll(hot&&hot.data||{})}catch(e){startAll({})}}}})();
 </script>
 {{CUBA}}
-<nav id="diceWorlds" aria-label="The worlds of the Dice System"><span>The Dice System</span><button type="button" data-world="tetra" aria-pressed="true">Tetra</button><button type="button" data-world="cuba" aria-pressed="false">Hexa</button></nav>
+{{OCTA}}
+<nav id="diceWorlds" aria-label="The worlds of the Dice System"><span>The Dice System</span><button type="button" data-world="tetra" aria-pressed="true">Tetra</button><button type="button" data-world="cuba" aria-pressed="false">Hexa</button><button type="button" data-world="octa" aria-pressed="false">Octa</button></nav>
 
 <script>
 (()=>{
@@ -440,7 +441,7 @@ const WORLD = {
              {name:'Amethyst the explorer', desc:'Charted the South Face: tropical at the top, the southern continent with Snowia, Coldland and Beria, and Wetia.'},
              {name:'Obsidian the explorer', desc:'Charted the Far Face: Mount Celestial, Wetia, and the nations Warmia, Ehia and Tree Land.'},
              {name:'Opal the explorer', desc:'Went back over the West, South and Far faces and drew the complete maps from the other explorers\u2019 charts. Opal\u2019s maps are the ones on the world now.'}],
-  worlds:[{id:'tetra',name:'Tetra',desc:'The d4. The four-sided world. This one.'},{id:'cuba',name:'Hexa',desc:'The d6. The cube planet, six square sides, farther from the star; called Cuba until 2026-10-10 (Ruby: “the hedron name for a cube was a hexahedron So Cuba should be called hexa”). All six of its sides are drawn; the Hexa button under the title switches to it.'},{id:'octo',name:'Octo',desc:'The d8. Not yet built (Ruby, 2026-10-10).'},{id:'deca',name:'Deca',desc:'The d10. Not yet built.'},{id:'dodeca',name:'Dodeca',desc:'The d12. Not yet built.'},{id:'icoso',name:'Icoso',desc:'The d20. Not yet built.'},{id:'icosotetra',name:'Icosotetra',desc:'The d24. Not yet built.'},{id:'triaconta',name:'Triaconta',desc:'The d30. Not yet built.'},{id:'dwarfs',name:'Two dwarf planets',desc:'The d2 and the d1: “probably”, Ruby says. Unnamed, not built.'},{id:'asteroids',name:'Asteroids',desc:'The d0.5, and a belt: her question (“Maby make some d0.5’s for asteroids And make a belt?”). Not built.'}],
+  worlds:[{id:'tetra',name:'Tetra',desc:'The d4. The four-sided world. This one.'},{id:'cuba',name:'Hexa',desc:'The d6. The cube planet, six square sides, farther from the star; called Cuba until 2026-10-10 (Ruby: “the hedron name for a cube was a hexahedron So Cuba should be called hexa”). All six of its sides are drawn; the Hexa button under the title switches to it.'},{id:'octa',name:'Octa',desc:'The d8. The eight-sided planet, in this page since 2026-10-17: eight sides named by their number on the die for now, nothing on it discovered or drawn yet. Octa by a vote, two to one over Octo.'},{id:'deca',name:'Deca',desc:'The d10. Not yet built.'},{id:'dodeca',name:'Dodeca',desc:'The d12. Not yet built.'},{id:'icoso',name:'Icoso',desc:'The d20. Not yet built.'},{id:'icosotetra',name:'Icosotetra',desc:'The d24. Not yet built.'},{id:'triaconta',name:'Triaconta',desc:'The d30. Not yet built.'},{id:'dwarfs',name:'Two dwarf planets',desc:'The d2 and the d1: “probably”, Ruby says. Unnamed, not built.'},{id:'asteroids',name:'Asteroids',desc:'The d0.5, and a belt: her question (“Maby make some d0.5’s for asteroids And make a belt?”). Not built.'}],
   star:{name:'A dark purple star', note:'Its light reaches Tetra the colour of our sunlight: the magical field turns it on the way in.'},
   moon:{name:'A d3 moon', shape:'a fair three-sided die, not the cube kind and not a barrel: a chunky rounded three-sided pebble, a little longer than it is wide, with domed ends, so it can only come to rest on one of its three sides; it rolls slowly so every side comes round', craters:'one crater on the one side, two on the two side, three on the three side', size:'a third of the size of Tetra', orbit:'a little farther out than the magical field; opposite the star on every ordinary day, drifting gently about that spot', eclipse:'a solar eclipse every month on the new moon, the middle of the month', phases:'waxes and wanes through the month like our moon, full when the month turns; the Restart Day is never a new moon'},
   size:{miles:20000, from:'the corner of Spikia', to:'the base of Mount Celestial', path:'straight through the world'},

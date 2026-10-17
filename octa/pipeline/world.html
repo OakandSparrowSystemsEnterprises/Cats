@@ -1,6 +1,9 @@
 <style>#oapp *{all:revert;box-sizing:border-box}#oapp *::before,#oapp *::after{box-sizing:border-box}
 #oapp{--void:#04060d;--deep:#070b16;--ink:#f2e8d3;--muted:#b9ad96;--dim:#7f765f;--gold:#f5b64f;--gold-soft:#ffdea3;--blue:#5aa5ff;--blue-soft:#a9d1ff;--stone:#9aa0ad;--panel:rgba(8,11,20,.76);--panel-2:rgba(12,16,27,.94);--line:rgba(242,232,211,.14);--line-2:rgba(242,232,211,.28);--focus:#ffd98a;--display:'Cinzel','Times New Roman',Georgia,serif;--serif:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Georgia,serif;--ui:'IBM Plex Sans','Segoe UI',Roboto,system-ui,sans-serif;position:fixed;inset:0;overflow:hidden;color:var(--ink);font:14px/1.4 var(--ui);background:radial-gradient(ellipse at 30% 40%,rgba(90,110,170,.16),transparent 38%),radial-gradient(ellipse at 80% 70%,rgba(150,70,220,.12),transparent 36%),linear-gradient(#03040a,#060a17 55%,#04060d)}
-#oapp canvas{position:absolute;inset:0;width:100%;height:100%;display:block}#oapp #ostars{z-index:0}#oapp #ogl{z-index:1;touch-action:none;cursor:grab}
+#oapp canvas{position:absolute;inset:0;width:100%;height:100%;display:block}#oapp #ostars{z-index:0}#oapp #ogl{z-index:1;touch-action:none;cursor:grab}#oapp #ofx{z-index:2;pointer-events:none}
+#oapp .phase{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px}#oapp .phase b{display:block;font:600 13px/1.3 var(--ui)}#oapp .phase span{display:block;font:400 12px/1.4 var(--ui);color:var(--muted)}
+#oapp .phase i,#oapp .side em i{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:0 0 auto;margin-top:5px;display:inline-block}#oapp .side em i{margin-top:0;width:6px;height:6px;margin-right:5px}
+#oapp i.sun{background:var(--gold-soft);box-shadow:0 0 8px var(--gold)}#oapp i.dawn{background:#f0a05a;box-shadow:0 0 8px #f0a05a}#oapp i.dusk{background:#c67b4a}#oapp i.night{background:#3f4a6e}#oapp i.eclipse{background:#7a5bd6;box-shadow:0 0 8px #b48cff}
 #oapp .brand{position:absolute;left:20px;top:14px;z-index:3;pointer-events:none}
 #oapp .brand h1{margin:0;font:400 44px/1 var(--display);letter-spacing:.28em;color:var(--gold-soft)}#oapp .brand p{margin:6px 0 0 2px;font:400 11px/1.3 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
 #oapp .system{position:absolute;right:20px;top:14px;z-index:3;text-align:right;pointer-events:none}
@@ -25,6 +28,7 @@
 #oapp .side em{font:400 11px/1.3 var(--ui);color:var(--muted);white-space:nowrap;margin-top:3px}
 #oapp .card .kind{font:400 10px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}#oapp .card h2{margin-top:6px}
 #oapp .pill{display:inline-block;margin-top:12px;border:1px dashed var(--line-2);border-radius:999px;padding:5px 10px;font:600 10px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+#oapp .actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}#oapp .actions button{background:rgba(242,232,211,.05);border:1px solid var(--line-2);border-radius:10px;color:var(--ink);font:600 12px/1 var(--ui);padding:10px 14px;cursor:pointer}
 #oapp .dock{position:absolute;left:50%;bottom:16px;translate:-50% 0;z-index:5;width:min(900px,calc(100% - 28px));background:var(--panel-2);border:1px solid var(--line);border-radius:18px;padding:12px 14px;display:grid;gap:10px;backdrop-filter:blur(14px)}
 #oapp .time{display:grid;grid-template-columns:auto 1fr auto;gap:8px 14px;align-items:center}
 #oapp .date{display:grid;gap:3px;width:272px;min-width:0;overflow:hidden}#oapp .date strong{font:600 14px/1.2 var(--ui);color:var(--gold-soft);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#oapp .date span{font:italic 400 12px/1.3 var(--serif);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -47,7 +51,7 @@
 }
 </style>
 <div id="oapp" class="away">
-  <canvas id="ostars"></canvas><canvas id="ogl"></canvas>
+  <canvas id="ostars"></canvas><canvas id="ogl"></canvas><canvas id="ofx"></canvas>
   <header class="brand"><h1>OCTA</h1><p>The eight-sided planet</p></header>
   <div class="system"><b>THE DICE SYSTEM</b><span>Worlds beyond chance</span><i>Different worlds.<br>Same imagination.</i></div>
   <div class="facing" id="ofacing">Facing · Side 1</div>
@@ -56,15 +60,24 @@
     <div class="body">
       <section class="pane" id="opaneWorld" role="tabpanel">
         <div class="sect"><p class="eyebrow">The world</p><h2>OCTA<small>The eight-sided planet · The Dice System</small></h2>
-          <p class="tagline">The third world of Ruby’s Dice System: the d8, eight triangular sides, and nothing on it discovered or drawn yet.</p>
+          <p class="tagline">The third world of Ruby’s Dice System: the d8, eight triangular sides, turning under the same star with a d7 moon, and nothing on it discovered or drawn yet.</p>
           <dl class="kv"><dt>Sides</dt><dd>Eight, named by the number on the die for now (Ruby, 2026-10-17: “the sides are just named by the number on the dice”), unless two more directions join Hexa’s six: see below. Side 1 is the first side. Opposite sides add up to 9, as on a d8, with 1, 3, 5 and 7 around the top point and 2, 4, 6 and 8 around the bottom one; how the numbers sit on the die is a reading.</dd>
             <dt>Drawn so far</dt><dd>Nothing. Ruby: “so the first side hasent been discoverd or drawn yet”. Every side is blank until she discovers it.</dd>
-            <dt>The name</dt><dd>Octa, by a vote on 2026-10-17, two to one: see below.</dd>
-            <dt>Everything else</dt><dd>Unwritten: its size, how it turns, its star and fields, its moon, its day and its year, who went there. No star is drawn in its sky and the world does not turn on its own, because none of that is written yet. The clock in the dock is the Dice System’s shared clock, counted in days.</dd></dl></div>
+            <dt>The name</dt><dd>Octa, by a vote on 2026-10-17, two to one, and by the rule Ruby gave the same day for every planet: “witchever is the hedron name minus "hedron"”. See below.</dd>
+            <dt>The star</dt><dd>Tetra’s dark purple star, the same for all three worlds (Ruby, 2026-10-17: “give octa the same star”). It stays where it is; turn the world to find it. Where Octa sits among the worlds, and how far from the star, is unwritten, so the star is drawn as large as from Hexa.</dd>
+            <dt>Turn</dt><dd>Octa turns (Ruby: “a turn”): one full turn a day, leftward, like Tetra and Hexa. The direction and the day’s length are readings; its days are the shared clock’s days.</dd>
+            <dt>Everything else</dt><dd>Unwritten: its size, its fields, its seasons, how its years are counted, who went there. Nothing of that is drawn or claimed.</dd></dl></div>
+        <div class="sect"><p class="eyebrow">The calendar</p>
+          <dl class="kv"><dt>Months</dt><dd>15 · 28 days each: Hexa’s fourteen and one more (Ruby, 2026-10-17: “a calender with one more month than hexa”). The fifteenth month has no name yet and sits after Amberary, between it and February; where it goes is a reading until she says.</dd>
+            <dt>Year</dt><dd>420 days + the Restart Day, which on Octa is one and three quarters of a day long (Ruby: “a restart day that is one and three fourths of a day”): 421¾ days. The year begins on 1 January, after the Restart Day, as on the other two worlds (a reading).</dd>
+            <dt>Week</dt><dd>Seven days with Tetra’s names, as Hexa has them (a reading for Octa): Starday to Twilightday. 420 month days are exactly 60 weeks, so every month runs Starday to Twilightday and the Restart Day stands outside the week.</dd>
+            <dt>Unwritten</dt><dd>The fifteenth month’s name and place, the seasons, and from what year Octa counts: the dock shows the day and the month, not a year or a season.</dd></dl></div>
+        <div class="sect"><p class="eyebrow">The moon</p>
+          <p class="note">Ruby, 2026-10-17: “a d7 moon”. So Octa’s moon is a seven-faced die, and like the other two moons it is fair and no barrel (Ruby, 2026-10-04 and 2026-10-11): a short five-sided prism with five oblong sides carrying one to five craters and two pentagon ends carrying six and seven, its length picked so each of the seven faces takes a seventh of the view from the middle (the shape and the proportion are readings, as for Hexa’s d5). It is a third of Octa’s size and keeps the other moons’ ways: opposite the star on ordinary days, swinging round in front of the star on the 14th of every month for an eclipse, rolling once a day, waxing and waning through the month. That it keeps those ways is a reading; Ruby gave the die.</p></div>
         <div class="sect"><p class="eyebrow">The name · a vote</p>
           <p class="note">Ruby, 2026-10-17: “cool now lets add octa (or octo (whichever sounds better (dont just use the first or secont, me, daddy, and you will vote (daddy votes octa, i vote octo)))”.</p>
           <ul class="votes"><li><b>Ruby</b><span>Octo.</span></li><li><b>Daddy</b><span>Octa.</span></li><li><b>Claude</b><span>Octa, for two reasons. It follows the rule Ruby made when she renamed Cuba: the planet takes the first half of its hedron’s name (tetrahedron, hexahedron, octahedron). And Tetra, Hexa, Octa, Deca, Dodeca sound like one family, while Octo pulls toward octopus and October.</span></li></ul>
-          <p class="note">Result: Octa, two votes to one. It is Ruby’s world, so she can overrule the vote. By the same rule the d20 would be Icosa rather than Icoso; nothing is changed there until she says.</p></div>
+          <p class="note">Result: Octa, two votes to one. Then Ruby made the rule for all of them, 2026-10-17: “witchever is the hedron name minus "hedron"”. So the d20 is Icosa and the d24 Icositetra (icosahedron, icositetrahedron), and the list below says so.</p></div>
         <div class="sect"><p class="eyebrow">Two more directions?</p>
           <p class="note">Ruby: “unless you can preduce 2 more directions on top of Hexa's that fit in(give me at least 3 examples before we resort to the numberd situation)”. Hexa’s six are Canon, East, West, Far, North and South. Five pairs that could join them, none chosen; the sides stay numbered until she picks one or keeps the numbers:</p>
           <ul class="plain" id="odirections"><li><b>Dawn and Dusk</b>: the side where the day begins and the side where it ends. It fits the slow mornings and the twilight of these worlds.</li>
@@ -72,10 +85,16 @@
             <li><b>Windward and Leeward</b>: the side the wind comes from and the sheltered side, the sailor’s words. They fit a system of explorers and watery worlds.</li>
             <li><b>Over and Under</b>: the plainest pair. On Hexa, North is already the top and South the bottom, so these would have to mean the die’s two points instead.</li>
             <li><b>Sunward and Starward</b>: toward its own star, and out toward the far stars. They fit a planet whose place among the worlds is still to be written.</li></ul>
+          <p class="note">Ruby, on those five: “give me another 5 so they arent confusing”. Five more, plainer, none chosen:</p>
+          <ul class="plain" id="odirections2"><li><b>Sunrise and Sunset</b>: the side the day comes up on and the side it goes down on. Plain words for the same idea as Dawn and Dusk.</li>
+            <li><b>Light and Dark</b>: the lit side and the dark side.</li>
+            <li><b>Gold and Blue</b>: after the two fields, the gold magical one and the blue magnetic one, the way Goldday and Blueday are named.</li>
+            <li><b>Inner and Outer</b>: the side toward the star and the side away from it.</li>
+            <li><b>Peak and Deep</b>: the die’s top point and its bottom point, the two places Hexa’s six directions do not reach.</li></ul>
           <p class="note">One more way, for the record: Hexa’s six directions are the six corners of an eight-sided die (the two shapes are each other’s inside out), so every side of Octa touches three of them, and a side could be called by its corners, the North-Canon-East side. That is a reading, offered, not used.</p></div>
         <div class="sect"><p class="eyebrow">The Dice System</p><p class="note">Ruby, 2026-10-10: “So to recap, tetra, hexa, octo, deca, dodeca, icoso, icosotetra, and triaconta are our planets.” Octa is the third of them to be built.</p><ul class="plain" id="oplanets"></ul></div>
         <div class="sect"><p class="eyebrow">Still unwritten</p>
-          <ul class="plain"><li>Whether two more directions join Hexa’s six, and which, or the sides stay numbered.</li><li>What is on side 1, and on every other side.</li><li>Octa’s size, its turn, its star and fields, its moon, its day and year, and who goes there.</li><li>Where Octa sits among the worlds, and whether it can be seen from Tetra and Hexa.</li></ul>
+          <ul class="plain"><li>Whether two more directions join Hexa’s six, and which (ten pairs offered), or the sides stay numbered.</li><li>What is on side 1, and on every other side.</li><li>The fifteenth month’s name and its place in the year; the seasons; from what year Octa counts.</li><li>Octa’s size, its fields, and who goes there.</li><li>Where Octa sits among the worlds, how far from the star, and whether it can be seen from Tetra and Hexa.</li><li>The dwarf planets’ names by the hedron rule (a d2 is a dihedron, a d1 has no hedron): hers to say.</li></ul>
           <p class="note">Octa shares this page with Tetra and Hexa, as Ruby asked for Cuba; the buttons under the title switch between the worlds.</p></div>
       </section>
       <section class="pane" id="opaneSides" role="tabpanel" hidden><div class="sect"><p class="eyebrow">The eight sides</p><div id="osideList"></div></div></section>
@@ -84,12 +103,13 @@
   </aside>
   <div class="dock" id="odock">
     <div class="time">
-      <div class="date"><strong id="odateOut">Shared clock · day 1</strong><span id="odateSub">Octa’s own day, year and calendar are unwritten</span></div>
-      <div class="sliders"><label><span>Spin</span><input id="orngSpin" type="range" min="0" max="8" step="0.1" value="1" aria-label="How fast time runs"><output id="ospinOut">1.0×</output></label></div>
-      <div class="btns"><button id="obtnSpin" type="button" aria-pressed="true">Pause</button><button id="obtnReset" type="button">Reset</button></div>
+      <div class="date"><strong id="odateOut">Starday · 1 January</strong><span id="odateSub">day 1 of 421¾ · Octa’s years and seasons are unwritten</span></div>
+      <div class="sliders"><label><span>Spin</span><input id="orngSpin" type="range" min="0" max="8" step="0.1" value="1" aria-label="How fast time runs"><output id="ospinOut">1.0×</output></label>
+        <label><span>Day</span><input id="orngDay" type="range" min="1" max="421" step="1" value="1" aria-label="Day of the year"><output id="odayOut">1</output></label></div>
+      <div class="btns"><button id="obtnSpin" type="button" aria-pressed="true">Pause</button><button id="obtnYearBack" type="button">−1 year</button><button id="obtnYear" type="button">+1 year</button><button id="obtnReset" type="button">Reset</button></div>
     </div>
     <div class="row"><div class="faces" id="ofaceButtons"></div><button id="obtnCodex" type="button" aria-pressed="true" aria-controls="ocodex">Codex</button></div>
-    <div class="row"><span class="hint">Drag to turn the view · scroll to come closer · tap a side</span><span class="hint hint-short">Drag to turn the view</span></div>
+    <div class="row"><span class="hint">Drag to turn the world · scroll to come closer · tap a side</span><span class="hint hint-short">Drag to turn the view</span></div>
   </div>
 </div>
 <script>
@@ -97,16 +117,22 @@
 'use strict';
 /* Octa, the eight-sided planet: the third world of the Dice System, added on 2026-10-17 from Ruby's line "cool now lets add octa (or octo ...)".
    Nothing on it is discovered or drawn yet (Ruby: "so the first side hasent been discoverd or drawn yet"), so the eight sides are blank slate,
-   each carrying its number on the die, and the Codex holds the vote on the name and the question of two more directions. */
+   each carrying its number on the die. Later the same day: "give octa the same star, a d7 moon, a turn, a calender with one more month than
+   hexa and a restart day that is one and three fourths of a day pleese", so it turns under Tetra's star with a d7 moon and a 15-month year. */
 const WORLD={
   name:'Octa',die:'d8',
   sides:[1,2,3,4,5,6,7,8].map(n=>({id:String(n),name:'Side '+n,state:n===1?'“the first side hasent been discoverd or drawn yet” (Ruby)':'Not discovered or drawn yet'})),
-  planets:[{name:'Tetra',die:'d4',state:'The four-sided world, built.'},{name:'Hexa',die:'d6',state:'The cube planet, built; Cuba until 2026-10-10.'},{name:'Octa',die:'d8',state:'This world: eight numbered sides, nothing discovered or drawn yet (2026-10-17).'},{name:'Deca',die:'d10',state:'Not yet built.'},{name:'Dodeca',die:'d12',state:'Not yet built.'},{name:'Icoso',die:'d20',state:'Not yet built (Icosa by the hedron rule; unchanged until Ruby says).'},{name:'Icosotetra',die:'d24',state:'Not yet built.'},{name:'Triaconta',die:'d30',state:'Not yet built.'},{name:'Two dwarf planets',die:'d2 and d1',state:'“probably”, Ruby; unnamed, not built.'},{name:'Asteroids',die:'d0.5',state:'Her question: “Maby make some d0.5’s for asteroids And make a belt?”'}]
+  calendar:{months:['January','Amberary','the fifteenth month','February','Tredesember','March','April','May','June','July','August','September','October','November','December'],daysPerMonth:28,restartAfter:'December',restartDays:1.75,
+    dayNames:['Starday','Moonday','Goldday','Blueday','Spikeday','Wetday','Twilightday'],unnamed:'the fifteenth month'},
+  moon:{die:'d7',said:'a d7 moon',shape:'a fair seven-faced die and no barrel: a short five-sided prism, five oblong sides and two pentagon ends, proportioned so the seven faces come up alike (the shape and the proportion are readings)',craters:[1,2,3,4,5,6,7]},
+  planets:[{name:'Tetra',die:'d4',state:'The four-sided world, built.'},{name:'Hexa',die:'d6',state:'The cube planet, built; Cuba until 2026-10-10.'},{name:'Octa',die:'d8',state:'This world: eight numbered sides, nothing discovered or drawn yet (2026-10-17).'},{name:'Deca',die:'d10',state:'Not yet built.'},{name:'Dodeca',die:'d12',state:'Not yet built.'},{name:'Icosa',die:'d20',state:'Not yet built. Icoso until Ruby’s rule of 2026-10-17, the hedron name minus hedron: icosahedron.'},{name:'Icositetra',die:'d24',state:'Not yet built. Icosotetra until the same rule: icositetrahedron.'},{name:'Triaconta',die:'d30',state:'Not yet built.'},{name:'Two dwarf planets',die:'d2 and d1',state:'“probably”, Ruby; unnamed, not built.'},{name:'Asteroids',die:'d0.5',state:'Her question: “Maby make some d0.5’s for asteroids And make a belt?”'}]
 };
 const $=id=>document.getElementById(id);
 const TAU=Math.PI*2,clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]],mulS=(a,s)=>[a[0]*s,a[1]*s,a[2]*s];
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],len=a=>Math.hypot(a[0],a[1],a[2]),norm=a=>mulS(a,1/(len(a)||1));
+const rotY=(a,v)=>[v[0]*Math.cos(a)+v[2]*Math.sin(a),v[1],-v[0]*Math.sin(a)+v[2]*Math.cos(a)];
+function rotAxis(v,ax,a){const c=Math.cos(a),s=Math.sin(a),k=norm(ax);return add(add(mulS(v,c),mulS(cross(k,v),s)),mulS(k,dot(k,v)*(1-c)))}
 function lookAt(eye,target,up){const f=norm(sub(target,eye)),s=norm(cross(f,up)),u=cross(s,f);return[s[0],u[0],-f[0],0,s[1],u[1],-f[1],0,s[2],u[2],-f[2],0,-dot(s,eye),-dot(u,eye),dot(f,eye),1]}
 function persp(fov,asp,n,f){const t=1/Math.tan(fov/2);return[t/asp,0,0,0,0,t,0,0,0,0,(f+n)/(n-f),-1,0,0,2*f*n/(n-f),0]}
 function mul(a,b){const o=new Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];return o}
@@ -121,24 +147,53 @@ const FACES=[1,2,3,4,5,6,7,8].map(n=>{const [sx,sy,sz]=OCTANTS[n];const v=[[sx*R
   return{id:String(n),n:nrm,up,right,c,v,opposite:String(9-n)}});
 const faceById=Object.fromEntries(FACES.map(f=>[f.id,f]));
 const sideById=Object.fromEntries(WORLD.sides.map(s=>[s.id,s]));
-/* ---- time: the Dice System's shared clock, at Tetra's rate (one day in 30 s at 1x). Octa's own day and year are unwritten, so the dock counts days. ---- */
+/* ---- time and the calendar: the Dice System's shared clock at Tetra's rate (one day in 30 s at 1x); Octa's year is Hexa's with one more
+   month and a Restart Day of a day and three quarters (Ruby, 2026-10-17). The fifteenth month is unnamed and sits after Amberary: a reading. ---- */
 const DAY_SECONDS=30;
-const state={day:0,playing:true,speed:1,baseYaw:Math.PI/4,pitch:Math.atan(1/Math.SQRT2),dist:4.9,fly:null,selectedSide:null,tab:'otabWorld'};
+const CAL=WORLD.calendar,MONTHS=CAL.months,DPM=CAL.daysPerMonth,RESTART=CAL.restartDays,YEAR=MONTHS.length*DPM+RESTART;
+const RESTART_MI=MONTHS.indexOf(CAL.restartAfter)+1,RESTART_AT=RESTART_MI*DPM,UNNAMED=MONTHS.indexOf(CAL.unnamed);
+const DAY_NAMES=CAL.dayNames;
+function dateParts(day){const y=Math.floor(day/YEAR),df=((day%YEAR)+YEAR)%YEAR;let doy,mi,dom;
+  if(df<RESTART_AT){doy=Math.floor(df);mi=Math.floor(doy/DPM);dom=doy%DPM+1}else{doy=RESTART_AT;mi=-1;dom=0}
+  return{y,doy,mi,dom,df,wd:mi<0?null:DAY_NAMES[doy%DAY_NAMES.length],month:mi<0?'Restart Day':MONTHS[mi]}}
+const spinAngle=()=>SPIN0-TAU*state.day;
+/* ---- state ---- */
+const state={day:0,playing:true,speed:1,baseYaw:Math.PI/4,pitch:Math.atan(1/Math.SQRT2),dist:4.9,follow:false,fly:null,selectedSide:null,tab:'otabWorld'};
 if(window.dice&&window.dice.time){const T=window.dice.time;for(const k of['day','playing','speed'])Object.defineProperty(state,k,{get:()=>T[k],set:v=>{T[k]=v},enumerable:true})}
+const camYaw=()=>state.baseYaw+(state.follow?spinAngle():0);
 let W=1,H=1,DPR=1;
-const app=$('oapp'),gl=$('ogl'),stars=$('ostars'),codex=$('ocodex');
+const app=$('oapp'),gl=$('ogl'),stars=$('ostars'),fx=$('ofx'),codex=$('ocodex');
 const ctx=gl.getContext('webgl',{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true});
 if(!ctx){app.innerHTML='<p style="padding:40px;font:16px system-ui">This page needs WebGL.</p>';return}
-/* ---- shaders: a textured face lit from the viewer's side, since nothing is written about Octa's star ---- */
-const VS=`attribute vec3 aPos;attribute vec2 aUV;attribute vec3 aN;uniform mat4 uMVP;varying vec2 vUV;varying vec3 vN,vP;
-void main(){vUV=aUV;vN=aN;vP=aPos;gl_Position=uMVP*vec4(aPos,1.);}`;
-const FS=`precision mediump float;uniform sampler2D uTex;uniform vec3 uLight,uEye;uniform float uHi;varying vec2 vUV;varying vec3 vN,vP;
-void main(){vec3 c=texture2D(uTex,vUV).rgb;float d=max(dot(normalize(vN),normalize(uLight)),0.);vec3 v=normalize(uEye-vP);float r=pow(1.-max(dot(normalize(vN),v),0.),3.);
-c=c*(0.55+0.6*d)+vec3(0.08,0.10,0.16)*r;c+=uHi*vec3(0.22,0.16,0.05);gl_FragColor=vec4(c,1.);}`;
+/* ---- the star: Tetra's dark purple star, the same direction in the world as from Tetra and Hexa (Ruby: "give octa the same star") ---- */
+const SUN0=norm([-0.75,0,0.66]);const STAR_SIZE=0.40;
+/* the die starts with side 1 turned toward the star (SPIN0) and the camera on side 1, so the first view is lit; which way side 1 faces at the start of the clock is a reading */
+const SPIN0=Math.atan2(SUN0[0],SUN0[2])-Math.PI/4,HOME_YAW=Math.PI/4+SPIN0,HOME_PITCH=Math.atan(1/Math.SQRT2);state.baseYaw=HOME_YAW;state.pitch=HOME_PITCH;
+/* ---- shaders ---- */
+const VS=`attribute vec3 aPos;attribute vec2 aUV;attribute vec3 aN;uniform mat4 uMVP,uModel;varying vec2 vUV;varying vec3 vN,vP;
+void main(){vUV=aUV;vN=normalize((uModel*vec4(aN,0.)).xyz);vP=(uModel*vec4(aPos,1.)).xyz;gl_Position=uMVP*vec4(aPos,1.);}`;
+const FS=`precision mediump float;uniform sampler2D uTex;uniform vec3 uLight,uEye;uniform float uHi,uAmb,uSun;varying vec2 vUV;varying vec3 vN,vP;
+void main(){vec3 c=texture2D(uTex,vUV).rgb;float d=max(dot(normalize(vN),uLight),0.);vec3 v=normalize(uEye-vP);float r=pow(1.-max(dot(normalize(vN),v),0.),3.);
+c=c*(uAmb+uSun*d)+vec3(0.08,0.10,0.16)*r;c+=uHi*vec3(0.22,0.16,0.05);gl_FragColor=vec4(c,1.);}`;
+/* the moon's shader: one to seven craters by face, as the other moons' */
+const VS2=`attribute vec3 aPos;attribute vec3 aN;attribute vec2 aUV;attribute float aF;uniform mat4 uMVP,uModel;varying vec3 vN;varying vec2 vUV;varying float vF;
+void main(){vN=normalize((uModel*vec4(aN,0.)).xyz);vUV=aUV;vF=aF;gl_Position=uMVP*vec4(aPos,1.);}`;
+const FS2=`precision mediump float;uniform vec3 uLight,uTint;uniform float uAmb,uLen;varying vec3 vN;varying vec2 vUV;varying float vF;
+float crater(vec2 p,vec2 c,float r){float d=distance(p,c);float inside=1.0-smoothstep(r*0.55,r,d);float rim=(1.0-smoothstep(r,r*1.35,d))*smoothstep(r*0.85,r,d);return inside-0.35*rim;}
+void main(){int n=int(vF+0.5)+1;float L=uLen,r=(n>5?0.05:0.06)*L,k=0.0;
+  if(n==1){k+=crater(vUV,vec2(0.,0.),r);}
+  else if(n==2){k+=crater(vUV,vec2(-0.2*L,0.),r);k+=crater(vUV,vec2(0.2*L,0.),r);}
+  else if(n==3){k+=crater(vUV,vec2(-0.3*L,0.),r);k+=crater(vUV,vec2(0.,0.),r);k+=crater(vUV,vec2(0.3*L,0.),r);}
+  else if(n==4){k+=crater(vUV,vec2(-0.25*L,-0.13*L),r);k+=crater(vUV,vec2(0.25*L,-0.13*L),r);k+=crater(vUV,vec2(-0.25*L,0.13*L),r);k+=crater(vUV,vec2(0.25*L,0.13*L),r);}
+  else if(n==5){k+=crater(vUV,vec2(-0.25*L,-0.13*L),r);k+=crater(vUV,vec2(0.25*L,-0.13*L),r);k+=crater(vUV,vec2(-0.25*L,0.13*L),r);k+=crater(vUV,vec2(0.25*L,0.13*L),r);k+=crater(vUV,vec2(0.,0.),r);}
+  else if(n==6){k+=crater(vUV,vec2(-0.14*L,-0.2*L),r);k+=crater(vUV,vec2(-0.14*L,0.),r);k+=crater(vUV,vec2(-0.14*L,0.2*L),r);k+=crater(vUV,vec2(0.14*L,-0.2*L),r);k+=crater(vUV,vec2(0.14*L,0.),r);k+=crater(vUV,vec2(0.14*L,0.2*L),r);}
+  else if(n==7){k+=crater(vUV,vec2(0.,0.),r);k+=crater(vUV,vec2(0.24*L,0.),r);k+=crater(vUV,vec2(0.12*L,0.208*L),r);k+=crater(vUV,vec2(-0.12*L,0.208*L),r);k+=crater(vUV,vec2(-0.24*L,0.),r);k+=crater(vUV,vec2(-0.12*L,-0.208*L),r);k+=crater(vUV,vec2(0.12*L,-0.208*L),r);}
+  float d=max(dot(normalize(vN),uLight),0.);vec3 col=uTint*(1.-0.5*clamp(k,0.,1.));col*=uAmb+0.95*d;gl_FragColor=vec4(col,1.);}`;
 function shader(t,s){const sh=ctx.createShader(t);ctx.shaderSource(sh,s);ctx.compileShader(sh);if(!ctx.getShaderParameter(sh,ctx.COMPILE_STATUS))throw new Error(ctx.getShaderInfoLog(sh));return sh}
 function program(vs,fs){const p=ctx.createProgram();ctx.attachShader(p,shader(ctx.VERTEX_SHADER,vs));ctx.attachShader(p,shader(ctx.FRAGMENT_SHADER,fs));ctx.linkProgram(p);if(!ctx.getProgramParameter(p,ctx.LINK_STATUS))throw new Error(ctx.getProgramInfoLog(p));return p}
-const prog=program(VS,FS);
-const loc={p:ctx.getAttribLocation(prog,'aPos'),uv:ctx.getAttribLocation(prog,'aUV'),n:ctx.getAttribLocation(prog,'aN'),mvp:ctx.getUniformLocation(prog,'uMVP'),light:ctx.getUniformLocation(prog,'uLight'),eye:ctx.getUniformLocation(prog,'uEye'),tex:ctx.getUniformLocation(prog,'uTex'),hi:ctx.getUniformLocation(prog,'uHi')};
+const prog=program(VS,FS),prog2=program(VS2,FS2);
+const loc={p:ctx.getAttribLocation(prog,'aPos'),uv:ctx.getAttribLocation(prog,'aUV'),n:ctx.getAttribLocation(prog,'aN'),mvp:ctx.getUniformLocation(prog,'uMVP'),model:ctx.getUniformLocation(prog,'uModel'),light:ctx.getUniformLocation(prog,'uLight'),eye:ctx.getUniformLocation(prog,'uEye'),tex:ctx.getUniformLocation(prog,'uTex'),hi:ctx.getUniformLocation(prog,'uHi'),amb:ctx.getUniformLocation(prog,'uAmb'),sun:ctx.getUniformLocation(prog,'uSun')};
+const loc2={p:ctx.getAttribLocation(prog2,'aPos'),n:ctx.getAttribLocation(prog2,'aN'),uv:ctx.getAttribLocation(prog2,'aUV'),f:ctx.getAttribLocation(prog2,'aF'),mvp:ctx.getUniformLocation(prog2,'uMVP'),model:ctx.getUniformLocation(prog2,'uModel'),light:ctx.getUniformLocation(prog2,'uLight'),amb:ctx.getUniformLocation(prog2,'uAmb'),len:ctx.getUniformLocation(prog2,'uLen'),tint:ctx.getUniformLocation(prog2,'uTint')};
 /* ---- geometry: one triangle per side, counter-clockwise from outside; its texture is the side's own flat picture, drawn below ---- */
 const TEX_PX=512,TEX_SCALE=236/(R*Math.sqrt(2/3));
 const flat=(f,p)=>{const d=sub(p,f.c);return[256+dot(d,f.right)*TEX_SCALE,256-dot(d,f.up)*TEX_SCALE]};
@@ -147,6 +202,30 @@ for(const f of FACES){let [a,b,c]=f.v;if(dot(cross(sub(b,a),sub(c,a)),f.n)<0)[b,
 function buf(arr){const b=ctx.createBuffer();ctx.bindBuffer(ctx.ARRAY_BUFFER,b);ctx.bufferData(ctx.ARRAY_BUFFER,new Float32Array(arr),ctx.STATIC_DRAW);return b}
 const pb=buf(P),ub=buf(UV),nb=buf(N);
 function attrib(b,l,n){ctx.bindBuffer(ctx.ARRAY_BUFFER,b);ctx.enableVertexAttribArray(l);ctx.vertexAttribPointer(l,n,ctx.FLOAT,false,0,0)}
+/* ---- the moon mesh: a fair d7 and no barrel (Ruby, 2026-10-17: "a d7 moon"; 2026-10-04 and 2026-10-11 for fair and no barrel): a five-sided
+   prism, MOON_LEN long, with five oblong sides (faces 0 to 4, one to five craters) and two pentagon ends (faces 5 and 6, six and seven craters);
+   the half-length is MOON_PRISM of the pentagon's side, where each of the seven faces takes a seventh of the view from the middle (the
+   solid-angle rule, as Hexa's d5: at 0.75 the shares are 0.143 each; a reading). A third of Octa's size, as the other moons are of theirs. ---- */
+const MOON_LEN=R*Math.SQRT2/3,MOON_HALF=MOON_LEN/2,MOON_ORBIT=3.4,MOON_BOB=0.14,NEW_MOON_DOM=14,ROLLS_PER_DAY=1,SWING_RAMP=0.25,MOON_SIDES=7,MOON_PRISM=0.75;
+const moonMesh=(()=>{const a=MOON_LEN/(2*MOON_PRISM),Rc=a/(2*Math.sin(Math.PI/5)),h=MOON_PRISM*a;const C=[0,1,2,3,4].map(i=>{const t=Math.PI/2+i*TAU/5;return[Rc*Math.cos(t),Rc*Math.sin(t)]});
+  const pos=[],nrm=[],uv=[],fi=[];const vert=(p,n,u,f)=>{pos.push(...p);nrm.push(...n);uv.push(...u);fi.push(f)};
+  for(let k=0;k<5;k++){const p=C[k],q=C[(k+1)%5];const mid=[(p[0]+q[0])/2,(p[1]+q[1])/2];const ml=Math.hypot(mid[0],mid[1]);const n=[0,mid[0]/ml,mid[1]/ml];const hw=Math.hypot(q[0]-p[0],q[1]-p[1])/2;
+    const A0=[-h,p[0],p[1]],B0=[-h,q[0],q[1]],A1=[h,p[0],p[1]],B1=[h,q[0],q[1]];
+    vert(A0,n,[-h,-hw],k);vert(B0,n,[-h,hw],k);vert(B1,n,[h,hw],k);vert(A0,n,[-h,-hw],k);vert(B1,n,[h,hw],k);vert(A1,n,[h,-hw],k)}
+  const sil=[];for(const [sgn,f] of [[-1,5],[1,6]]){const n=[sgn,0,0];for(let k=0;k<5;k++){const p=C[k],q=C[(k+1)%5];vert([sgn*h,0,0],n,[0,0],f);vert([sgn*h,p[0],p[1]],n,[p[0],p[1]],f);vert([sgn*h,q[0],q[1]],n,[q[0],q[1]],f);sil.push([sgn*h,p[0],p[1]])}}
+  return{pb:buf(pos),nb:buf(nrm),ub:buf(uv),fb:buf(fi),count:pos.length/3,sides:MOON_SIDES,tip:h,flat:h,sil}})();
+/* ---- the moon's state, as Tetra's and Hexa's: opposite the star on ordinary days with a little drift, a full eased swing through the star line on the 14th of each month ---- */
+function swing(t){const r=SWING_RAMP,v=1/(1-r);if(t<r)return v*t*t/(2*r);if(t>1-r){const u=1-t;return 1-v*u*u/(2*r)}return v*(t-r/2)}
+let MOON={dir:[0,0,-1],pos:[0,0,-MOON_ORBIT],theta:0,eclipse:0,newMoon:false,phase:0.5,light:[0,0,1],roll:0,axis:[1,0,0]};
+function moonState(day){const {mi,dom}=dateParts(day);const newMoon=mi>=0&&dom===NEW_MOON_DOM;const frac=day-Math.floor(day);const theta=newMoon?TAU*swing(frac):0;
+  const axis=norm(cross(SUN0,[0,1,0]));const base=mulS(SUN0,-1);const axis2=norm(cross(axis,base));
+  let dir=rotAxis(base,axis,theta+MOON_BOB*Math.cos(TAU*frac));dir=norm(rotAxis(dir,axis2,MOON_BOB*Math.sin(TAU*frac)));
+  const ang=Math.acos(clamp(dot(dir,SUN0),-1,1)),half=Math.atan(MOON_HALF/MOON_ORBIT);const eclipse=clamp((half*1.3-ang)/(half*0.9),0,1);
+  const phase=mi<0?0.5:((((dom-NEW_MOON_DOM)%DPM)+DPM)%DPM)/DPM;const light=norm(rotAxis(dir,axis,TAU*phase));
+  return{dir,pos:mulS(dir,MOON_ORBIT),theta,eclipse,newMoon,phase,light,roll:TAU*day*ROLLS_PER_DAY,axis}}
+function moonModel(){const u=MOON.axis,v=MOON.dir,w=norm(cross(u,v));const c=Math.cos(MOON.roll),s=Math.sin(MOON.roll);
+  const a=[u[0],u[1],u[2]],b=[w[0]*c+v[0]*s,w[1]*c+v[1]*s,w[2]*c+v[2]*s],d=[-w[0]*s+v[0]*c,-w[1]*s+v[1]*c,-w[2]*s+v[2]*c];const p=MOON.pos;
+  return[a[0],a[1],a[2],0,b[0],b[1],b[2],0,d[0],d[1],d[2],0,p[0],p[1],p[2],1]}
 /* ---- the sides' pictures: blank slate, undiscovered, with the side's number on the die. Drawn on a canvas, not shipped as files. ---- */
 const textures={};
 function sidePicture(f){const cv=document.createElement('canvas');cv.width=cv.height=TEX_PX;const g=cv.getContext('2d');
@@ -159,20 +238,39 @@ function sidePicture(f){const cv=document.createElement('canvas');cv.width=cv.he
   g.restore();g.strokeStyle='rgba(242,232,211,0.28)';g.lineWidth=5;g.setLineDash([14,10]);g.beginPath();tri.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.stroke();
   const t=ctx.createTexture();ctx.bindTexture(ctx.TEXTURE_2D,t);ctx.texImage2D(ctx.TEXTURE_2D,0,ctx.RGB,ctx.RGB,ctx.UNSIGNED_BYTE,cv);ctx.generateMipmap(ctx.TEXTURE_2D);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_MIN_FILTER,ctx.LINEAR_MIPMAP_LINEAR);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_WRAP_S,ctx.CLAMP_TO_EDGE);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_WRAP_T,ctx.CLAMP_TO_EDGE);return t}
 function makeTextures(){for(const f of FACES)textures[f.id]=sidePicture(f)}
-/* ---- sky: stars only. No star of Octa's own is drawn, because none is written. ---- */
-const sc=stars.getContext('2d');let starData=[];
+/* ---- sky: the stars and the star's glow, only where the star really is (as on Hexa), dimmed by an eclipse ---- */
+const sc=stars.getContext('2d');let starData=[],lastStar=null;
 function makeStars(){starData=[];let s=23;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;for(let i=0;i<Math.round(W*H/5200);i++)starData.push({x:rnd()*W,y:rnd()*H,r:.4+rnd()*1.3,a:.25+rnd()*.7,p:rnd()*TAU,c:rnd()})}
 function drawStars(t){sc.setTransform(DPR,0,0,DPR,0,0);sc.clearRect(0,0,W,H);
-  for(const s of starData){const a=s.a*(.8+.2*Math.sin(t*.0005+s.p));sc.fillStyle=s.c<.12?`rgba(190,214,255,${a})`:s.c>.88?`rgba(255,226,180,${a})`:`rgba(232,238,255,${a})`;sc.beginPath();sc.arc(s.x,s.y,s.r,0,TAU);sc.fill()}}
-/* ---- camera: the viewer orbits a die that does not turn on its own (how Octa turns is unwritten) ---- */
-const cam={eye:[0,0,5],vp:null,mvp:null};
-function resize(){const r=app.getBoundingClientRect();W=Math.max(1,r.width);H=Math.max(1,r.height);DPR=Math.min(2,devicePixelRatio||1);for(const c of[gl,stars]){c.width=Math.round(W*DPR);c.height=Math.round(H*DPR)}ctx.viewport(0,0,gl.width,gl.height);makeStars()}
+  for(const s of starData){const a=s.a*(.8+.2*Math.sin(t*.0005+s.p));sc.fillStyle=s.c<.12?`rgba(190,214,255,${a})`:s.c>.88?`rgba(255,226,180,${a})`:`rgba(232,238,255,${a})`;sc.beginPath();sc.arc(s.x,s.y,s.r,0,TAU);sc.fill()}
+  const sp=cam.vp?project(cam.vp,mulS(SUN0,60)):null;lastStar=sp;const size=Math.max(W,H)*STAR_SIZE,dim=1-0.85*MOON.eclipse;
+  if(sp){const g2=sc.createRadialGradient(sp.x,sp.y,0,sp.x,sp.y,size);g2.addColorStop(0,`rgba(246,232,255,${dim})`);g2.addColorStop(.022,`rgba(214,170,255,${dim})`);g2.addColorStop(.06,`rgba(150,70,220,${0.55*dim})`);g2.addColorStop(.2,`rgba(90,30,150,${0.22*dim})`);g2.addColorStop(1,'rgba(40,10,80,0)');sc.fillStyle=g2;sc.fillRect(0,0,W,H)}}
+/* ---- camera ---- */
+const cam={eye:[0,0,5],vp:null,model:null,mvp:null};
+function resize(){const r=app.getBoundingClientRect();W=Math.max(1,r.width);H=Math.max(1,r.height);DPR=Math.min(2,devicePixelRatio||1);for(const c of[gl,stars,fx]){c.width=Math.round(W*DPR);c.height=Math.round(H*DPR)}ctx.viewport(0,0,gl.width,gl.height);makeStars()}
 function shift(){return codex.classList.contains('open')&&W>=820?-0.42:0}
-function updateCamera(){const yaw=state.baseYaw,cp=Math.cos(state.pitch);cam.eye=[state.dist*cp*Math.sin(yaw),state.dist*Math.sin(state.pitch),state.dist*cp*Math.cos(yaw)];
+function updateCamera(){const yaw=camYaw(),cp=Math.cos(state.pitch);cam.eye=[state.dist*cp*Math.sin(yaw),state.dist*Math.sin(state.pitch),state.dist*cp*Math.cos(yaw)];
   const target=[0,W<820?(codex.classList.contains('open')?-1.1:-0.25):0,0];const view=lookAt(cam.eye,target,[0,1,0]);const pr=persp(0.72,W/H,0.1,100);
-  const off=[1,0,0,0,0,1,0,0,0,0,1,0,shift(),0,0,1];cam.vp=mul(mul(off,pr),view);cam.mvp=cam.vp}
-function facing(){let best=null,bd=-2;for(const f of FACES){const d=dot(f.n,norm(cam.eye));if(d>bd){bd=d;best=f.id}}return best}
-function flyTo(id){const f=faceById[id];state.fly={yaw:Math.atan2(f.n[0],f.n[2]),pitch:clamp(Math.asin(f.n[1]),-1.2,1.2)}}
+  const off=[1,0,0,0,0,1,0,0,0,0,1,0,shift(),0,0,1];cam.vp=mul(mul(off,pr),view);const s=spinAngle();cam.model=[Math.cos(s),0,-Math.sin(s),0,0,1,0,0,Math.sin(s),0,Math.cos(s),0,0,0,0,1];cam.mvp=mul(cam.vp,cam.model)}
+const worldNormal=f=>rotY(spinAngle(),f.n);
+function facing(){let best=null,bd=-2;for(const f of FACES){const d=dot(worldNormal(f),norm(cam.eye));if(d>bd){bd=d;best=f.id}}return best}
+function faceYaw(f){const n=worldNormal(f);return Math.atan2(n[0],n[2])}
+function flyTo(id){const f=faceById[id];state.fly={yaw:faceYaw(f),pitch:clamp(Math.asin(f.n[1]),-1.2,1.2)}}
+function setFollow(on){if(on===state.follow)return;const yaw=camYaw();state.follow=on;state.baseYaw=on?yaw-spinAngle():yaw}
+function release(){setFollow(false);state.fly=null}
+/* ---- phases on the side cards, as Tetra's and Hexa's ---- */
+const fc=fx.getContext('2d');
+function sideLight(f){const n=worldNormal(f);const nl=dot(n,SUN0);const n2=rotY(spinAngle()-0.02,f.n);return{nl,toward:dot(n2,SUN0)-nl}}
+function phaseOf(nl,toward){const m=toward>0;
+  if(MOON.eclipse>=0.5)return{k:'eclipse',t:'Eclipse',d:'The moon has swung in front of the star. The whole world goes dark for a while, day side and night side alike.'};
+  if(nl>=0.72)return{k:'sun',t:'High sun',d:'The full light of day.'};
+  if(nl>=0.35)return m?{k:'sun',t:'Morning',d:'The sun climbing.'}:{k:'sun',t:'Afternoon',d:'The long light before the turn.'};
+  if(nl>=0.05)return m?{k:'dawn',t:'The slow morning',d:'Light arriving.'}:{k:'dusk',t:'Late light',d:'Shadows lengthening toward night.'};
+  if(nl>=-0.22)return m?{k:'dawn',t:'First light',d:'The terminator is crossing here now.'}:{k:'dusk',t:'Dusk',d:'The last of the day going over the edge.'};
+  if(nl>=-0.55)return m?{k:'night',t:'Before dawn',d:'Dark still, but the world is turning toward the star.'}:{k:'night',t:'Evening',d:'Night settling in behind the day.'};
+  return{k:'night',t:'Deep night',d:'The far side of the turn.'}}
+function phaseFor(id){const {nl,toward}=sideLight(faceById[id]);return phaseOf(nl,toward)}
+function phaseHtml(id){const ph=phaseFor(id);return`<div class="phase" data-k="${ph.t}"><i class="${ph.k}"></i><div><b>${ph.t}</b><span>${ph.d}</span></div></div>`}
 /* ---- codex ---- */
 const tabs=[['otabWorld','opaneWorld'],['otabSides','opaneSides'],['otabPlace','opanePlace']];
 function showTab(id){tabs.forEach(([t,p])=>{const on=t===id;$(t).setAttribute('aria-selected',String(on));$(p).hidden=!on});state.tab=id}
@@ -180,23 +278,32 @@ tabs.forEach(([t])=>$(t).addEventListener('click',()=>{showTab(t);openCodex(true
 function openCodex(on){codex.classList.toggle('closed',!on);codex.classList.toggle('open',on);$('obtnCodex').setAttribute('aria-pressed',String(on))}
 $('obtnCodex').addEventListener('click',()=>openCodex(codex.classList.contains('closed')));$('obtnClose').addEventListener('click',()=>openCodex(false));
 function renderPlanets(){const el=$('oplanets');el.innerHTML='';for(const p of WORLD.planets){const li=document.createElement('li');li.innerHTML='<b></b> <span></span> <em></em>';li.querySelector('b').textContent=p.name;li.querySelector('span').textContent=p.die;li.querySelector('em').textContent=p.state;el.appendChild(li)}}
-function renderSides(){const el=$('osideList');el.innerHTML='';for(const s of WORLD.sides){const b=document.createElement('button');b.className='side';b.type='button';b.dataset.side=s.id;b.innerHTML='<i class="sw"></i><div><b></b><span></span></div><em></em>';
-    b.querySelector('b').textContent=s.name;b.querySelector('span').textContent=s.state;b.querySelector('em').textContent='opposite side '+faceById[s.id].opposite;b.addEventListener('click',()=>selectSide(s.id));el.appendChild(b)}}
+function renderSides(){const el=$('osideList');el.innerHTML='';for(const s of WORLD.sides){const b=document.createElement('button');b.className='side';b.type='button';b.dataset.side=s.id;b.innerHTML='<i class="sw"></i><div><b></b><span></span></div><em><i></i><u></u></em>';
+    b.querySelector('b').textContent=s.name;b.querySelector('span').textContent=s.state+'. Opposite side '+faceById[s.id].opposite+'.';b.addEventListener('click',()=>selectSide(s.id));el.appendChild(b)}updateSidePhases()}
+function updateSidePhases(){for(const b of $('osideList').querySelectorAll('button[data-side]')){const ph=phaseFor(b.dataset.side);const i=b.querySelector('em i'),u=b.querySelector('em u');if(u.textContent!==ph.t){u.textContent=ph.t;i.className=ph.k}}}
 function renderPlace(){const el=$('oplaceBody');if(!state.selectedSide){el.innerHTML='<p class="kind">Side</p><h2>Nothing chosen</h2><p class="note">Tap a side of the die, or one of the eight buttons.</p>';return}
-  const s=sideById[state.selectedSide],f=faceById[s.id];el.innerHTML='<p class="kind">Side</p><h2></h2><p class="tagline"></p><p class="note"></p><span class="pill">Blank · nothing written</span>';
+  const s=sideById[state.selectedSide],f=faceById[s.id];el.innerHTML='<p class="kind">Side</p><h2></h2><p class="tagline"></p>'+phaseHtml(s.id)+'<p class="note"></p><span class="pill">Blank · nothing written</span><div class="actions"><button type="button" class="btnFollow"></button></div>';
   el.querySelector('h2').textContent=s.name;el.querySelector('.tagline').textContent=s.state;
-  el.querySelector('.note').textContent='Opposite it is side '+f.opposite+', as the numbers of a d8 add up to 9. Nothing is charted here; when Ruby discovers this side, it will be drawn.'}
-function selectSide(id,fly){state.selectedSide=id;if(fly!==false)flyTo(id);renderPlace();showTab('otabPlace');openCodex(true);syncButtons()}
+  el.querySelector('.note').textContent='Opposite it is side '+f.opposite+', as the numbers of a d8 add up to 9. Nothing is charted here; when Ruby discovers this side, it will be drawn.';
+  const fb=el.querySelector('.btnFollow');fb.textContent=state.follow?'Release view':'Follow this side';fb.addEventListener('click',()=>{if(state.follow)release();else{setFollow(true);flyTo(state.selectedSide)}renderPlace()})}
+function updatePlacePhase(){if(!state.selectedSide)return;const el=$('oplaceBody').querySelector('.phase');if(!el)return;const ph=phaseFor(state.selectedSide);if(el.dataset.k!==ph.t){el.dataset.k=ph.t;el.querySelector('i').className=ph.k;el.querySelector('b').textContent=ph.t;el.querySelector('span').textContent=ph.d}}
+function selectSide(id,fly){state.selectedSide=id;if(fly!==false){setFollow(true);flyTo(id)}renderPlace();showTab('otabPlace');openCodex(true);syncButtons()}
 function syncButtons(){document.querySelectorAll('#oapp [data-face]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.face===(state.selectedSide||facing()))))}
 /* ---- HUD and dock ---- */
-const dateOut=$('odateOut'),rngSpin=$('orngSpin'),spinOut=$('ospinOut');
-function updateDate(){const txt='Shared clock · day '+(Math.floor(state.day)+1);if(dateOut.textContent!==txt)dateOut.textContent=txt}
+const dateOut=$('odateOut'),dateSub=$('odateSub'),rngDay=$('orngDay'),dayOut=$('odayOut'),rngSpin=$('orngSpin'),spinOut=$('ospinOut');let scrubbing=false;
+const yearText=`day %d of 421¾ · Octa’s years and seasons are unwritten`;
+function updateDate(){const {doy,mi,dom,wd}=dateParts(state.day);const txt=mi<0?'Restart Day · 1¾ days':mi===UNNAMED?`${wd} · day ${dom} of the unnamed month`:`${wd} · ${dom} ${MONTHS[mi]}`;if(dateOut.textContent!==txt)dateOut.textContent=txt;
+  const sub=yearText.replace('%d',String(doy+1));if(dateSub.textContent!==sub)dateSub.textContent=sub;
+  if(!scrubbing){const v=String(doy+1);if(rngDay.value!==v)rngDay.value=v;if(dayOut.textContent!==v)dayOut.textContent=v}}
+rngDay.addEventListener('pointerdown',()=>scrubbing=true);addEventListener('pointerup',()=>scrubbing=false);
+rngDay.addEventListener('input',()=>{const y=Math.floor(state.day/YEAR);state.day=y*YEAR+(Number(rngDay.value)-1)+((state.day%1)+1)%1});
 rngSpin.addEventListener('input',()=>{state.speed=Number(rngSpin.value);spinOut.textContent=state.speed.toFixed(1)+'×'});
-const fb=$('ofaceButtons');for(const s of WORLD.sides){const b=document.createElement('button');b.type='button';b.dataset.face=s.id;b.innerHTML='<i></i><span></span>';b.querySelector('span').textContent=s.id;b.setAttribute('aria-label',s.name);b.addEventListener('click',()=>selectSide(s.id));fb.appendChild(b)}
+const fbtn=$('ofaceButtons');for(const s of WORLD.sides){const b=document.createElement('button');b.type='button';b.dataset.face=s.id;b.innerHTML='<i></i><span></span>';b.querySelector('span').textContent=s.id;b.setAttribute('aria-label',s.name);b.addEventListener('click',()=>selectSide(s.id));fbtn.appendChild(b)}
 $('obtnSpin').addEventListener('click',()=>{state.playing=!state.playing;syncTime()});
+$('obtnYearBack').addEventListener('click',()=>{state.day-=YEAR});$('obtnYear').addEventListener('click',()=>{state.day+=YEAR});
 function syncTime(){$('obtnSpin').textContent=state.playing?'Pause':'Play';$('obtnSpin').setAttribute('aria-pressed',String(state.playing));rngSpin.value=String(state.speed);spinOut.textContent=state.speed.toFixed(1)+'×'}
 addEventListener('dice:show',syncTime);
-$('obtnReset').addEventListener('click',()=>{state.day=0;state.baseYaw=Math.PI/4;state.pitch=Math.atan(1/Math.SQRT2);state.dist=4.9;state.fly=null;state.selectedSide=null;renderPlace();showTab('otabWorld');syncButtons()});
+$('obtnReset').addEventListener('click',()=>{state.day=0;state.baseYaw=HOME_YAW;state.pitch=HOME_PITCH;state.dist=4.9;state.fly=null;setFollow(false);state.selectedSide=null;renderPlace();showTab('otabWorld');syncButtons()});
 /* ---- pointer: drag to turn the view, wheel to zoom, tap the die to choose the facing side ---- */
 let drag=null;
 app.addEventListener('pointerdown',e=>{if(e.target.closest('#ocodex,.dock'))return;drag={x:e.clientX,y:e.clientY,moved:false};state.fly=null;app.setPointerCapture(e.pointerId)});
@@ -209,24 +316,31 @@ function frame(t){if(app.classList.contains('away')){last=t;requestAnimationFram
   const dt=Math.min(0.05,(t-last)/1000);last=t;
   const r=app.getBoundingClientRect();if(Math.abs(r.width-W)>0.5||Math.abs(r.height-H)>0.5)resize();
   if(state.playing)state.day+=dt*state.speed/DAY_SECONDS;
-  if(state.fly){const k=1-Math.pow(0.0008,dt);const dy=Math.atan2(Math.sin(state.fly.yaw-state.baseYaw),Math.cos(state.fly.yaw-state.baseYaw));state.baseYaw+=dy*k;state.pitch+=(state.fly.pitch-state.pitch)*k;if(Math.abs(dy)<0.002&&Math.abs(state.fly.pitch-state.pitch)<0.002)state.fly=null}
-  updateCamera();drawStars(t);
+  if(state.fly){const k=1-Math.pow(0.0008,dt);const want=state.fly.yaw-(state.follow?spinAngle():0);const dy=Math.atan2(Math.sin(want-state.baseYaw),Math.cos(want-state.baseYaw));state.baseYaw+=dy*k;state.pitch+=(state.fly.pitch-state.pitch)*k;if(Math.abs(dy)<0.002&&Math.abs(state.fly.pitch-state.pitch)<0.002)state.fly=null}
+  updateCamera();MOON=moonState(state.day);drawStars(t);
+  fc.setTransform(DPR,0,0,DPR,0,0);fc.clearRect(0,0,W,H);
   ctx.clearColor(0,0,0,0);ctx.clear(ctx.COLOR_BUFFER_BIT|ctx.DEPTH_BUFFER_BIT);ctx.enable(ctx.DEPTH_TEST);ctx.enable(ctx.CULL_FACE);ctx.cullFace(ctx.BACK);
-  ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));
-  const light=norm(add(norm(cam.eye),[0.35,0.5,0]));ctx.uniform3fv(loc.light,new Float32Array(light));ctx.uniform3fv(loc.eye,new Float32Array(cam.eye));ctx.uniform1i(loc.tex,0);ctx.activeTexture(ctx.TEXTURE0);
+  const ecl=MOON.eclipse;
+  ctx.useProgram(prog);attrib(pb,loc.p,3);attrib(ub,loc.uv,2);attrib(nb,loc.n,3);ctx.uniformMatrix4fv(loc.mvp,false,new Float32Array(cam.mvp));ctx.uniformMatrix4fv(loc.model,false,new Float32Array(cam.model));
+  ctx.uniform3fv(loc.light,new Float32Array(SUN0));ctx.uniform3fv(loc.eye,new Float32Array(cam.eye));ctx.uniform1f(loc.amb,0.34*(1-0.45*ecl));ctx.uniform1f(loc.sun,0.78*(1-0.85*ecl));ctx.uniform1i(loc.tex,0);ctx.activeTexture(ctx.TEXTURE0);
   FACES.forEach((f,i)=>{ctx.bindTexture(ctx.TEXTURE_2D,textures[f.id]);ctx.uniform1f(loc.hi,state.selectedSide===f.id?1:0);ctx.drawArrays(ctx.TRIANGLES,i*3,3)});
+  ctx.disable(ctx.CULL_FACE);ctx.useProgram(prog2);attrib(moonMesh.pb,loc2.p,3);attrib(moonMesh.nb,loc2.n,3);attrib(moonMesh.ub,loc2.uv,2);attrib(moonMesh.fb,loc2.f,1);
+  const mm=moonModel();ctx.uniformMatrix4fv(loc2.mvp,false,new Float32Array(mul(cam.vp,mm)));ctx.uniformMatrix4fv(loc2.model,false,new Float32Array(mm));ctx.uniform3fv(loc2.light,new Float32Array(MOON.light));ctx.uniform1f(loc2.amb,0.18);ctx.uniform1f(loc2.len,MOON_LEN);ctx.uniform3fv(loc2.tint,new Float32Array([0.84,0.84,0.80]));ctx.drawArrays(ctx.TRIANGLES,0,moonMesh.count);
   updateDate();
-  if((tick++%10)===0){$('ofacing').textContent='Facing · '+sideById[facing()].name;if(!state.selectedSide)syncButtons()}
+  if((tick++%10)===0){$('ofacing').textContent='Facing · '+sideById[facing()].name;if(!state.selectedSide)syncButtons();if(state.tab==='otabSides')updateSidePhases();if(state.tab==='otabPlace')updatePlacePhase()}
   requestAnimationFrame(frame)}
 /* ---- debug hook for the tests ---- */
 window.octa={state,facing:()=>{updateCamera();return facing()},sides:()=>FACES.map(f=>f.id),opposite:id=>faceById[id]&&faceById[id].opposite,face:(id,fly)=>selectSide(id,fly),setYaw:(y,p)=>{state.baseYaw=y;if(typeof p==='number')state.pitch=p;state.fly=null;updateCamera()},
-  setSpin:on=>{state.playing=on;syncTime()},syncTime,centre:id=>{updateCamera();return project(cam.mvp,faceById[id].c)},
+  setSpin:on=>{state.playing=on;syncTime()},syncTime,setDay:d=>{state.day=d;MOON=moonState(d)},date:()=>dateParts(state.day),months:()=>MONTHS.slice(),yearDays:()=>YEAR,
+  moonDie:()=>({sides:moonMesh.sides,count:moonMesh.count,tip:moonMesh.tip,flat:moonMesh.flat}),moon:()=>({...MOON,screen:project(cam.vp,MOON.pos)}),phase:id=>{MOON=moonState(state.day);return phaseFor(id)},
+  starScreen:()=>lastStar,sunDir:()=>SUN0,release,home:()=>{state.baseYaw=HOME_YAW;state.pitch=HOME_PITCH;state.dist=4.9;state.fly=null;setFollow(false);updateCamera()},
+  centre:id=>{updateCamera();return project(cam.mvp,faceById[id].c)},
   sampleAt:(fx_,fy)=>{const px=new Uint8Array(4);ctx.readPixels(Math.round(fx_*gl.width),Math.round((1-fy)*gl.height),1,1,ctx.RGBA,ctx.UNSIGNED_BYTE,px);return[px[0],px[1],px[2],px[3]]},
   sample:id=>{const sp=window.octa.centre(id);if(!sp)return null;const px=new Uint8Array(4);ctx.readPixels(Math.round(sp.x*DPR),Math.round(gl.height-sp.y*DPR),1,1,ctx.RGBA,ctx.UNSIGNED_BYTE,px);return[px[0],px[1],px[2],px[3]]}};
 /* ---- start, through the page's bridge, so one hot reload starts every world ---- */
-function start(saved){try{if(saved&&typeof saved==='object'){for(const k of['baseYaw','pitch','dist'])if(typeof saved[k]==='number')state[k]=saved[k];if(typeof saved.selectedSide==='string'&&sideById[saved.selectedSide])state.selectedSide=saved.selectedSide}}catch(e){}
-  syncTime();resize();makeTextures();renderPlanets();renderSides();renderPlace();syncButtons();if(state.selectedSide)showTab('otabPlace');
-  window.dice?.snapshot?.('octa',()=>({baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,selectedSide:state.selectedSide}));
+function start(saved){try{if(saved&&typeof saved==='object'){for(const k of['baseYaw','pitch','dist'])if(typeof saved[k]==='number')state[k]=saved[k];if(typeof saved.follow==='boolean')state.follow=saved.follow;if(typeof saved.selectedSide==='string'&&sideById[saved.selectedSide])state.selectedSide=saved.selectedSide}}catch(e){}
+  syncTime();resize();makeTextures();MOON=moonState(state.day);renderPlanets();renderSides();renderPlace();syncButtons();if(state.selectedSide)showTab('otabPlace');
+  window.dice?.snapshot?.('octa',()=>({baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,follow:state.follow,selectedSide:state.selectedSide}));
   requestAnimationFrame(frame)}
 if(window.dice?.ready)window.dice.ready('octa',start);else start({});
 })();

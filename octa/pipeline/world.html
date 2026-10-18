@@ -76,7 +76,7 @@
           <p class="note">Ruby, 2026-10-17: “a d7 moon”. So Octa’s moon is a seven-faced die, and like the other two moons it is fair and no barrel (Ruby, 2026-10-04 and 2026-10-11): a short five-sided prism with five oblong sides carrying one to five craters and two pentagon ends carrying six and seven, its length picked so each of the seven faces takes a seventh of the view from the middle (the shape and the proportion are readings, as for Hexa’s d5). It is a third of Octa’s size and keeps the other moons’ ways: opposite the star on ordinary days, swinging round in front of the star on the 14th of every month for an eclipse, rolling once a day, waxing and waning through the month. That it keeps those ways is a reading; Ruby gave the die.</p></div>
         <div class="sect"><p class="eyebrow">The name · a vote</p>
           <p class="note">Ruby, 2026-10-17: “cool now lets add octa (or octo (whichever sounds better (dont just use the first or secont, me, daddy, and you will vote (daddy votes octa, i vote octo)))”.</p>
-          <ul class="votes"><li><b>Ruby</b><span>Octo.</span></li><li><b>Daddy</b><span>Octa.</span></li><li><b>Claude</b><span>Octa, for two reasons. It follows the rule Ruby made when she renamed Cuba: the planet takes the first half of its hedron’s name (tetrahedron, hexahedron, octahedron). And Tetra, Hexa, Octa, Deca, Dodeca sound like one family, while Octo pulls toward octopus and October.</span></li></ul>
+          <ul class="votes"><li><b>Ruby</b><span>Octo.</span></li><li><b>Daddy</b><span>Octa.</span></li><li><b>Claude</b><span>Octa, for two reasons. It follows what Ruby did when she renamed Cuba: the planet takes the first half of its hedron’s name (tetrahedron, hexahedron, octahedron), a pattern she has since made the rule for every planet. And Tetra, Hexa, Octa, Deca, Dodeca sound like one family, while Octo pulls toward octopus and October.</span></li></ul>
           <p class="note">Result: Octa, two votes to one. Then Ruby made the rule for all of them, 2026-10-17: “witchever is the hedron name minus "hedron"”. So the d20 is Icosa and the d24 Icositetra (icosahedron, icositetrahedron), and the list below says so.</p></div>
         <div class="sect"><p class="eyebrow">Two more directions?</p>
           <p class="note">Ruby: “unless you can preduce 2 more directions on top of Hexa's that fit in(give me at least 3 examples before we resort to the numberd situation)”. Hexa’s six are Canon, East, West, Far, North and South. Five pairs that could join them, none chosen; the sides stay numbered until she picks one or keeps the numbers:</p>
@@ -233,8 +233,9 @@ function sidePicture(f){const cv=document.createElement('canvas');cv.width=cv.he
   const tri=f.v.map(p=>flat(f,p));g.save();g.beginPath();tri.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.clip();
   const grd=g.createRadialGradient(256,256,20,256,256,300);grd.addColorStop(0,'#262c3e');grd.addColorStop(1,'#151a28');g.fillStyle=grd;g.fillRect(0,0,TEX_PX,TEX_PX);
   g.strokeStyle='rgba(242,232,211,0.07)';g.lineWidth=1;for(let k=-TEX_PX;k<TEX_PX*2;k+=28){g.beginPath();g.moveTo(k,0);g.lineTo(k+TEX_PX,TEX_PX);g.stroke()}
-  g.fillStyle='rgba(255,222,163,0.78)';g.font='600 170px Cinzel, "Times New Roman", Georgia, serif';g.textAlign='center';g.textBaseline='middle';g.fillText(f.id,256,236);
-  g.fillStyle='rgba(185,173,150,0.75)';g.font='500 22px "IBM Plex Sans", "Segoe UI", system-ui, sans-serif';g.fillText('not yet discovered',256,352);
+  const down=f.n[1]<0;
+  g.fillStyle='rgba(255,222,163,0.78)';g.font='600 170px Cinzel, "Times New Roman", Georgia, serif';g.textAlign='center';g.textBaseline='middle';g.fillText(f.id,256,down?300:236);
+  g.fillStyle='rgba(185,173,150,0.75)';g.font='500 22px "IBM Plex Sans", "Segoe UI", system-ui, sans-serif';g.fillText('not yet discovered',256,down?172:352);
   g.restore();g.strokeStyle='rgba(242,232,211,0.28)';g.lineWidth=5;g.setLineDash([14,10]);g.beginPath();tri.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.stroke();
   const t=ctx.createTexture();ctx.bindTexture(ctx.TEXTURE_2D,t);ctx.texImage2D(ctx.TEXTURE_2D,0,ctx.RGB,ctx.RGB,ctx.UNSIGNED_BYTE,cv);ctx.generateMipmap(ctx.TEXTURE_2D);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_MIN_FILTER,ctx.LINEAR_MIPMAP_LINEAR);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_WRAP_S,ctx.CLAMP_TO_EDGE);ctx.texParameteri(ctx.TEXTURE_2D,ctx.TEXTURE_WRAP_T,ctx.CLAMP_TO_EDGE);return t}
 function makeTextures(){for(const f of FACES)textures[f.id]=sidePicture(f)}
@@ -339,7 +340,7 @@ window.octa={state,facing:()=>{updateCamera();return facing()},sides:()=>FACES.m
   sample:id=>{const sp=window.octa.centre(id);if(!sp)return null;const px=new Uint8Array(4);ctx.readPixels(Math.round(sp.x*DPR),Math.round(gl.height-sp.y*DPR),1,1,ctx.RGBA,ctx.UNSIGNED_BYTE,px);return[px[0],px[1],px[2],px[3]]}};
 /* ---- start, through the page's bridge, so one hot reload starts every world ---- */
 function start(saved){try{if(saved&&typeof saved==='object'){for(const k of['baseYaw','pitch','dist'])if(typeof saved[k]==='number')state[k]=saved[k];if(typeof saved.follow==='boolean')state.follow=saved.follow;if(typeof saved.selectedSide==='string'&&sideById[saved.selectedSide])state.selectedSide=saved.selectedSide}}catch(e){}
-  syncTime();resize();makeTextures();MOON=moonState(state.day);renderPlanets();renderSides();renderPlace();syncButtons();if(state.selectedSide)showTab('otabPlace');
+  syncTime();resize();makeTextures();MOON=moonState(state.day);renderPlanets();renderSides();renderPlace();syncButtons();if(state.selectedSide)showTab('otabPlace');if(W<820)openCodex(false);
   window.dice?.snapshot?.('octa',()=>({baseYaw:state.baseYaw,pitch:state.pitch,dist:state.dist,follow:state.follow,selectedSide:state.selectedSide}));
   requestAnimationFrame(frame)}
 if(window.dice?.ready)window.dice.ready('octa',start);else start({});

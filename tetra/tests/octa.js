@@ -28,6 +28,9 @@ const PAGE = require('./_page');
     console.log(width, JSON.stringify(info));
     await page.screenshot({ path: PAGE.out(phone ? 'octa_phone.png' : 'octa_home.png') });
     if (info.world !== 'octa' || info.tetraHidden !== 'hidden' || info.hexaHidden !== 'hidden') fails.push(`${width}: the switch did not show Octa alone`);
+    const codexOpen = await page.evaluate(() => document.getElementById('ocodex').classList.contains('open'));
+    if (phone && codexOpen) fails.push(`${width}: the Codex starts open on a phone and hides the dock`);
+    if (!phone && !codexOpen) fails.push(`${width}: the Codex starts closed on a desktop`);
     if (info.sides !== '1,2,3,4,5,6,7,8' || info.buttons !== '1,2,3,4,5,6,7,8') fails.push(`${width}: sides ${info.sides} buttons ${info.buttons}`);
     if (info.opposites !== '1:8 2:7 3:6 4:5 5:4 6:3 7:2 8:1') fails.push(`${width}: opposites ${info.opposites}`);
     if (info.facing !== '1' || !/Side 1/.test(info.facingText)) fails.push(`${width}: not facing side 1 (${info.facing}, ${info.facingText})`);
@@ -52,8 +55,9 @@ const PAGE = require('./_page');
     await page.evaluate(() => { octa.home(); }); await settle(page);
     // every side button flies to its side, and the side's centre pixel is slate once it faces the viewer
     for (const id of ['8', '4', '5', '2']) {
-      // on a phone the open Codex covers the dock (as on Hexa), so the side is chosen through the hook there and by the button on a desktop
-      if (phone) await page.evaluate(id => octa.face(id), id); else await page.click(`#oapp [data-face="${id}"]`);
+      // on a phone a chosen side opens the Codex sheet over the dock (as on Hexa), so Close is tapped before the next button
+      if (phone) { const open = await page.evaluate(() => document.getElementById('ocodex').classList.contains('open')); if (open) { await page.click('#obtnClose'); await page.waitForTimeout(500); } }
+      await page.click(`#oapp [data-face="${id}"]`);
       await page.waitForTimeout(1600); await settle(page);
       const r = await page.evaluate(id => ({ facing: octa.facing(), px: octa.sample(id), card: document.getElementById('oplaceBody').textContent }), id);
       if (r.facing !== id) fails.push(`${width}: button ${id} did not fly to side ${id} (facing ${r.facing})`);

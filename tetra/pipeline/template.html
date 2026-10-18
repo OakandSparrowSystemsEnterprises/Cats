@@ -240,7 +240,8 @@
   #diceWorlds button{background:rgba(8,11,20,.7);border:1px solid var(--line-2);border-radius:999px;color:var(--muted);font:600 11px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
   #diceWorlds button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold-soft);background:rgba(245,182,79,.14)}
   .worlds i.cuba{background:var(--stone)}
-.worlds i.octa,.worlds i.deca,.worlds i.dodeca,.worlds i.icosa,.worlds i.icositetra,.worlds i.triaconta,.worlds i.dwarfs,.worlds i.asteroids{background:none;border-style:dashed;opacity:.6}
+  .worlds i.octa{background:#3a4258;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.worlds i.deca,.worlds i.dodeca,.worlds i.icosa,.worlds i.icositetra,.worlds i.triaconta,.worlds i.dwarfs,.worlds i.asteroids{background:none;border-style:dashed;opacity:.6}
   @media (max-width:819px){#diceWorlds{top:calc(92px + env(safe-area-inset-top,0px));left:14px}#diceWorlds span{display:none}#diceWorlds button{padding:7px 10px;font-size:10px}}
 </style>
 
@@ -368,7 +369,7 @@
   <img id="tex-far" alt="" hidden src="{{TEX_FAR}}">
 </div>
 <script>
-/* The Dice System bridge: the two worlds register their start functions here, and one hot-reload hook starts both (each used to register its own, and only
+/* The Dice System bridge: the worlds (Tetra, Hexa, Octa) register their start functions here, and one hot-reload hook starts them all (each used to register its own, and only
    one survived, so after a republish one world stayed blank). Snapshots are gathered the same way, one object with a slice per world and the world shown. */
 (()=>{const starters={},snaps={};let booted=false,data=null;const el=id=>document.getElementById(id);const btns=()=>[...document.querySelectorAll('#diceWorlds [data-world]')];
 const time={day:0,playing:true,speed:1};   // one clock for both worlds (Ruby, 2026-10-04: pause, spin and the day and year steps happen on both planets); the shown world advances it

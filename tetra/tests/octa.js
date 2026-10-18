@@ -56,11 +56,12 @@ const PAGE = require('./_page');
     await page.evaluate(() => { octa.home(); }); await settle(page);
     // the other planets in the sky: seven of them on one line from the star through the die, and Tetra on screen at some turn of the view; the ship's landing marked on side 1
     const sky = await page.evaluate(async () => { octa.state.pitch = 0.05; octa.state.dist = 6.5; octa.state.fly = null; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); let found = null;
-      for (let k = 0; k < 36 && !found; k++) { octa.setYaw(k * Math.PI / 18, 0.05); await frames(); const b = octa.skyBodies(); if (b.tetra && b.tetra.x > 40 && b.tetra.x < innerWidth - 400 && b.tetra.y > 40 && b.tetra.y < innerHeight - 200) found = b.tetra; }
-      const keys = Object.keys(octa.skyBodies()).sort().join(','); octa.home(); await frames(); octa.setDay(0); await frames(); return { found, keys, markers: octa.markers() }; });
+      let overlap = 0; for (let k = 0; k < 36; k++) { octa.setYaw(k * Math.PI / 18, 0.05); await frames(); const b = octa.skyBodies(); if (b.tetra && b.cuba && Math.hypot(b.tetra.x - b.cuba.x, b.tetra.y - b.cuba.y) < 20) overlap++; if (!found && b.tetra && b.tetra.x > 40 && b.tetra.x < innerWidth - 400 && b.tetra.y > 40 && b.tetra.y < innerHeight - 200) found = b.tetra; }
+      const keys = Object.keys(octa.skyBodies()).sort().join(','); octa.home(); await frames(); octa.setDay(0); await frames(); return { found, keys, overlap, markers: octa.markers() }; });
     console.log(width, 'sky', JSON.stringify(sky));
     if (sky.keys !== 'cuba,deca,dodeca,icosa,icositetra,tetra,triaconta') fails.push(`${width}: the sky lists ${sky.keys}`);
     if (!phone && !sky.found) fails.push(`${width}: Tetra is not in Octa's sky when turned toward it`);
+    if (sky.overlap) fails.push(`${width}: Tetra and Hexa drawn on one point in ${sky.overlap} of 36 turns of the view`);
     if (!sky.markers.includes('The ship’s landing')) fails.push(`${width}: the landing marker is not shown on side 1 (${JSON.stringify(sky.markers)})`);
     // every side button flies to its side, and the side's centre pixel is slate once it faces the viewer
     for (const id of ['8', '4', '5', '2']) {

@@ -4,6 +4,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 
 ## 1. State
 
+- **Draft 14 (2026-10-18, later)**: the planets in Hexa's sky on one curved line from the star (Ruby's question of the day; the sky block shared with Tetra and Octa). See section 2.
 - **Draft 13 (2026-10-18)**: year 96 of Hexa (Tetra is in 1750; the math in the eleventh round), every other planet in Hexa's sky. See section 2.
 - **Draft 12 (2026-10-17, later)**: the planets on the World tab named by Ruby's hedron rule (Icosa, Icositetra); Octa's star, moon and calendar are in `../octa/`.
 - **Draft 11 (2026-10-17)**: the lands shrunk to seven tenths keeping their shapes (Ruby: "yes but dont change the shape, just shrink them"), the two portals leading to each other for now, the Montezuma a kind of tree so far only on Hexa; Octa joins the page as the third world (`../octa/`). See the tenth round in section 2.
@@ -124,6 +125,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 ### The eleventh round, 2026-10-18: year 96, every planet in the sky
 
 - 2026-10-18, Ruby, in her message on Octa: "the year has advannced to 1750 on tetra (do the math for hexa)" (the math: year 50 of Hexa was while Tetra was in 1700 (her 2026-10-04 line); fifty Tetra years are 50 × 365.25 = 18,262.5 days; a Hexa year is 393.5 days, so that is 46.41 Hexa years; 50 + 46.41 = 96.41: year 96 of Hexa, about two fifths through. `yearNow` is 96; the page still starts both worlds on 1 January together and drops the two fifths of a year, a simplification said on the World tab.) And "you shuld be able to see all of the other planets from a given planet" (Hexa's sky shows Tetra as before, Octa as a small eight-sided die away from the star, and the five unbuilt planets as points of light with their names; one sky block shared by the three fragments; where each stands is a reading. `../octa/HANDOFF.md` has the rest of her message.)
+- 2026-10-18, Ruby, later, on the shared sky: "Why are all the planets not in a curved line from te sun" (draft 14: the sky block in all three fragments lays the planets on one arc from the star, nearest first, in the stacked order, the home world's slot empty; the arc's bend a reading. The rest of her message is Octa's, in `../octa/HANDOFF.md`.)
 
 ## 3. Open questions for Ruby (do not guess these)
 
@@ -157,6 +159,7 @@ The page is Tetra's (`../tetra/pipeline/template.html`, one file for both worlds
 
 ## 5. Publishing
 
+- Draft 14, 2026-10-18, later: republished to Tetra's artifact with the label "v11 Year 0 of Octa, planets in a line, a stronger field".
 - Draft 13, 2026-10-18: republished to Tetra's artifact with the label "v11 Year 1750, every planet in every sky, a ship on Octa".
 - Draft 12, 2026-10-17, later: republished to Tetra's artifact with the label "v11 Octa turns under the star, a d7 moon, a 15-month year" (the planets' names by her rule).
 - Draft 11, 2026-10-17: republished to Tetra's artifact with the label "v11 Octa joins, eight blank sides; Hexa's lands shrunk".

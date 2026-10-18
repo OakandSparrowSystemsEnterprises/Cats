@@ -303,7 +303,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The Dice System</p>
-          <p>Worlds beyond chance. Tetra is the four-sided world, Hexa the cube planet and Octa the eight-sided planet; they share this page, and the buttons under the title switch between them. Every other planet shows in each world’s sky (Ruby, 2026-10-18: “you shuld be able to see all of the other planets from a given planet”): the built ones as small turning dice, the five not yet built as points of light with their names, stacked away from the star as she stacked the fields (“going away from the star would be the direction they were stacked in”). She placed only Tetra first and Hexa last; the page sorts the rest by die size, which puts Octa and the five beyond Hexa: a reading she may overrule.</p>
+          <p>Worlds beyond chance. Tetra is the four-sided world, Hexa the cube planet and Octa the eight-sided planet; they share this page, and the buttons under the title switch between them. Every other planet shows in each world’s sky (Ruby, 2026-10-18: “you shuld be able to see all of the other planets from a given planet”): the built ones as small turning dice, the five not yet built as points of light with their names, on one curved line from the star (Ruby, 2026-10-18: “Why are all the planets not in a curved line from te sun”), in the order she stacked the fields (“going away from the star would be the direction they were stacked in”), nearest the star first. She placed only Tetra first and Hexa last; the page sorts the rest by die size, which puts Octa and the five beyond Hexa: a reading she may overrule. The line’s bend and where it runs across the sky are readings.</p>
           <ul class="worlds" id="worlds"></ul>
           <p class="q" style="margin-top:12px">Different worlds. Same imagination.</p>
         </div>
@@ -809,15 +809,16 @@ function drawRain(dt,amount){if(amount<=0)return;const a=spinAngle();fc.strokeSt
   fc.stroke();fc.globalAlpha=1}
 
 /* ============================== CUBA IN THE SKY ============================== */
-// Ruby (2026-10-04): "you shuld be able to see tetra from cuba and vice versa". Hexa (Cuba then) lies farther from the star, so it stands away from the star here, a little to one side and above; where exactly is a reading.
+// Ruby (2026-10-04): "you shuld be able to see tetra from cuba and vice versa". Hexa (Cuba then) lies farther from the star, so it stands beyond Tetra's own empty slot on the line from the star (2026-10-18, below); where exactly is a reading.
 function inTri2(s,t){if(t.some(p=>!p))return false;const [a,b,c]=t;const d=(b.y-c.y)*(a.x-c.x)+(c.x-b.x)*(a.y-c.y);const u=((b.y-c.y)*(s.x-c.x)+(c.x-b.x)*(s.y-c.y))/d,v=((c.y-a.y)*(s.x-c.x)+(a.x-c.x)*(s.y-c.y))/d;return u>=0&&v>=0&&u+v<=1}
 /* ---- the other planets in the sky. Ruby, 2026-10-18: "you shuld be able to see all of the other planets from a given planet". The built ones are small turning dice,
-   the five not yet built are points of light with their names. They stand sorted away from the star by die size, as Ruby placed the planets in the fields on 2026-10-04
-   (Tetra in the first field, Hexa in the last, going away from the star); exactly where each one stands in the sky is a reading. ---- */
+   the five not yet built are points of light with their names. They stand on one curved line from the star (Ruby, 2026-10-18: "Why are all the planets not in a curved line from te sun"),
+   nearest the star first, in the order she stacked the fields on 2026-10-04 (Tetra in the first field, Hexa in the last, going away from the star; the rest by die size,
+   a reading), the home world's own slot left empty. The arc: SUN0 turned about a tilted axis by SKY_STEP0 + SKY_STEP per slot; its bend and its run across the sky are readings. ---- */
 const SKY_ALL=[{id:'tetra',name:'TETRA',shape:'tetra',size:0.9,tint:[0.78,0.72,0.58]},{id:'cuba',name:'HEXA',shape:'cube',size:0.75,tint:[0.72,0.8,0.95]},{id:'octa',name:'OCTA',shape:'octa',size:0.85,tint:[0.62,0.66,0.82]},{id:'deca',name:'DECA'},{id:'dodeca',name:'DODECA'},{id:'icosa',name:'ICOSA'},{id:'icositetra',name:'ICOSITETRA'},{id:'triaconta',name:'TRIACONTA'}];
-const SKY_DIST=38,SKY_HOME='tetra',SKY_PRIMARY='cuba';
-const SKY=(()=>{const h=SKY_ALL.findIndex(p=>p.id===SKY_HOME);const sunAng=[0.42,-0.6,0.75,-0.9,1.0,-1.1,1.2],farAng=[-0.5,0.62,-0.78,0.9,-1.02,1.1,-1.2];let js=0,jf=0;const out=[];
-  SKY_ALL.forEach((p,i)=>{if(i===h)return;const sunward=i<h;const j=sunward?js++:jf++;const base=sunward?SUN0:mulS(SUN0,-1);const dir=norm(add(rotAxis(base,[0,1,0],(sunward?sunAng:farAng)[j]),[0,(sunward?0.06:0.08)+0.06*j,0]));const d=Math.abs(i-h);out.push(Object.assign({},p,{dir,scale:1/(1+0.25*(d-1))}))});return out})();
+const SKY_DIST=38,SKY_STEP0=0.25,SKY_STEP=0.13,SKY_HOME='tetra',SKY_PRIMARY='cuba';
+const SKY=(()=>{const h=SKY_ALL.findIndex(p=>p.id===SKY_HOME);const side=norm(cross(SUN0,[0,1,0])),axis=norm(add(mulS(side,0.27),[0,0.96,0]));const out=[];
+  SKY_ALL.forEach((p,i)=>{if(i===h)return;const dir=norm(rotAxis(SUN0,axis,SKY_STEP0+SKY_STEP*i));const d=Math.abs(i-h);out.push(Object.assign({},p,{dir,scale:1/(1+0.25*(d-1))}))});return out})();
 const SKY_SHAPES={tetra:{V:[[0,1,0],[Math.sqrt(8/9),-1/3,0],[-Math.sqrt(2/9),-1/3,Math.sqrt(2/3)],[-Math.sqrt(2/9),-1/3,-Math.sqrt(2/3)]],F:[[0,1,2],[0,2,3],[0,3,1],[1,3,2]]},
   cube:{V:[[-1,-1,-1],[-1,-1,1],[-1,1,-1],[-1,1,1],[1,-1,-1],[1,-1,1],[1,1,-1],[1,1,1]],F:[[0,1,3,2],[4,6,7,5],[0,4,5,1],[2,3,7,6],[0,2,6,4],[1,5,7,3]]},
   octa:{V:[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]],F:[[0,2,4],[2,1,4],[1,3,4],[3,0,4],[2,0,5],[1,2,5],[3,1,5],[0,3,5]]}};

@@ -6,7 +6,7 @@ const PAGE = require('./_page');
 // words about the first side; the shared clock runs here too; switching back shows Tetra; no page errors at desktop and phone widths.
 // Since Ruby's second message of 2026-10-17 ("give octa the same star, a d7 moon, a turn, a calender with one more month than hexa and a restart day that is
 // one and three fourths of a day"): the die turns with the day, the star is drawn where it stands, the d7 moon is a seven-faced prism that eclipses on the 14th,
-// and the year is 15 months of 28 days plus a Restart Day of 1.75 days, the fifteenth month unnamed, between March and April.
+// and the year is 15 months of 28 days plus a Restart Day of 1.75 days, the fifteenth month unnamed, between March and April, half spring and half between spring and summer; the years count from 0, with -0 before it.
 (async () => {
   const browser = await chromium.launch(PAGE.LAUNCH);
   const fails = [];
@@ -35,13 +35,14 @@ const PAGE = require('./_page');
     if (info.opposites !== '1:8 2:7 3:6 4:5 5:4 6:3 7:2 8:1') fails.push(`${width}: opposites ${info.opposites}`);
     if (info.facing !== '1' || !/Side 1/.test(info.facingText)) fails.push(`${width}: not facing side 1 (${info.facing}, ${info.facingText})`);
     if (!slate(info.centre)) fails.push(`${width}: side 1 is not drawn at its centre (${JSON.stringify(info.centre)})`);
-    if (info.date !== 'Starday · 1 January' || info.sub !== 'Year 1 of Octa · Rain season · day 1 of 421¾') fails.push(`${width}: the dock date reads ${info.date} / ${info.sub}`);
+    if (info.date !== 'Starday · 1 January' || info.sub !== 'Year 0 of Octa · Rain season · day 1 of 421¾') fails.push(`${width}: the dock date reads ${info.date} / ${info.sub}`);
     // the calendar: 15 months, the unnamed one between March and April, a Restart Day of a day and three quarters, 421¾ days a year
-    const cal = await page.evaluate(() => { const out = []; for (const d of [0, 27.5, 28, 56, 84, 112, 140, 168, 419.5, 420.2, 421.7, 421.75]) { octa.setDay(d); const p = octa.date(); out.push(`${d}:${p.wd}/${p.month}/${p.dom}/y${p.y}/${p.season}`); } octa.setDay(0); return { months: octa.months().length, year: octa.yearDays(), out: out.join(' ') }; });
+    const cal = await page.evaluate(() => { const out = []; for (const d of [0, 27.5, 28, 56, 84, 112, 140, 154, 168, 419.5, 420.2, 421.7, 421.75]) { octa.setDay(d); const p = octa.date(); out.push(`${d}:${p.wd}/${p.month}/${p.dom}/y${p.y}/${p.season}`); } octa.setDay(-1); const before = octa.date(); octa.setDay(0); return { months: octa.months().length, year: octa.yearDays(), out: out.join(' '), before: `${before.yl}/${before.y}` }; });
     console.log(width, 'calendar', JSON.stringify(cal));
     if (cal.months !== 15 || Math.abs(cal.year - 421.75) > 1e-9) fails.push(`${width}: the year is ${cal.months} months and ${cal.year} days`);
-    for (const need of ['0:Starday/January/1/y1/Rain season', '27.5:Twilightday/January/28/y1/Rain season', '28:Starday/Amberary/1/y1/Rain season', '56:Starday/February/1/y1/Spring', '84:Starday/Tredesember/1/y1/Spring', '112:Starday/March/1/y1/Spring', '140:Starday/the fifteenth month/1/y1/season unwritten', '168:Starday/April/1/y1/Summer', '419.5:Twilightday/December/28/y1/Winter', '420.2:null/Restart Day/0/y1/Rain season', '421.7:null/Restart Day/0/y1/Rain season', '421.75:Starday/January/1/y2/Rain season'])
+    for (const need of ['0:Starday/January/1/y0/Rain season', '27.5:Twilightday/January/28/y0/Rain season', '28:Starday/Amberary/1/y0/Rain season', '56:Starday/February/1/y0/Spring', '84:Starday/Tredesember/1/y0/Spring', '112:Starday/March/1/y0/Spring', '140:Starday/the fifteenth month/1/y0/Spring', '154:Starday/the fifteenth month/15/y0/Between spring and summer', '168:Starday/April/1/y0/Summer', '419.5:Twilightday/December/28/y0/Winter', '420.2:null/Restart Day/0/y0/Rain season', '421.7:null/Restart Day/0/y0/Rain season', '421.75:Starday/January/1/y1/Rain season'])
       if (!cal.out.includes(need)) fails.push(`${width}: calendar lacks ${need} (${cal.out})`);
+    if (cal.before !== '-0/-1') fails.push(`${width}: the year before year 0 reads ${cal.before}, not -0`);
     // the d7 moon: seven faces, an eclipse at midday on the 14th and none on the 15th; the die turns with the day; the star stands in the world
     // the deepest moment of the eclipse is near midday on the 14th (the moon's small daily drift moves it a little off 13.5), so the day is scanned, as in tests/cuba.js
     const moon = await page.evaluate(() => { const die = octa.moonDie(); let e1 = 0, at = 0; for (let d = 13.2; d <= 13.8; d += 0.004) { octa.setDay(d); const e = octa.moon().eclipse; if (e > e1) { e1 = e; at = d; } } octa.setDay(14.5); const e2 = octa.moon().eclipse; octa.setDay(0.5); const f = octa.facing(); octa.setDay(0); return { die, e1, at, e2, halfTurnFacing: f, facing0: octa.facing(), sun: octa.sunDir() }; });
@@ -76,7 +77,7 @@ const PAGE = require('./_page');
     // the Codex: the World tab phrases, in Ruby's spelling where they are hers
     await page.click('#otabWorld'); await page.waitForTimeout(200);
     const world = (await page.evaluate(() => document.getElementById('opaneWorld').textContent)).toLowerCase();
-    for (const need of ['the first side hasent been discoverd or drawn yet', 'named by the number on the dice', 'daddy votes octa, i vote octo', 'two votes to one', 'another 5 so they arent confusing', 'hedron name minus', 'add up to 9', 'still unwritten', 'give octa the same star', 'a d7 moon', 'one more month than hexa', 'one and three fourths of a day', '421¾', 'icosa', 'icositetra', 'between march and april', 'everything is similar to the first two', 'a ship as landed on side one of octa', 'all of the other planets', 'nay face could be seen', 'zenith and nadir', 'crown and keel'])
+    for (const need of ['the first side hasent been discoverd or drawn yet', 'named by the number on the dice', 'daddy votes octa, i vote octo', 'two votes to one', 'another 5 so they arent confusing', 'hedron name minus', 'add up to 9', 'still unwritten', 'give octa the same star', 'a d7 moon', 'one more month than hexa', 'one and three fourths of a day', '421¾', 'icosa', 'icositetra', 'between march and april', 'everything is similar to the first two', 'a ship as landed on side one of octa', 'all of the other planets', 'nay face could be seen', 'zenith and nadir', 'crown and keel', 'between spring and summer', 'year 0 of octa', 'curved line from te sun', 'it shuld be stronger', '5 more pairs', 'hither and yon', 'bow and stern'])
       if (!world.includes(need)) fails.push(`${width}: Octa's world tab lacks "${need}"`);
     const sidesTab = await page.evaluate(() => { document.getElementById('otabSides').click(); return document.querySelectorAll('#osideList button').length; });
     if (sidesTab !== 8) fails.push(`${width}: the Sides tab lists ${sidesTab} sides`);

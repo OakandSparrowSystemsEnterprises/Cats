@@ -4,6 +4,8 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 
 ## 1. State
 
+- **Draft 13 (2026-10-18)**: year 96 of Hexa (Tetra is in 1750; the math in the eleventh round), every other planet in Hexa's sky. See section 2.
+- **Draft 12 (2026-10-17, later)**: the planets on the World tab named by Ruby's hedron rule (Icosa, Icositetra); Octa's star, moon and calendar are in `../octa/`.
 - **Draft 11 (2026-10-17)**: the lands shrunk to seven tenths keeping their shapes (Ruby: "yes but dont change the shape, just shrink them"), the two portals leading to each other for now, the Montezuma a kind of tree so far only on Hexa; Octa joins the page as the third world (`../octa/`). See the tenth round in section 2.
 - **Draft 10 (2026-10-14)**: her answers to the Still unwritten list: the arms as drawn are fine, Hexa's places have no names (humans did not develop there), its plants are Tetra's and the giant tree, Mount Celestial is half the height of Tetra's moon (set in Tetra's page), Ammolite's map is the Far side as drawn. See the ninth round in section 2.
 - **Draft 9 (2026-10-11)**: the moons remade without the barrel (Hexa's d5 a five-faced prism), her watery-planet line on the World tab with the water shares as drawn. See the eighth round in section 2.
@@ -119,6 +121,10 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 - 2026-10-17, Ruby, later, answering the report: "3: its great 4: yes it did" (3: the shrink to seven tenths stands; 4: the Far side shrank too, so her 2026-10-05 "making it half water" is superseded: the Far side is about three quarters water). In the same message, the planets' names are the hedron name minus "hedron": the list says Icosa and Icositetra (`../octa/HANDOFF.md`).
 - 2026-10-17, Ruby: "also for now we will make the portals go to each other" (the portal on the North side and the portal on the West side lead to each other for now: each card has a Through the portal button to the other, like the Canyon's; open question 20 answered for now).
 
+### The eleventh round, 2026-10-18: year 96, every planet in the sky
+
+- 2026-10-18, Ruby, in her message on Octa: "the year has advannced to 1750 on tetra (do the math for hexa)" (the math: year 50 of Hexa was while Tetra was in 1700 (her 2026-10-04 line); fifty Tetra years are 50 × 365.25 = 18,262.5 days; a Hexa year is 393.5 days, so that is 46.41 Hexa years; 50 + 46.41 = 96.41: year 96 of Hexa, about two fifths through. `yearNow` is 96; the page still starts both worlds on 1 January together and drops the two fifths of a year, a simplification said on the World tab.) And "you shuld be able to see all of the other planets from a given planet" (Hexa's sky shows Tetra as before, Octa as a small eight-sided die away from the star, and the five unbuilt planets as points of light with their names; one sky block shared by the three fragments; where each stands is a reading. `../octa/HANDOFF.md` has the rest of her message.)
+
 ## 3. Open questions for Ruby (do not guess these)
 
 1. (Joshua) The photo itself: please put it in `reference/ruby/canon_side.jpg` or send it in chat, so the island can be checked against it.
@@ -133,7 +139,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 10. (Answered 2026-10-04: "a fair d5 for cuba", and 2026-10-11: "Remake the moons without the \"barrel\" method". Drawn as a short five-faced prism since 2026-10-11 (a pentagonal rod with pointed ends before that); the prism and its proportion are readings.)
 11. (2026-10-04) "cuba is way too buggy": the blank Tetra, the leaking styles, the label overflow and the tab mix-up are fixed. What else did she see?
 12. (Answered 2026-10-04 by placing Amberary between January and February: the rain season is one piece and February begins spring.)
-13. (Answered 2026-10-04: year one at Amber's landing, year 50 now.)
+13. (Answered 2026-10-04: year one at Amber's landing, year 50 then; 2026-10-18: year 96, worked out from Tetra's 1750.)
 14. (2026-10-04) Where exactly do Tetra and Cuba stand in each other's skies, and how big do they look? Drawn as readings.
 15. (Answered 2026-10-14: "tetras and the giant tree".) (2026-10-04) Which plants grow where, on either world, and what colours Cuba's land has (painted like Tetra's for now). (Answered 2026-10-06: colours "same as tetra"; what grows, "I've already told you"; where, "i don't know yet (earth planets grow all over)".)
 16. (Answered 2026-10-17: "the Montezuma is a kind of tree that so far only grows on hexa".) (Answered in part 2026-10-04: it grows on the East side "when it is writen", a mile high, a canopy a mile and a half in radius, a trunk three quarters of a mile wide. Still open: one tree or a kind of tree, on Tetra too, and whether it is the Montezuma cypress of our world.) New on 2026-10-06: the East side is drawn from her sketch; is that "writen" enough for the Montezuma to appear there?
@@ -151,6 +157,7 @@ The page is Tetra's (`../tetra/pipeline/template.html`, one file for both worlds
 
 ## 5. Publishing
 
+- Draft 13, 2026-10-18: republished to Tetra's artifact with the label "v11 Year 1750, every planet in every sky, a ship on Octa".
 - Draft 12, 2026-10-17, later: republished to Tetra's artifact with the label "v11 Octa turns under the star, a d7 moon, a 15-month year" (the planets' names by her rule).
 - Draft 11, 2026-10-17: republished to Tetra's artifact with the label "v11 Octa joins, eight blank sides; Hexa's lands shrunk".
 - Draft 10, 2026-10-14: republished to Tetra's artifact with the label "v11 Year 1700 now, no names on Hexa, the mountain set".

@@ -29,9 +29,9 @@ const PAGE = require('./_page');
     [252.5, 'Starday · 1 September', 'Fall · day 253 of', 'September', 'Fall'],
     [363.5, 'Twilightday · 28 December', 'Winter · day 364 of', 'December', 'Winter'],
     [364.5, 'Restart Day · 1¼ days', 'Rain season · day 365 of', 'The Restart Day, which closes the year', 'Rain season'],
-    [365.2, 'Restart Day · 1¼ days', 'Year 1700 · Rain season · day 365 of', 'The Restart Day, which closes the year', 'Rain season'],
-    [365.3, 'Starday · 1 January', 'Year 1701 · Rain season · day 1 of', 'January', 'Rain season'],
-    [-0.5, 'Restart Day · 1¼ days', 'Year 1699 · Rain season · day 365 of', 'The Restart Day, which closes the year', 'Rain season'],
+    [365.2, 'Restart Day · 1¼ days', 'Year 1750 · Rain season · day 365 of', 'The Restart Day, which closes the year', 'Rain season'],
+    [365.3, 'Starday · 1 January', 'Year 1751 · Rain season · day 1 of', 'January', 'Rain season'],
+    [-0.5, 'Restart Day · 1¼ days', 'Year 1749 · Rain season · day 365 of', 'The Restart Day, which closes the year', 'Rain season'],
   ];
   for (const [day, date, sub, month, season] of expect) {
     await page.evaluate(d => tetra.setDay(d), day); await settle();   // the frame tick updates the HUD and, on the World tab, the strip

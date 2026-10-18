@@ -30,7 +30,7 @@ const PAGE = require('./_page');
     if (!info.markers.includes('The Canyon · to the Far side') || !info.markers.includes('The Plus Continent')) fails.push(`${width}: markers ${JSON.stringify(info.markers)}`);
     if (!land(info.island && info.island.rgb)) fails.push(`${width}: the Plus Continent marker is not over land (${info.island && info.island.rgb})`);
     if (!dark(info.hole && info.hole.rgb)) fails.push(`${width}: the Canyon is not dark (${info.hole && info.hole.rgb})`);
-    if (info.date !== 'Starday · 1 January | Year 50 of Hexa · Rain season · day 1 of 393½') fails.push(`${width}: first day reads "${info.date}"`);
+    if (info.date !== 'Starday · 1 January | Year 96 of Hexa · Rain season · day 1 of 393½') fails.push(`${width}: first day reads "${info.date}"`);
     // the star: facing the lit Canon side it is behind the viewer and off the frame (Ruby: it must not be held in the frame); turned toward it, the glow is there and purple
     if (info.starPx) fails.push(`${width}: the star glow is on screen while facing the lit side (${JSON.stringify(info.star)})`);
     const starYaw = await page.evaluate(() => { const s = cuba.sunDir(); return Math.atan2(s[0], s[2]) + Math.PI; });   // the eye opposite the star looks straight at it
@@ -56,7 +56,7 @@ const PAGE = require('./_page');
     // the calendar: Amberary is the 14th month, before March, half rain and half between rain and spring; the Restart Day closes the year
     const cal = await page.evaluate(() => { const out = []; for (const d of [0, 27.5, 28, 42, 56, 84, 112, 391.5, 392.5, 393.4, 393.6]) { cuba.setDay(d); const p = cuba.date(); out.push(`${d}:${p.mi < 0 ? 'Restart' : (p.wd + ' ' + p.dom + ' ' + ['January','Amberary','February','Tredesember','March','April','May','June','July','August','September','October','November','December'][p.mi])}/${p.season.name}/${p.doy + 1}/y${p.y}`); } cuba.setDay(0); return out.join(' '); });
     console.log(width, 'calendar', cal);
-    const wantCal = '0:Starday 1 January/Rain season/1/y50 27.5:Twilightday 28 January/Rain season/28/y50 28:Starday 1 Amberary/Rain season/29/y50 42:Starday 15 Amberary/Between rain and spring/43/y50 56:Starday 1 February/Spring/57/y50 84:Starday 1 Tredesember/Spring/85/y50 112:Starday 1 March/Spring/113/y50 391.5:Twilightday 28 December/Winter/392/y50 392.5:Restart/Rain season/393/y50 393.4:Restart/Rain season/393/y50 393.6:Starday 1 January/Rain season/1/y51';
+    const wantCal = '0:Starday 1 January/Rain season/1/y96 27.5:Twilightday 28 January/Rain season/28/y96 28:Starday 1 Amberary/Rain season/29/y96 42:Starday 15 Amberary/Between rain and spring/43/y96 56:Starday 1 February/Spring/57/y96 84:Starday 1 Tredesember/Spring/85/y96 112:Starday 1 March/Spring/113/y96 391.5:Twilightday 28 December/Winter/392/y96 392.5:Restart/Rain season/393/y96 393.4:Restart/Rain season/393/y96 393.6:Starday 1 January/Rain season/1/y97';
     if (cal !== wantCal) fails.push(`${width}: calendar reads wrong`);
     // one clock: Ruby's example, when Tetra steps from Tredesember into March, Cuba is starting Tredesember; and pausing one pauses the other
     const clock = await page.evaluate(() => { tetra.setDay(84); const c = cuba.date(); const t = document.getElementById('dateOut'); cuba.setDay(84); const tetraDay = tetra.state.day; cuba.state.playing = false; const tp = tetra.state.playing; cuba.state.playing = true; cuba.setDay(0); return { cuba: c.dom + ' ' + ['January','Amberary','February','Tredesember','March'][c.mi], tetraDay, tetraPaused: tp === false }; });

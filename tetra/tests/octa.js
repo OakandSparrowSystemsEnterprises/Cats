@@ -33,7 +33,7 @@ const PAGE = require('./_page');
     if (!phone && !codexOpen) fails.push(`${width}: the Codex starts closed on a desktop`);
     if (info.sides !== '1,2,3,4,5,6,7,8' || info.buttons !== '1,2,3,4,5,6,7,8') fails.push(`${width}: sides ${info.sides} buttons ${info.buttons}`);
     if (info.opposites !== '1:8 2:7 3:6 4:5 5:4 6:3 7:2 8:1') fails.push(`${width}: opposites ${info.opposites}`);
-    if (info.facing !== '1' || !/Side 1/.test(info.facingText)) fails.push(`${width}: not facing side 1 (${info.facing}, ${info.facingText})`);
+    if (info.facing !== '1' || !/Home/.test(info.facingText)) fails.push(`${width}: not facing side 1 (${info.facing}, ${info.facingText})`);
     if (!slate(info.centre)) fails.push(`${width}: side 1 is not drawn at its centre (${JSON.stringify(info.centre)})`);
     if (info.date !== 'Starday · 1 January' || info.sub !== 'Year 0 of Octa · Rain season · day 1 of 421¾') fails.push(`${width}: the dock date reads ${info.date} / ${info.sub}`);
     // the calendar: 15 months, the unnamed one between March and April, a Restart Day of a day and three quarters, 421¾ days a year
@@ -54,14 +54,13 @@ const PAGE = require('./_page');
     const star = await page.evaluate(() => { const s = octa.sunDir(); octa.setYaw(Math.atan2(-s[0], -s[2]), 0.05); return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => { const sp = octa.starScreen(); r({ sp }); }))); });
     if (!star.sp || star.sp.x < 0 || star.sp.x > width) fails.push(`${width}: the star is not on screen when facing it (${JSON.stringify(star.sp)})`);
     await page.evaluate(() => { octa.home(); }); await settle(page);
-    // the other planets in the sky: seven of them on one line from the star through the die, and Tetra on screen at some turn of the view; the ship's landing marked on side 1
-    const sky = await page.evaluate(async () => { octa.state.pitch = 0.05; octa.state.dist = 6.5; octa.state.fly = null; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); let found = null;
-      let overlap = 0; for (let k = 0; k < 36; k++) { octa.setYaw(k * Math.PI / 18, 0.05); await frames(); const b = octa.skyBodies(); if (b.tetra && b.cuba && Math.hypot(b.tetra.x - b.cuba.x, b.tetra.y - b.cuba.y) < 20) overlap++; if (!found && b.tetra && b.tetra.x > 40 && b.tetra.x < innerWidth - 400 && b.tetra.y > 40 && b.tetra.y < innerHeight - 200) found = b.tetra; }
-      const keys = Object.keys(octa.skyBodies()).sort().join(','); octa.home(); await frames(); octa.setDay(0); await frames(); return { found, keys, overlap, markers: octa.markers() }; });
+    // the other planets in the sky: seven of them at fixed places along the star's line through the die, and Tetra on screen at some turn of the view when zoomed out; the ship's landing marked on side 1 (Home)
+    const sky = await page.evaluate(async () => { octa.state.pitch = 0.05; octa.state.dist = 9.5; octa.state.fly = null; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); let found = null;
+      for (let k = 0; k < 36 && !found; k++) { octa.setYaw(k * Math.PI / 18, 0.05); await frames(); const b = octa.skyBodies(); if (b.tetra && b.tetra.x > 40 && b.tetra.x < innerWidth - 400 && b.tetra.y > 40 && b.tetra.y < innerHeight - 200) found = b.tetra; }
+      const keys = Object.keys(octa.skyBodies()).sort().join(','); octa.home(); await frames(); octa.setDay(0); await frames(); return { found, keys, markers: octa.markers() }; });
     console.log(width, 'sky', JSON.stringify(sky));
     if (sky.keys !== 'cuba,deca,dodeca,icosa,icositetra,tetra,triaconta') fails.push(`${width}: the sky lists ${sky.keys}`);
     if (!phone && !sky.found) fails.push(`${width}: Tetra is not in Octa's sky when turned toward it`);
-    if (sky.overlap) fails.push(`${width}: Tetra and Hexa drawn on one point in ${sky.overlap} of 36 turns of the view`);
     if (!sky.markers.includes('The ship’s landing')) fails.push(`${width}: the landing marker is not shown on side 1 (${JSON.stringify(sky.markers)})`);
     // every side button flies to its side, and the side's centre pixel is slate once it faces the viewer
     for (const id of ['8', '4', '5', '2']) {
@@ -72,13 +71,14 @@ const PAGE = require('./_page');
       const r = await page.evaluate(id => ({ facing: octa.facing(), px: octa.sample(id), card: document.getElementById('oplaceBody').textContent }), id);
       if (r.facing !== id) fails.push(`${width}: button ${id} did not fly to side ${id} (facing ${r.facing})`);
       if (!slate(r.px)) fails.push(`${width}: side ${id} is not drawn (${JSON.stringify(r.px)})`);
-      if (!r.card.includes('Side ' + id) || !r.card.includes('Opposite it is side ' + (9 - Number(id)))) fails.push(`${width}: the card for side ${id} reads ${r.card.slice(0, 120)}`);
+      const names = { 1: 'Home', 2: 'Canon', 3: 'West', 4: 'South', 5: 'North', 6: 'East', 7: 'Far', 8: 'Away' };
+      if (!r.card.includes('Side ' + id) || !r.card.includes(names[id]) || !r.card.includes('Opposite it is ' + names[9 - Number(id)] + ' (side ' + (9 - Number(id)) + ')')) fails.push(`${width}: the card for side ${id} reads ${r.card.slice(0, 120)}`);
     }
     if (!phone) await page.screenshot({ path: PAGE.out('octa_side2.png') });
     // the Codex: the World tab phrases, in Ruby's spelling where they are hers
     await page.click('#otabWorld'); await page.waitForTimeout(200);
     const world = (await page.evaluate(() => document.getElementById('opaneWorld').textContent)).toLowerCase();
-    for (const need of ['the first side hasent been discoverd or drawn yet', 'named by the number on the dice', 'daddy votes octa, i vote octo', 'two votes to one', 'another 5 so they arent confusing', 'hedron name minus', 'add up to 9', 'still unwritten', 'give octa the same star', 'a d7 moon', 'one more month than hexa', 'one and three fourths of a day', '421¾', 'icosa', 'icositetra', 'between march and april', 'everything is similar to the first two', 'a ship as landed on side one of octa', 'all of the other planets', 'nay face could be seen', 'zenith and nadir', 'crown and keel', 'between spring and summer', 'year 0 of octa', 'curved line from te sun', 'it shuld be stronger', '5 more pairs', 'hither and yon', 'bow and stern', 'including the planet you are on', 'side names, not directions', 'heads and tails', 'home and away', 'maps are being drawn'])
+    for (const need of ['the first side hasent been discoverd or drawn yet', 'named by the number on the dice', 'daddy votes octa, i vote octo', 'two votes to one', 'another 5 so they arent confusing', 'hedron name minus', 'add up to 9', 'still unwritten', 'give octa the same star', 'a d7 moon', 'one more month than hexa', 'one and three fourths of a day', '421¾', 'icosa', 'icositetra', 'between march and april', 'everything is similar to the first two', 'a ship as landed on side one of octa', 'all of the other planets', 'nay face could be seen', 'zenith and nadir', 'crown and keel', 'between spring and summer', 'year 0 of octa', 'curved line from te sun', 'it shuld be stronger', '5 more pairs', 'hither and yon', 'bow and stern', 'including the planet you are on', 'side names, not directions', 'heads and tails', 'home and away', 'maps are being drawn', 'pair three fits', '1 is home', 'home (1)', 'fixed pint in space'])
       if (!world.includes(need)) fails.push(`${width}: Octa's world tab lacks "${need}"`);
     const sidesTab = await page.evaluate(() => { document.getElementById('otabSides').click(); return document.querySelectorAll('#osideList button').length; });
     if (sidesTab !== 8) fails.push(`${width}: the Sides tab lists ${sidesTab} sides`);

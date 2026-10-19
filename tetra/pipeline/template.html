@@ -303,7 +303,7 @@
         </div>
         <div class="sect">
           <p class="eyebrow">The Dice System</p>
-          <p>Worlds beyond chance. Tetra is the four-sided world, Hexa the cube planet and Octa the eight-sided planet; they share this page, and the buttons under the title switch between them. Every other planet shows in each world’s sky (Ruby, 2026-10-18: “you shuld be able to see all of the other planets from a given planet”): the built ones as small turning dice, the five not yet built as points of light with their names, on one curved line from the star that runs through this world (Ruby, 2026-10-18: “Why are all the planets not in a curved line from te sun”, then: it “was including the planet you are on”, then: “make them in a fixed pint in space that lets it look like they are actualy all in a line and not you are just zoomed in on one planet, engulfing he rest in its fields”), in the order she stacked the fields (“going away from the star would be the direction they were stacked in”): the planets nearer the star stand between it and this world on the screen, the farther ones carry the line on past it. They stand at fixed places in space along that line, outside this world’s fields, so turning and zooming out (the zoom now goes far enough) shows the whole row as it is; a planet hides behind this world or the moon only when it is farther away than they are. The spacing and the bend are readings. She placed only Tetra first and Hexa last; the page sorts the rest by die size, which puts Octa and the five beyond Hexa: a reading she may overrule. The line’s bend and where it runs across the sky are readings.</p>
+          <p>Worlds beyond chance. Tetra is the four-sided world, Hexa the cube planet and Octa the eight-sided planet; they share this page, and the buttons under the title switch between them. Every other planet shows in each world’s sky (Ruby, 2026-10-18: “you shuld be able to see all of the other planets from a given planet”): the built ones as small turning dice, the five not yet built as points of light with their names, on one curved line from the star that runs through this world (Ruby, 2026-10-18: “Why are all the planets not in a curved line from te sun”, then: it “was including the planet you are on”, then: “make them in a fixed pint in space that lets it look like they are actualy all in a line and not you are just zoomed in on one planet, engulfing he rest in its fields”), in the order she stacked the fields (“going away from the star would be the direction they were stacked in”): the planets nearer the star stand between it and this world on the screen, the farther ones carry the line on past it. They stand at fixed places in space along that line, well outside this world’s fields and spaced widely (Ruby, 2026-10-19: “they still look colse. tat needs to be fixed”), so turning and zooming out (the zoom now goes far enough) shows the whole row as it is; where two line up the nearer one is drawn in front (Ruby, 2026-10-19: “picture one depicts a grafical  error”), and a planet hides behind this world or the moon only when it is farther away than they are. The spacing and the bend are readings. She placed only Tetra first and Hexa last; the page sorts the rest by die size, which puts Octa and the five beyond Hexa: a reading she may overrule. The line’s bend and where it runs across the sky are readings.</p>
           <ul class="worlds" id="worlds"></ul>
           <p class="q" style="margin-top:12px">Different worlds. Same imagination.</p>
         </div>
@@ -786,10 +786,10 @@ function ringPoints(sun,side,k,count){
 const arcPoints=ringPoints;
 function strokeArc(pts,color,alpha,width,glow){const runs=[];let run=null;for(let i=0;i<pts.length;i++){const s=project(cam.vp,pts[i]);const occ=s?occluded(pts[i]):null;if(!s||(run&&run.occ!==occ)){if(run&&run.p.length>1)runs.push(run);run=s?{occ,p:[s]}:null;if(!s)continue;if(runs.length){const prev=runs[runs.length-1].p;run.p.unshift(prev[prev.length-1])}}else{if(!run)run={occ,p:[]};run.p.push(s)}}if(run&&run.p.length>1)runs.push(run);
   fc.strokeStyle=color;fc.lineWidth=width;fc.shadowColor=color;for(const r of runs){fc.globalAlpha=alpha*(r.occ?0.16:1);fc.shadowBlur=r.occ?0:glow;fc.beginPath();fc.moveTo(r.p[0].x,r.p[0].y);for(let i=1;i<r.p.length;i++)fc.lineTo(r.p[i].x,r.p[i].y);fc.stroke()}fc.globalAlpha=1;fc.shadowBlur=0}
-function drawOverlay(t,sun){fc.setTransform(DPR,0,0,DPR,0,0);fc.clearRect(0,0,W,H);fc.lineCap='round';drawOtherWorld();
+function drawOverlay(t,sun){fc.setTransform(DPR,0,0,DPR,0,0);fc.clearRect(0,0,W,H);fc.lineCap='round';drawOtherWorld(false);
   const gold='rgba(255,196,96,1)',blue='rgba(110,170,255,1)';
   // field rings, all the way around (fixed relative to the sun, not the spinning world)
-  const glow=W<820?0:10;for(let k=0;k<3;k++){strokeArc(arcPoints(sun,1,k,3),gold,0.26+0.06*Math.sin(t*.0007+k),1.1,glow);strokeArc(arcPoints(sun,-1,k,3),blue,0.22+0.06*Math.sin(t*.0009+k),1.0,glow)}
+  const glow=W<820?0:10;for(let k=0;k<3;k++){strokeArc(arcPoints(sun,1,k,3),gold,0.26+0.06*Math.sin(t*.0007+k),1.1,glow);strokeArc(arcPoints(sun,-1,k,3),blue,0.22+0.06*Math.sin(t*.0009+k),1.0,glow)}drawOtherWorld(true);
   // particles riding the arcs: gold slow (light slowed), blue quicker
   if(!reduceMotion)for(let k=0;k<3;k++){for(const side of[1,-1]){const pts=arcPoints(sun,side,k,3);const speed=side>0?0.045:0.16;for(let j=0;j<3;j++){const u=((t*.001*speed+j/3+k*.17)%1);const i=u*(pts.length-1),i0=Math.floor(i),f=i-i0;const p=add(mulS(pts[i0],1-f),mulS(pts[Math.min(i0+1,pts.length-1)],f));const s=project(cam.vp,p);if(!s)continue;const occ=occluded(p);fc.globalAlpha=occ?0.15:0.9;fc.fillStyle=side>0?'rgba(255,224,150,1)':'rgba(170,210,255,1)';fc.shadowBlur=occ?0:12;fc.shadowColor=side>0?gold:blue;fc.beginPath();fc.arc(s.x,s.y,side>0?2.4:1.8,0,TAU);fc.fill()}}}
   fc.globalAlpha=1;fc.shadowBlur=0;
@@ -816,11 +816,12 @@ function inTri2(s,t){if(t.some(p=>!p))return false;const [a,b,c]=t;const d=(b.y-
    then: it "was including the planet you are on", then: "make them in a fixed pint in space that lets it look like they are actualy all in a line and not you are just zoomed in on one planet,
    engulfing he rest in its fields"), in the order she stacked the fields on 2026-10-04 (Tetra in the first field, Hexa in the last, going away from the star; the rest by die size, a reading).
    skyPos gives each planet a fixed place in the world's frame: along the star's line through this world, the nearer ones toward the star and the farther ones beyond it, from SKY_FIRST
-   (just outside the outermost field ring) in steps of SKY_GAP, bent to one side by SKY_BEND so the row reads as a curved line and the planets behind this world step out from behind it.
-   A planet is hidden by this world or the moon only when it is farther from the eye than they are. The spacing, the bend and the small dice's sizes are readings. ---- */
+   (more than twice the outermost field ring's radius out) in wide steps of SKY_GAP (Ruby, 2026-10-19: "they still look colse. tat needs to be fixed"), bent gently to one side by SKY_BEND
+   so the row reads as a curved line and the planets behind this world step out from behind it. They are drawn farthest first, so where two line up the nearer one covers the farther
+   (Ruby, 2026-10-19: "picture one depicts a grafical  error"); the ones behind this world are drawn before its field rings (drawOtherWorld(false)) and the ones in front of it after them (drawOtherWorld(true)). A planet is hidden by this world or the moon only when it is farther from the eye than they are. The spacing, the bend and the small dice's sizes are readings. ---- */
 const SKY_ALL=[{id:'tetra',name:'TETRA',shape:'tetra',size:0.9,tint:[0.78,0.72,0.58]},{id:'cuba',name:'HEXA',shape:'cube',size:0.75,tint:[0.72,0.8,0.95]},{id:'octa',name:'OCTA',shape:'octa',size:0.85,tint:[0.62,0.66,0.82]},{id:'deca',name:'DECA'},{id:'dodeca',name:'DODECA'},{id:'icosa',name:'ICOSA'},{id:'icositetra',name:'ICOSITETRA'},{id:'triaconta',name:'TRIACONTA'}];
 const SKY_HOME='tetra',SKY_PRIMARY='cuba';
-const SKY_H=SKY_ALL.findIndex(p=>p.id===SKY_HOME),SKY_FIRST=3.4,SKY_GAP=SKY_FIRST*0.34,SKY_BEND=0.3/SKY_FIRST,SKY_BODY=0.45,SKY_SIDE=norm(cross(SUN0,[0,1,0]));
+const SKY_H=SKY_ALL.findIndex(p=>p.id===SKY_HOME),SKY_FIRST=5.0,SKY_GAP=SKY_FIRST*0.56,SKY_BEND=0.28/(SKY_FIRST+4*SKY_GAP),SKY_BODY=1,SKY_SIDE=norm(cross(SUN0,[0,1,0]));
 function skyPos(i){const k=i-SKY_H,s=(k<0?1:-1)*(SKY_FIRST+SKY_GAP*(Math.abs(k)-1));return add(add(TARGET,mulS(SUN0,s)),mulS(SKY_SIDE,SKY_BEND*s*s))}
 const SKY=SKY_ALL.map((p,i)=>Object.assign({},p,{i,pos:skyPos(i),scale:1/(1+0.25*(Math.abs(i-SKY_H)-1))})).filter(p=>p.i!==SKY_H);
 const OTHER_DIR=norm(sub(SKY.find(p=>p.id===SKY_PRIMARY).pos,TARGET));
@@ -836,10 +837,11 @@ function drawSkyBody(p){const c=p.pos;const sp=project(cam.vp,c);const behind=do
   const a=-TAU*state.day,size=p.size*p.scale*SKY_BODY;const V=sh.V.map(v=>add(c,mulS(rotYv(a,v),size)));const toEye=norm(sub(cam.eye,c));
   for(const f of sh.F){const q3=f.map(i=>V[i]);let n=norm(cross(sub(q3[1],q3[0]),sub(q3[2],q3[0])));const cen=mulS(q3.reduce((s,q)=>add(s,q),[0,0,0]),1/q3.length);if(dot(n,sub(cen,c))<0)n=mulS(n,-1);if(dot(n,toEye)<=0)continue;const pts=q3.map(q=>project(cam.vp,q));if(pts.some(q=>!q))continue;const lit=Math.max(0,dot(n,SUN0));const g=60+150*lit;fc.fillStyle=`rgb(${Math.round(g*p.tint[0])},${Math.round(g*p.tint[1])},${Math.round(g*p.tint[2])})`;fc.beginPath();pts.forEach((q,m)=>m?fc.lineTo(q.x,q.y):fc.moveTo(q.x,q.y));fc.closePath();fc.fill()}
   fc.fillStyle='rgba(185,173,150,.9)';fc.font='500 10px IBM Plex Sans, system-ui, sans-serif';fc.fillText(p.name,sp.x,sp.y+24)}
-function drawOtherWorld(){skyEyeF=norm(sub(TARGET,cam.eye));skyCentreDepth=dot(sub(TARGET,cam.eye),skyEyeF);const moonDepth=dot(sub(MOON.pos,cam.eye),skyEyeF);const depth=p=>dot(sub(p.pos,cam.eye),skyEyeF);
+function drawOtherWorld(near){skyEyeF=norm(sub(TARGET,cam.eye));skyCentreDepth=dot(sub(TARGET,cam.eye),skyEyeF);const depth=p=>dot(sub(p.pos,cam.eye),skyEyeF);
+  const order=SKY.filter(p=>near?depth(p)<=skyCentreDepth:depth(p)>skyCentreDepth).sort((a,b)=>depth(b)-depth(a));
+  if(near){for(const p of order)drawSkyBody(p);lastOther=skyScreen[SKY_PRIMARY]||null;return}
   const hp=moonHull();fc.save();if(hp){fc.beginPath();fc.rect(-20,-20,W+40,H+40);hp.forEach((p,i)=>i?fc.lineTo(p.x,p.y):fc.moveTo(p.x,p.y));fc.closePath();fc.clip('evenodd')}
-  for(const p of SKY)if(depth(p)>moonDepth)drawSkyBody(p);fc.restore();
-  for(const p of SKY)if(depth(p)<=moonDepth)drawSkyBody(p);lastOther=skyScreen[SKY_PRIMARY]||null}
+  for(const p of order)drawSkyBody(p);fc.restore()}
 
 /* ============================== MARKERS ============================== */
 const markerEls=new Map();
@@ -933,10 +935,10 @@ const pts=new Map();let drag=null,pinch=null,moved=0,downAt=null;
 gl.addEventListener('pointerdown',e=>{gl.setPointerCapture(e.pointerId);pts.set(e.pointerId,[e.clientX,e.clientY]);drag=[e.clientX,e.clientY];downAt=[e.clientX,e.clientY];moved=0;state.fly=null;gl.classList.add('dragging')});
 gl.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,[e.clientX,e.clientY]);const p=[...pts.values()];
   if(p.length===1&&drag){const dx=e.clientX-drag[0],dy=e.clientY-drag[1];moved+=Math.abs(dx)+Math.abs(dy);state.baseYaw-=dx*0.0075;state.pitch=clamp(state.pitch+dy*0.0055,-1.35,1.35);drag=[e.clientX,e.clientY]}
-  else if(p.length===2){const d=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);if(pinch)state.dist=clamp(state.dist*pinch/d,3.0,24);pinch=d;moved+=99}});
+  else if(p.length===2){const d=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);if(pinch)state.dist=clamp(state.dist*pinch/d,3.0,60);pinch=d;moved+=99}});
 function endPtr(e){pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===0){gl.classList.remove('dragging');if(moved<8&&downAt){const r=gl.getBoundingClientRect();const f=pickFace(e.clientX-r.left,e.clientY-r.top);if(f)selectFace(f.id,false);else{release()}}drag=null;downAt=null}}
 gl.addEventListener('pointerup',endPtr);gl.addEventListener('pointercancel',endPtr);
-gl.addEventListener('wheel',e=>{e.preventDefault();state.dist=clamp(state.dist*Math.exp(e.deltaY*0.0012),3.0,24)},{passive:false});
+gl.addEventListener('wheel',e=>{e.preventDefault();state.dist=clamp(state.dist*Math.exp(e.deltaY*0.0012),3.0,60)},{passive:false});
 addEventListener('keydown',e=>{if(e.target.matches('input,textarea'))return;if(e.key===' '){e.preventDefault();togglePlay()}else if(e.key==='ArrowLeft')state.baseYaw+=0.08;else if(e.key==='ArrowRight')state.baseYaw-=0.08;else if(e.key==='ArrowUp')state.pitch=clamp(state.pitch+0.06,-1.35,1.35);else if(e.key==='ArrowDown')state.pitch=clamp(state.pitch-0.06,-1.35,1.35);else if(e.key==='Escape')release()});
 
 /* ============================== TIME CONTROLS ============================== */

@@ -41,7 +41,7 @@ const PAGE = require('./_page');
     const drift = await page.evaluate(() => { const a = cuba.starScreen(); cuba.setDay(0.3); return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => { const b = cuba.starScreen(); r({ a, b }); }))); });
     if (!drift.a || !drift.b || Math.abs(drift.a.x - drift.b.x) > 0.5 || Math.abs(drift.a.y - drift.b.y) > 0.5) fails.push(`${width}: the star moved while the world turned (${JSON.stringify(drift)})`);
     // Tetra in Cuba's sky: the view released from any side it was following and swept round, the small world is on screen at some turn (since 2026-10-18 the planets stand at fixed places in space along the star's line through the home world, so where Tetra shows depends on the view)
-    const otherC = await page.evaluate(async (phone) => { cuba.state.follow = false; cuba.state.fly = null; cuba.state.pitch = phone ? -0.45 : 0.05; cuba.state.dist = 9.5; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const otherC = await page.evaluate(async (phone) => { cuba.state.follow = false; cuba.state.fly = null; cuba.state.pitch = phone ? -0.45 : 0.05; cuba.state.dist = 14; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
       for (let k = 0; k < 36; k++) { cuba.setYaw(k * Math.PI / 18); await frames(); const o = cuba.otherWorld(); if (o && o.x > (phone ? 0 : 40) && o.x < innerWidth - (phone ? 0 : 400) && o.y > (phone ? 0 : 40) && o.y < innerHeight * (phone ? 1 : 0.78)) return o; } return cuba.otherWorld(); }, phone);
     if (!otherC || otherC.x < 0 || otherC.x > width || otherC.y < 0 || otherC.y > height) fails.push(`${width}: Tetra is not in Cuba's sky when turned toward it (${JSON.stringify(otherC)})`);
     if (!phone) await page.screenshot({ path: PAGE.out('cuba_tetra_sky.png') });
@@ -134,7 +134,7 @@ const PAGE = require('./_page');
     await page.click('#diceWorlds [data-world="tetra"]'); await page.waitForTimeout(500);
     const back = await page.evaluate(() => ({ world: dice.world, date: document.getElementById('dateOut').textContent, cubaHidden: getComputedStyle(document.getElementById('capp')).visibility }));
     // Cuba in Tetra's sky: turned toward it, the small cube is on screen
-    const otherT = await page.evaluate(async (phone) => { tetra.state.follow = false; tetra.state.fly = null; tetra.state.pitch = phone ? -0.45 : 0.05; tetra.state.dist = 9.5; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const otherT = await page.evaluate(async (phone) => { tetra.state.follow = false; tetra.state.fly = null; tetra.state.pitch = phone ? -0.45 : 0.05; tetra.state.dist = 14; const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
       for (let k = 0; k < 36; k++) { tetra.state.baseYaw = k * Math.PI / 18; await frames(); const o = tetra.otherWorld(); if (o && o.x > (phone ? 0 : 40) && o.x < innerWidth - (phone ? 0 : 400) && o.y > (phone ? 0 : 40) && o.y < innerHeight * (phone ? 1 : 0.78)) return o; } return tetra.otherWorld(); }, phone);
     if (!otherT || otherT.x < 0 || otherT.x > width || otherT.y < 0 || otherT.y > height) fails.push(`${width}: Cuba is not in Tetra's sky when turned toward it (${JSON.stringify(otherT)})`);
     if (!phone) { await page.evaluate(() => tetra.setDay(10.3)); await page.waitForTimeout(500); await page.screenshot({ path: PAGE.out('tetra_cuba_sky.png') }); }

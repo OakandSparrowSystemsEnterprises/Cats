@@ -4,6 +4,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 
 ## 1. State
 
+- **Draft 17 (2026-10-19)**: the planets in Hexa's sky spaced widely along the line and drawn nearest last (Ruby's two pictures; the sky block shared with Tetra and Octa); the zoom out to 60. See section 2.
 - **Draft 16 (2026-10-18, evening)**: the planets at fixed places in space along the star's line through Hexa, outside its fields (Ruby: "make them in a fixed pint in space that lets it look like they are actualy all in a line"; the sky block shared with Tetra and Octa); the zoom goes out to 24. See section 2.
 - **Draft 15 (2026-10-18, later again)**: the line of planets runs through Hexa itself on the screen, from the star through the cube and on (Ruby: the line "was including the planet you are on"; the sky block shared with Tetra and Octa). See section 2.
 - **Draft 14 (2026-10-18, later)**: the planets in Hexa's sky on one curved line from the star (Ruby's question of the day; the sky block shared with Tetra and Octa). See section 2.
@@ -130,6 +131,7 @@ Hexa (Cuba until 2026-10-10) is the second world of The Dice System, after Tetra
 - 2026-10-18, Ruby, later, on the shared sky: "Why are all the planets not in a curved line from te sun" (draft 14: the sky block in all three fragments lays the planets on one arc from the star, nearest first, in the stacked order, the home world's slot empty; the arc's bend a reading. The rest of her message is Octa's, in `../octa/HANDOFF.md`.)
 - 2026-10-18, Ruby, later again: the question "was including the planet you are on" (draft 15: the sky block lays the line out on the screen from the star through the home world's die and on, following the view; `layoutSky`, `SKY_R`; a reading of her words. The rest of her message is Octa's, in `../octa/HANDOFF.md`.)
 - 2026-10-18, Ruby, evening, on the shared sky: "make them in a fixed pint in space that lets it look like they are actualy all in a line and not you are just zoomed in on one planet, engulfing he rest in its fields" (draft 16: the sky block gives every planet a fixed place in the world's frame along the star's line through the home world, outside its fields, `skyPos`, `SKY_FIRST` 3.9 on Hexa; hidden behind the cube or the moon only when farther away; the zoom goes out to 24. The rest of her message is Octa's, in `../octa/HANDOFF.md`.)
+- 2026-10-19, Ruby, with two pictures of Octa's sky: "picture one depicts a grafical  error, picture two depicts that they still look colse. tat needs to be fixed." (draft 17: the sky block draws the planets farthest first, so the nearer covers the farther where two line up, and spaces the row widely: `SKY_FIRST` 6.0 on Hexa, `SKY_GAP` 0.56 of it; the zoom goes out to 60. In `../octa/HANDOFF.md`.)
 
 ## 3. Open questions for Ruby (do not guess these)
 
@@ -163,6 +165,7 @@ The page is Tetra's (`../tetra/pipeline/template.html`, one file for both worlds
 
 ## 5. Publishing
 
+- Draft 17, 2026-10-19: republished to Tetra's artifact with the label "v11 The planets spaced apart, the nearer drawn in front".
 - Draft 16, 2026-10-18, evening: republished to Tetra's artifact with the label "v11 Side names on Octa, the planets fixed in a line".
 - Draft 15, 2026-10-18, later again: republished to Tetra's artifact with the label "v11 The line through your own world, side names, maps coming".
 - Draft 14, 2026-10-18, later: republished to Tetra's artifact with the label "v11 Year 0 of Octa, planets in a line, a stronger field".
